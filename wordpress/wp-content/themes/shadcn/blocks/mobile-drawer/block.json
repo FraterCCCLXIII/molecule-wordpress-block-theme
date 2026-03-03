@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "molecule/mobile-drawer",
+	"version": "1.0.0",
+	"title": "Mobile Drawer",
+	"category": "molecule",
+	"description": "Hamburger button and slide-in mobile navigation drawer. Add navigation links as inner blocks.",
+	"keywords": [ "navigation", "mobile", "drawer", "hamburger" ],
+	"textdomain": "shadcn",
+	"editorScript": "file:./build/index.js",
+	"editorStyle": "file:./editor.css",
+	"render": "file:./render.php",
+	"supports": {
+		"html": false,
+		"inserter": true,
+		"multiple": false
+	}
+}

@@ -1,0 +1,29 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "molecule/icon-link",
+	"version": "1.0.0",
+	"title": "Icon Link",
+	"category": "molecule",
+	"description": "A navigation icon button for Search, Account, or Cart. Renders a styled anchor with the matching SVG icon.",
+	"keywords": [ "icon", "search", "account", "cart", "navigation" ],
+	"textdomain": "shadcn",
+	"editorScript": "file:./build/index.js",
+	"render": "file:./render.php",
+	"attributes": {
+		"type": {
+			"type": "string",
+			"default": "search",
+			"enum": [ "search", "account", "cart" ]
+		},
+		"href": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"supports": {
+		"html": false,
+		"inserter": true,
+		"multiple": true
+	}
+}

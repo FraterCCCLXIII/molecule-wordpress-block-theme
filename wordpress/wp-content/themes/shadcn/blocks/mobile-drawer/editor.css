@@ -1,0 +1,41 @@
+.molecule-mobile-drawer-editor {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.molecule-mobile-drawer-editor__header {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.5rem;
+	background: var(--wp--preset--color--accent, #f3f4f6);
+	border-radius: 6px;
+}
+
+.molecule-mobile-drawer-editor__header .molecule-mobile-menu-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.5rem;
+	height: 2.5rem;
+	border-radius: 6px;
+	background: transparent;
+	border: 1px solid #e5e7eb;
+	color: #111827;
+	cursor: default;
+	padding: 0;
+}
+
+.molecule-mobile-drawer-editor__label {
+	font-size: 0.8125rem;
+	font-weight: 600;
+	color: #374151;
+}
+
+.molecule-mobile-drawer-editor__nav {
+	padding: 0.5rem;
+	border: 1px dashed #d1d5db;
+	border-radius: 6px;
+	min-height: 3rem;
+}

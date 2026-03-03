@@ -11,6 +11,7 @@ class Blocks {
 		add_action( 'init', array( $this, 'register_pattern_category' ), 1 );
 		add_action( 'init', array( $this, 'register_block_settings' ), 1 );
 		add_action( 'init', array( $this, 'register_blocks' ), 1 );
+		add_filter( 'block_categories_all', array( $this, 'add_block_category' ), 5, 1 );
 	}
 
 	public function register_pattern_category() {
@@ -39,6 +40,35 @@ class Blocks {
 
 	public function register_blocks() {
 		require_once __DIR__ . '/../Blocks/SvgImage/Caller.php';
+
+		register_block_type( get_template_directory() . '/blocks/mobile-drawer' );
+		register_block_type( get_template_directory() . '/blocks/icon-link' );
+	}
+
+	/**
+	 * Register the "molecule" block category so the custom blocks appear
+	 * grouped in the block inserter.
+	 *
+	 * @param array[] $categories Existing block categories.
+	 * @return array[]
+	 */
+	public function add_block_category( $categories ) {
+		$names = wp_list_pluck( $categories, 'slug' );
+
+		if ( in_array( 'molecule', $names, true ) ) {
+			return $categories;
+		}
+
+		return array_merge(
+			array(
+				array(
+					'slug'  => 'molecule',
+					'title' => __( 'Molecule', 'shadcn' ),
+					'icon'  => null,
+				),
+			),
+			$categories
+		);
 	}
 }
 

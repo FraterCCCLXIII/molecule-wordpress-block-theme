@@ -1,0 +1,12 @@
+{
+	"name": "shadcn-theme",
+	"version": "1.0.0",
+	"description": "Molecule / shadcn WordPress block theme",
+	"scripts": {
+		"build": "wp-scripts build",
+		"start": "wp-scripts start"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^30.0.0"
+	}
+}

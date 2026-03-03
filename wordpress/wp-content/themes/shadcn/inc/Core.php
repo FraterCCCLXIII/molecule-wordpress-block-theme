@@ -8,8 +8,8 @@ class Core {
 	use SingletonTrait;
 
 	private const COMMENTS_MIGRATION_OPTION      = 'shadcn_comments_disabled_for_posts_v1';
-	private const HEADER_NATIVE_MIGRATION_OPTION = 'shadcn_native_header_migrated_v4';
-	private const HEADER_NATIVE_ROLLBACK_OPTION  = 'shadcn_native_header_rollback_v4';
+	private const HEADER_NATIVE_MIGRATION_OPTION = 'shadcn_native_header_migrated_v5';
+	private const HEADER_NATIVE_ROLLBACK_OPTION  = 'shadcn_native_header_rollback_v5';
 
 	public function __construct() {
 		add_action( 'after_setup_theme', array( $this, 'setup_theme' ) );
@@ -19,7 +19,6 @@ class Core {
 		add_action( 'after_switch_theme', array( $this, 'close_comments_for_existing_posts' ) );
 		add_action( 'init', array( $this, 'migrate_to_native_header_once' ) );
 		add_filter( 'render_block', array( $this, 'override_mini_cart_icon' ), 20, 2 );
-		add_filter( 'render_block', array( $this, 'inject_drawer_cart_count' ), 20, 2 );
 		add_filter( 'comments_open', array( $this, 'disable_post_comments' ), 20, 2 );
 		add_filter( 'pings_open', array( $this, 'disable_post_comments' ), 20, 2 );
 
@@ -268,58 +267,6 @@ class Core {
 			$block_content,
 			1
 		);
-	}
-
-	/**
-	 * Inject the live WooCommerce cart count badge into the static cart icon
-	 * link inside the custom mobile drawer (wp:html block).
-	 *
-	 * The drawer uses a static <a class="molecule-cart-icon-link"> link — not
-	 * a WooCommerce block — to avoid the mini-cart singleton constraint.
-	 * This filter appends (or updates) a <span class="molecule-cart-count">
-	 * badge so the count stays in sync with the real cart.
-	 *
-	 * Only acts on core/html blocks that contain molecule-cart-icon-link to
-	 * keep the hot path fast.
-	 *
-	 * @param string $block_content Rendered block HTML.
-	 * @param array  $block         Parsed block metadata.
-	 * @return string
-	 */
-	public function inject_drawer_cart_count( $block_content, $block ) {
-		if ( empty( $block['blockName'] ) || 'core/html' !== $block['blockName'] ) {
-			return $block_content;
-		}
-
-		if ( ! is_string( $block_content ) || false === strpos( $block_content, 'molecule-cart-icon-link' ) ) {
-			return $block_content;
-		}
-
-		if ( ! function_exists( 'WC' ) ) {
-			return $block_content;
-		}
-
-		$count = WC()->cart ? (int) WC()->cart->get_cart_contents_count() : 0;
-		$badge = '<span class="molecule-cart-count" aria-hidden="true">' . $count . '</span>';
-
-		// Replace existing badge if present, otherwise append before </a>.
-		if ( false !== strpos( $block_content, 'molecule-cart-count' ) ) {
-			$block_content = preg_replace(
-				'/<span class="molecule-cart-count"[^>]*>.*?<\/span>/s',
-				$badge,
-				$block_content,
-				1
-			);
-		} else {
-			$block_content = preg_replace(
-				'/(<a[^>]+molecule-cart-icon-link[^>]*>)(.*?)(<\/a>)/s',
-				'$1$2' . $badge . '$3',
-				$block_content,
-				1
-			);
-		}
-
-		return $block_content;
 	}
 
 	/**
