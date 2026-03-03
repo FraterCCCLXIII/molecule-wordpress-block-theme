@@ -1,0 +1,17 @@
+.radio-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 1rem 1.5rem 1rem 1rem;
+    box-sizing: border-box;
+}
+
+.radio-form {
+    width: 100%;
+}
+
+.radio-error {
+    color: #d9534f;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}

@@ -1,0 +1,134 @@
+.widget-container {
+    border: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+}
+
+.button-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    gap: 0.5rem;
+    box-sizing: border-box;
+
+    .button {
+        padding: 0.75rem;
+
+        &.Mui-disabled {
+            background-color: (0, 0, 0, 0.26);
+        }
+
+        .logo {
+            font-size: 28px;
+        }
+
+        .loader {
+            color: inherit;
+        }
+    }
+}
+
+.confirm-container {
+    padding: 1.5rem 1rem;
+
+    .title {
+        font-size: 1rem;
+    }
+
+    .confirm-inner {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.5rem 1rem;
+        border-color: #39af6a;
+
+        .spacer {
+            flex: 1;
+        }
+
+        .icon-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .success-icon {
+            color: #39af6a;
+            font-size: 45px;
+        }
+    }
+
+    .divider {
+        margin: 1rem 0;
+    }
+}
+
+.tan-container {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    gap: 1rem;
+}
+
+.dialog {
+    text-align: center;
+
+    .closeBtn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+    }
+
+    .logo {
+        font-size: 3rem;
+        margin-top: 2.5rem;
+    }
+
+    .title {
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .body {
+        font-size: 0.9rem;
+        opacity: 0.8;
+        margin-bottom: 1.5rem;
+    }
+
+    .link {
+        font-size: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .form {
+        padding: 1.5rem 1rem 1rem;
+        border-radius: 8px;
+    }
+
+    .actions {
+        padding: 0rem 1.5rem 1.5rem;
+    }
+}
+
+.title {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.body {
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+}
+
+.error {
+    color: #d9534f;
+}

@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+      "target": "ES6",
+      "lib": ["DOM", "ESNext"],
+      "jsx": "react-jsx",            // or "react" for older TS versions
+      "moduleResolution": "Node",
+      "module": "ESNext",
+      "strict": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      "noImplicitAny": false,       // you can tighten over time
+      "allowJs": true,               // let you keep .js files initially
+      "checkJs": false,               // set true to lint your existing .js
+      "typeRoots": ["./node_modules/@types", "src/data/types"],
+      "paths": {
+        "@greenpay/models": ["./src/data/models"],
+        "@greenpay/hooks": ["./src/hooks"],
+        "@greenpay/redux": ["./src/data/redux"],
+        "@greenpay/utils": ["./src/utils"],
+        "@greenpay/store": ["./src/store"]
+      }
+    },
+    "include": ["src", "types/**/*.ts"],
+    "exclude": ["node_modules", "dist"]
+}
+  

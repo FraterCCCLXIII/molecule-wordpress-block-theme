@@ -1,0 +1,59 @@
+{
+	"name": "woocommerce-greenpay-gateway",
+	"title": "WooCommerce GreenPay",
+        "version": "3.3.3",
+	"author": "Green Money",
+	"license": "GPL-3.0+",
+	"keywords": [],
+	"engines": {
+		"node": ">=20.12.0",
+		"npm": ">=10.5.0"
+	},
+	"dependencies": {
+		"@emotion/react": "^11.14.0",
+		"@emotion/styled": "^11.14.0",
+		"@mui/icons-material": "^6.4.11",
+		"@mui/material": "^6.4.11",
+		"eventemitter3": "^5.0.1",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1",
+		"react-router": "^7.5.2",
+		"react-shadow": "^20.5.0",
+		"react-toastify": "^11.0.2"
+	},
+	"devDependencies": {
+		"@svgr/webpack": "^8.1.0",
+		"@types/jquery": "^3.5.32",
+		"@types/react": "^18.3.1",
+		"@types/react-dom": "^18.3.1",
+		"@woocommerce/dependency-extraction-webpack-plugin": "^3.1.0",
+		"@woocommerce/settings": "^1.0.0",
+		"@wordpress/components": "^29.8.0",
+		"@wordpress/data": "^10.22.0",
+		"@wordpress/dependency-extraction-webpack-plugin": "^6.22.0",
+		"@wordpress/element": "^6.28.0",
+		"@wordpress/plugins": "^7.22.0",
+		"@wordpress/scripts": "^30.15.0",
+		"cross-env": "7.0.3",
+		"prettier": "^3.5.3",
+		"style-loader": "^4.0.0",
+		"ts-loader": "^9.5.2",
+		"tsconfig-paths-webpack-plugin": "^4.2.0",
+		"typescript": "^5.8.3",
+		"webpack-dev-server": "^5.2.1"
+	},
+	"scripts": {
+		"start": "wp-scripts start",
+		"build": "wp-scripts build",
+		"start:dev": "webpack serve --config webpack.config.js --mode development",
+		"i18n": "npm run i18n:build",
+		"i18n:build": "npm run i18n:pot && ./bin/build_i18n.sh",
+		"i18n:pot": "php -d xdebug.max_nesting_level=512 $(which wp) i18n make-pot --exclude=\"node_modules/,languages/,assets/\" --headers='{\"Report-Msgid-Bugs-To\":\"https://woocommerce.com/my-account/create-a-ticket/\", \"language-team\":\"LANGUAGE <EMAIL@ADDRESS>\"}' . languages/woocommerce-gateway-dummy.pot",
+		"i18n:json": "$(which wp) i18n make-json languages --no-purge",
+		"packages-update": "wp-scripts packages-update",
+		"check-engines": "wp-scripts check-engines"
+	},
+	"overrides": {
+		"@babel/runtime": "^7.26.10"
+	}
+}

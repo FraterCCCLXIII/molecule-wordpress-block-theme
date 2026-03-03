@@ -1,0 +1,17 @@
+{
+	"arrowParens": "always",
+	"printWidth": 120,
+	"trailingComma": "all",
+	"bracketLine": true,
+	"bracketSpacing": true,
+	"editor.formatOnSave": true,
+	"tabWidth": 4,
+	"useTabs": true,
+	"semi": false,
+	"singleQuote": true,
+	"proseWrap": "preserve",
+	"overrides": [
+		{ "files": "*.yaml", "options": { "tabWidth": 2 } },
+		{ "files": "*.yml", "options": { "tabWidth": 2 } }
+	]
+}

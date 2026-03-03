@@ -1,0 +1,165 @@
+.subscription-product .wc-block-components-product-price .woocommerce-Price-amount {
+    display: none !important;
+}
+
+/* Product grid: evenly spaced, consistent row alignment */
+.wc-block-product-template__responsive {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: flex-start;
+}
+
+/* Fixed width per product item for 3 per row */
+.wc-block-product {
+  width: calc(33.333% - 1.34rem); /* 3 columns, minus gap compensation */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  background: #fff;
+  padding: 1rem;
+  min-height: 520px; /* Adjust based on tallest product */
+  border: 1px solid transparent;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* Product image handling */
+.wc-block-components-product-image img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+.wc-block-product > .wc-block-components-product-image,
+.wc-block-product > .wc-block-components-product-image > a {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* Keep image and meta rows aligned while preserving existing card grid */
+.wc-block-product > .wc-block-components-product-image {
+  grid-column: 1 / -1;
+}
+
+/* Product title on the left */
+.wc-block-product > h2.wp-block-post-title {
+  grid-column: 1;
+  min-height: 0;
+  margin: 0;
+  text-align: left;
+  line-height: 1.4;
+}
+
+/* Price on the right, same row as the title */
+.wc-block-product > .subscription-period-prices {
+  grid-column: 2;
+  min-height: 0;
+  margin: 0;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Price and add-to-cart button pinned to bottom */
+.wp-block-woocommerce-product-price,
+.wp-block-woocommerce-product-button {
+  margin-top: auto;
+  text-align: center;
+}
+
+/* Shop card content row: name (left) and price (right). Keep grid layout intact. */
+.wc-block-product-template .wc-block-product {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  row-gap: 0.5rem;
+  column-gap: 0.75rem;
+  align-items: center;
+  min-height: auto;
+  height: auto;
+  align-content: start;
+  position: relative;
+  cursor: pointer;
+}
+
+/* Keep hover/focus state visually stable (no hover-only outline/padding jump). */
+.wc-block-product-template .wc-block-product:hover,
+.wc-block-product-template .wc-block-product:focus-within {
+  outline: none;
+  box-shadow: none;
+  border-color: #eaeaea;
+}
+
+.wc-block-product-template .wc-block-product .wc-block-components-product-image > a:hover,
+.wc-block-product-template .wc-block-product .wc-block-components-product-image > a:focus,
+.wc-block-product-template .wc-block-product .wc-block-components-product-image > a:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* Make the full product card clickable via the existing product link */
+.wc-block-product-template .wc-block-product .wc-block-components-product-image > a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+/* Remove add-to-cart button and view-cart link inside shop cards */
+.wc-block-product-template .wc-block-product .wp-block-woocommerce-product-button,
+.wc-block-product-template .wc-block-product a.added_to_cart {
+  display: none !important;
+}
+
+.subscription-options-wrapper {
+  margin-top: 10px;
+}
+.subscription-options-wrapper label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Responsive: 2 items per row on tablets */
+@media (max-width: 1024px) {
+  .wc-block-product {
+    width: calc(50% - 1rem);
+  }
+}
+
+/* Responsive: 1 item per row on mobile */
+@media (max-width: 600px) {
+  .wc-block-product {
+    width: 100%;
+  }
+}
+
+.my-account-subscriptions-table .button {
+	background-color: #cc0000;
+	color: white;
+	padding: 6px 10px;
+	text-decoration: none;
+}
+
+.subscription-error {
+  clear: both;
+  color: red;
+  font-size: 12px;
+  display: block;
+  margin-top: 4px;
+}
+
+#_subscription_interval {
+  float: none !important;
+}
+
+.description {
+  padding: 0;
+  margin: 0 0 0 40px;
+  display: inline;
+}
+
+.wc-block-components-product-details__value {
+  font-weight: normal !important;
+}
