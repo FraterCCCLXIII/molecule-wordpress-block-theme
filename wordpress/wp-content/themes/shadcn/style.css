@@ -770,6 +770,12 @@ body.admin-bar .molecule-top-nav {
   color: #374151;
 }
 
+/* Keep footer navigation links light-weight regardless of global nav styles. */
+footer .wp-block-navigation .wp-block-navigation-item__content,
+footer .wp-block-navigation .wp-block-navigation-item__label {
+  font-weight: 400;
+}
+
 .molecule-desktop-dropdown {
   position: relative;
 }

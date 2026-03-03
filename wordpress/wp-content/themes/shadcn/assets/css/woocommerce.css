@@ -110,6 +110,11 @@ button.single_add_to_cart_button.button.alt.wp-element-button {
   width: 100%;
 }
 
+/* Hide duplicate default tab heading shown above custom description content. */
+.single-product .woocommerce-Tabs-panel--description > h2:first-child {
+  display: none;
+}
+
 .woocommerce .molecule-product-disclaimer {
   width: 100%;
   margin-top: calc(var(--spacing) * 12);
