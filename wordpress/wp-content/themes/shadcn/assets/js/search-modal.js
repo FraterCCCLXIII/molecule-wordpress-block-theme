@@ -8,7 +8,7 @@
 			'.molecule-header-search .wp-block-search__button, .molecule-top-nav .wp-block-search__button, .molecule-top-nav-icons .wp-block-search__button'
 		);
 		var triggerLinks = document.querySelectorAll(
-			'.molecule-top-nav a.molecule-icon-link[aria-label="Search"], .molecule-top-nav a[href*="?s="][aria-label="Search"], .molecule-top-nav-icons a.molecule-icon-link[aria-label="Search"], .molecule-top-nav-icons a[href*="?s="][aria-label="Search"], .molecule-mobile-drawer-quick-icons a[aria-label="Search"]'
+			'.molecule-top-nav a.molecule-icon-link[aria-label="Search"], .molecule-top-nav a[href*="?s="][aria-label="Search"], .molecule-top-nav-icons a.molecule-icon-link[aria-label="Search"], .molecule-top-nav-icons a[href*="?s="][aria-label="Search"]'
 		);
 		if (
 			! modal ||
@@ -224,7 +224,7 @@
 				}
 
 				link = link.closest(
-					'.molecule-top-nav a, .molecule-top-nav-icons a, .molecule-mobile-drawer-quick-icons a'
+					'.molecule-top-nav a, .molecule-top-nav-icons a'
 				);
 				if ( ! link ) {
 					return;

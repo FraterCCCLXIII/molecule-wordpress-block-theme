@@ -32,6 +32,16 @@ class DarkMode {
 			$script_ver,
 			true
 		);
+
+		$drawer_script = get_template_directory() . '/assets/js/mobile-drawer.js';
+		$drawer_ver    = file_exists( $drawer_script ) ? (string) filemtime( $drawer_script ) : $style_version;
+		wp_enqueue_script(
+			'shadcn-mobile-drawer',
+			get_template_directory_uri() . '/assets/js/mobile-drawer.js',
+			array(),
+			$drawer_ver,
+			true
+		);
 	}
 
 	/**
