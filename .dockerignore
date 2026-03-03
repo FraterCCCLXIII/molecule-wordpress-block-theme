@@ -1,0 +1,12 @@
+.git
+.gitignore
+.DS_Store
+.env
+node_modules
+molecule-nextpresser-frontend
+
+# WordPress runtime data that should not be baked into images.
+wordpress/wp-content/uploads
+wordpress/wp-content/ai1wm-backups
+wordpress/wp-content/cache
+wordpress/wp-content/upgrade

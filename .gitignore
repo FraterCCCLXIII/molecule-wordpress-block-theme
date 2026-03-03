@@ -8,6 +8,7 @@
 
 # WordPress uploads
 wordpress/wp-content/uploads/
+wordpress/wp-content/ai1wm-backups/
 
 # Logs
 *.log
