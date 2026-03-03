@@ -21,6 +21,7 @@ class Core {
 		add_filter( 'render_block', array( $this, 'override_mini_cart_icon' ), 20, 2 );
 		add_filter( 'comments_open', array( $this, 'disable_post_comments' ), 20, 2 );
 		add_filter( 'pings_open', array( $this, 'disable_post_comments' ), 20, 2 );
+		add_filter( 'woocommerce_blocks_template_content', array( $this, 'suppress_wc_customer_account_injection' ), 20, 3 );
 
 		require_once __DIR__ . '/Core/Blocks.php';
 		require_once __DIR__ . '/Core/Patterns.php';
@@ -267,6 +268,41 @@ class Core {
 			$block_content,
 			1
 		);
+	}
+
+	/**
+	 * Prevent WooCommerce from auto-injecting a woocommerce/customer-account
+	 * block into this theme's header template part.
+	 *
+	 * WooCommerce's block template system injects account/cart blocks into FSE
+	 * templates via the `woocommerce_blocks_template_content` filter. This
+	 * theme manages its own icon set (molecule/icon-link) so the injected block
+	 * is redundant and clutters the block editor.
+	 *
+	 * @param string $content     Template content.
+	 * @param object $template    Template object.
+	 * @param array  $template_types Template types.
+	 * @return string
+	 */
+	public function suppress_wc_customer_account_injection( $content, $template, $template_types ) {
+		if ( ! is_string( $content ) ) {
+			return $content;
+		}
+
+		// Only act on the main header template part.
+		if ( false === strpos( $content, 'molecule-top-nav' ) ) {
+			return $content;
+		}
+
+		// Strip any auto-injected standalone customer-account block that WC
+		// places outside of our managed icon group.
+		$content = preg_replace(
+			'/<!-- wp:woocommerce\/customer-account\b[^\/]*\/-->\s*/s',
+			'',
+			$content
+		);
+
+		return $content;
 	}
 
 	/**
