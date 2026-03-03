@@ -22,11 +22,11 @@ require_once __DIR__ . '/inc/SearchModal.php';
 require_once __DIR__ . '/inc/Integrations.php';
 
 /**
- * Hide the automatic Page Title block on frontend pages.
+ * Hide Page Title blocks on frontend page views.
  *
- * This keeps manually-authored H1 content intact while preventing block
- * template (including DB-saved template overrides) from injecting a duplicate
- * page title above the page content.
+ * This prevents duplicate/misaligned page H1 output from template overrides
+ * and manually inserted Post Title blocks while preserving post/product titles
+ * rendered in loops.
  */
 add_filter(
 	'render_block_core/post-title',
@@ -51,9 +51,16 @@ add_filter(
 
 		$queried_object_id = get_queried_object_id();
 
-		// Hide only the current page's own automatic title block. Keep query-loop
-		// titles (products/posts), which use different context post IDs.
-		if ( 'page' === $context_post_type && $context_post_id > 0 && $context_post_id === (int) $queried_object_id ) {
+		$is_current_page_title = 'page' === $context_post_type
+			&& $context_post_id > 0
+			&& $context_post_id === (int) $queried_object_id;
+
+		// Some template overrides can render the page title block without context.
+		$is_contextless_page_title = '' === $context_post_type && 0 === $context_post_id;
+
+		// Keep query-loop titles (products/posts) untouched by only hiding page-owned
+		// or contextless page title blocks on page views.
+		if ( $is_current_page_title || $is_contextless_page_title ) {
 			return '';
 		}
 

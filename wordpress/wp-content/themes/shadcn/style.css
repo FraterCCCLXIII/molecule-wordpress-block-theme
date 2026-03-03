@@ -770,6 +770,16 @@ body.admin-bar .molecule-top-nav {
   color: #374151;
 }
 
+/* Keep page titles aligned with constrained page content. */
+.page main .wp-block-post-title {
+  max-width: var(--wp--style--global--content-size);
+  margin-top: 0;
+  margin-right: auto;
+  margin-bottom: var(--wp--preset--spacing--6);
+  margin-left: auto;
+  text-align: left;
+}
+
 /* Keep footer navigation links light-weight regardless of global nav styles. */
 footer .wp-block-navigation .wp-block-navigation-item__content,
 footer .wp-block-navigation .wp-block-navigation-item__label {

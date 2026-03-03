@@ -16,6 +16,7 @@ class WooCommerce {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'woocommerce_before_add_to_cart_form', array( $this, 'render_available_sizes_module' ), 8 );
 		add_filter( 'woocommerce_product_tabs', array( $this, 'override_product_detail_tabs' ), 20 );
+		add_filter( 'woocommerce_account_menu_items', array( $this, 'reorder_my_account_menu_items' ), 20 );
 		add_filter( 'woocommerce_process_login_errors', array( $this, 'require_email_for_login' ), 10, 3 );
 		add_filter( 'woocommerce_new_customer_data', array( $this, 'set_customer_username_from_email' ) );
 		add_filter( 'body_class', array( $this, 'add_auth_mode_body_class' ) );
@@ -24,6 +25,16 @@ class WooCommerce {
 	public function enqueue_scripts() {
 		wp_enqueue_style( 'shadcn-woocommerce', get_template_directory_uri() . '/assets/css/woocommerce.css', array(), wp_get_theme()->get( 'Version' ) );
 		wp_enqueue_style( 'shadcn-side-cart', get_template_directory_uri() . '/assets/css/side-cart.css', array( 'shadcn-woocommerce' ), wp_get_theme()->get( 'Version' ) );
+
+		if ( function_exists( 'is_account_page' ) && is_account_page() && is_user_logged_in() ) {
+			wp_enqueue_script(
+				'shadcn-my-account-nav-mobile',
+				get_template_directory_uri() . '/assets/js/my-account-nav-mobile.js',
+				array(),
+				wp_get_theme()->get( 'Version' ),
+				true
+			);
+		}
 	}
 
 	/**
@@ -200,6 +211,32 @@ class WooCommerce {
 		$customer_data['username'] = sanitize_user( $customer_data['email'], true );
 
 		return $customer_data;
+	}
+
+	/**
+	 * Keep "My Subscriptions" above "Log out" in My Account navigation.
+	 *
+	 * @param array<string, string> $items Account endpoint menu items.
+	 * @return array<string, string>
+	 */
+	public function reorder_my_account_menu_items( $items ) {
+		if ( ! isset( $items['my-subscriptions'], $items['customer-logout'] ) ) {
+			return $items;
+		}
+
+		$subscriptions_label = $items['my-subscriptions'];
+		unset( $items['my-subscriptions'] );
+
+		$reordered = array();
+		foreach ( $items as $endpoint => $label ) {
+			if ( 'customer-logout' === $endpoint ) {
+				$reordered['my-subscriptions'] = $subscriptions_label;
+			}
+
+			$reordered[ $endpoint ] = $label;
+		}
+
+		return $reordered;
 	}
 
 	/**
