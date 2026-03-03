@@ -1,0 +1,103 @@
+{
+    "packages": [
+        {
+            "name": "forumpay/payment-gateway-php-client",
+            "version": "v1.5.1",
+            "version_normalized": "1.5.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/forumpay/payment-gateway-php-client.git",
+                "reference": "92c05ebc40c9651ce16e9e007ec0536a78f4c449"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/forumpay/payment-gateway-php-client/zipball/92c05ebc40c9651ce16e9e007ec0536a78f4c449",
+                "reference": "92c05ebc40c9651ce16e9e007ec0536a78f4c449",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "php": ">=7.4",
+                "psr/log": ">=1.1.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.6.0",
+                "symplify/easy-coding-standard": "^9.3.10"
+            },
+            "time": "2026-02-05T11:44:58+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "ForumPay\\PaymentGateway\\PHPClient\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Payment Gateway PHP Api Client",
+            "support": {
+                "issues": "https://github.com/forumpay/payment-gateway-php-client/issues",
+                "source": "https://github.com/forumpay/payment-gateway-php-client/tree/v1.5.1"
+            },
+            "install-path": "../forumpay/payment-gateway-php-client"
+        },
+        {
+            "name": "psr/log",
+            "version": "3.0.2",
+            "version_normalized": "3.0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/log.git",
+                "reference": "f16e1d5863e37f8d8c2a01719f5b34baa2b714d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/f16e1d5863e37f8d8c2a01719f5b34baa2b714d3",
+                "reference": "f16e1d5863e37f8d8c2a01719f5b34baa2b714d3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0.0"
+            },
+            "time": "2024-09-11T13:17:53+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.x-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Log\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for logging libraries",
+            "homepage": "https://github.com/php-fig/log",
+            "keywords": [
+                "log",
+                "psr",
+                "psr-3"
+            ],
+            "support": {
+                "source": "https://github.com/php-fig/log/tree/3.0.2"
+            },
+            "install-path": "../psr/log"
+        }
+    ],
+    "dev": false,
+    "dev-package-names": []
+}

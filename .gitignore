@@ -1,0 +1,17 @@
+# Environment secrets
+.env
+.DS_Store
+
+# WordPress core files (optional - uncomment if you want to exclude them from version control)
+# wordpress/wp-includes/
+# wordpress/wp-admin/
+
+# WordPress uploads
+wordpress/wp-content/uploads/
+
+# Logs
+*.log
+
+# Next.js frontend
+nextjs/
+molecule-nextpresser-frontend/

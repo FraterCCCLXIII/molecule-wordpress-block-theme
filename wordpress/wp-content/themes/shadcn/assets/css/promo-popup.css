@@ -1,0 +1,159 @@
+.molecule-promo-popup[hidden] {
+  display: none !important;
+}
+
+.molecule-promo-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.molecule-promo-popup__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 0.75);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.molecule-promo-popup__dialog {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 32rem);
+  margin-inline: 1rem;
+  background: var(--background);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) + 2px);
+  box-shadow: 0 25px 70px rgb(0 0 0 / 0.3);
+  padding: 2rem;
+}
+
+.molecule-promo-popup__logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.molecule-promo-popup__logo .custom-logo-link {
+  display: inline-flex;
+  align-items: center;
+}
+
+.molecule-promo-popup__logo .custom-logo {
+  width: auto;
+  height: 2rem;
+  max-height: 2rem;
+}
+
+.molecule-promo-popup__fallback-logo {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.molecule-promo-popup__intro {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.molecule-promo-popup__title {
+  margin: 0 0 1rem;
+  font-size: var(--wp--preset--font-size--lg);
+  line-height: var(--text-lg--line-height);
+}
+
+.molecule-promo-popup__copy {
+  margin: 0;
+  font-size: var(--wp--preset--font-size--sm);
+  line-height: var(--text-sm--line-height);
+  color: var(--muted-foreground);
+}
+
+.molecule-promo-popup__actions {
+  margin: 0 0 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.molecule-promo-popup__button {
+  flex: 1;
+  min-height: 2.75rem;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px !important;
+  border: 1px solid transparent;
+  padding: 0.75rem 1rem;
+  font-size: var(--wp--preset--font-size--base);
+  line-height: var(--text-base--line-height);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--default-transition-duration)
+      var(--default-transition-timing-function),
+    color var(--default-transition-duration)
+      var(--default-transition-timing-function);
+}
+
+.molecule-promo-popup__button--decline {
+  background: var(--secondary);
+  color: var(--secondary-foreground);
+  border-color: var(--border);
+}
+
+.molecule-promo-popup__button--decline:hover,
+.molecule-promo-popup__button--decline:focus-visible {
+  background: color-mix(in oklab, var(--secondary) 82%, transparent);
+}
+
+.molecule-promo-popup__button--accept {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.molecule-promo-popup__button--accept:hover,
+.molecule-promo-popup__button--accept:focus-visible {
+  background: color-mix(in oklab, var(--primary) 86%, transparent);
+}
+
+.molecule-promo-popup__remember {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.molecule-promo-popup__remember-input {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+}
+
+.molecule-promo-popup__remember-label {
+  font-size: var(--wp--preset--font-size--sm);
+  color: var(--foreground);
+  cursor: pointer;
+}
+
+.molecule-promo-popup__disclaimer {
+  border-top: 1px solid var(--border);
+  margin-top: 1rem;
+  padding-top: 1rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--muted-foreground);
+}
+
+body.molecule-promo-popup-open {
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .molecule-promo-popup__dialog {
+    padding: 2rem;
+  }
+}

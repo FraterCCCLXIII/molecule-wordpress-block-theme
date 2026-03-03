@@ -1,0 +1,353 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ForumPay\PaymentGateway\PHPClient;
+
+use ForumPay\PaymentGateway\PHPClient\Api\ApiCaller;
+use ForumPay\PaymentGateway\PHPClient\Http\Exception\ApiExceptionInterface;
+use ForumPay\PaymentGateway\PHPClient\Http\HttpClient;
+use ForumPay\PaymentGateway\PHPClient\Http\HttpClientInterface;
+use ForumPay\PaymentGateway\PHPClient\Map\Actions;
+use ForumPay\PaymentGateway\PHPClient\Response\CancelPaymentResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\CheckPaymentResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\Factory\ResponseFactory;
+use ForumPay\PaymentGateway\PHPClient\Response\GetCurrencyListResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\GetRateResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\GetRatesResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\GetTransactionsResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\GetWalletAppsResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\PingResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\RequestKycResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\StartPaymentResponse;
+use Psr\Log\LoggerInterface;
+
+class PaymentGatewayApi implements PaymentGatewayApiInterface
+{
+    public const VERSION = '1.5.1';
+
+    private const DEFAULT_LOCALE = 'en-GB';
+
+    private ApiCaller $apiCaller;
+
+    private string $locale;
+
+    private ResponseFactory $responseFactory;
+
+    public function __construct(
+        string $paymentGatewayUri,
+        string $apiUser,
+        string $apiSecret,
+        string $userAgentApplicationIdentifier,
+        string $locale = self::DEFAULT_LOCALE,
+        ?HttpClientInterface $httpClient = null,
+        ?LoggerInterface $logger = null
+    ) {
+        $httpClient = $httpClient ?? new HttpClient($userAgentApplicationIdentifier);
+        $httpClient->setLogger($logger);
+        $this->apiCaller = new ApiCaller(
+            $paymentGatewayUri,
+            $apiUser,
+            $apiSecret,
+            $httpClient,
+            $logger
+        );
+        $this->locale = $locale;
+        $this->responseFactory = new ResponseFactory(
+            $logger
+        );
+    }
+
+    /**
+     * @throws ApiExceptionInterface
+     */
+    public function ping(?string $webhook = null): PingResponse
+    {
+        $httpResult = $this->apiCaller->get(
+            Actions::PING,
+            []
+            + ($webhook !== null ? [
+                'webhook_url' => $webhook,
+            ] : [])
+        );
+
+        return $this->responseFactory->createPingResponse($httpResult);
+    }
+
+    /**
+     * @throws ApiExceptionInterface
+     */
+    public function getRate(
+        string $posId,
+        string $invoiceCurrency,
+        string $invoiceAmount,
+        string $currency,
+        string $acceptZeroConfirmations,
+        ?string $requireKytForConfirmation,
+        ?string $walletAppId,
+        ?string $sid,
+        ?string $user = null
+    ): GetRateResponse {
+        $httpResult = $this->apiCaller->get(
+            Actions::GET_RATE,
+            [
+                'pos_id' => $posId,
+                'invoice_currency' => $invoiceCurrency,
+                'invoice_amount' => $invoiceAmount,
+                'currency' => $currency,
+                'accept_zero_confirmations' => $acceptZeroConfirmations,
+                'require_kyt_for_confirmation' => $requireKytForConfirmation,
+                'wallet_app_id' => $walletAppId,
+                'sid' => $sid,
+                'locale' => $this->locale,
+            ] + ($user !== null ? [
+                'user' => $user,
+            ] : [])
+        );
+
+        return $this->responseFactory->createGetRateResponse($httpResult);
+    }
+
+    /**
+     * Get rates for multiple cryptocurrencies
+     *
+     * @throws ApiExceptionInterface
+     */
+    public function getRates(
+        string $posId,
+        string $invoiceCurrency,
+        string $invoiceAmount,
+        string $currencies,
+        ?string $acceptZeroConfirmations = null,
+        ?string $requireKytForConfirmation = null,
+        ?string $walletAppId = null,
+        ?string $sid = null,
+        ?string $user = null
+    ): GetRatesResponse {
+        $httpResult = $this->apiCaller->get(
+            Actions::GET_RATES,
+            [
+                'pos_id' => $posId,
+                'invoice_currency' => $invoiceCurrency,
+                'invoice_amount' => $invoiceAmount,
+                'currencies' => $currencies,
+                'accept_zero_confirmations' => $acceptZeroConfirmations,
+                'require_kyt_for_confirmation' => $requireKytForConfirmation,
+                'wallet_app_id' => $walletAppId,
+                'sid' => $sid,
+                'locale' => $this->locale,
+            ] + ($user !== null ? [
+                'user' => $user,
+            ] : [])
+        );
+
+        return $this->responseFactory->createGetRatesResponse($httpResult);
+    }
+
+    /**
+     * @throws ApiExceptionInterface
+     */
+    public function startPayment(
+        string $posId,
+        string $invoiceCurrency,
+        string $paymentId,
+        string $invoiceAmount,
+        string $currency,
+        ?string $referenceNo,
+        string $acceptZeroConfirmations,
+        ?string $payerIpAddress,
+        ?string $payerEmail,
+        ?string $payerId,
+        string $autoAcceptUnderpayment,
+        string $autoAcceptUnderpaymentMin,
+        string $autoAcceptOverpayment,
+        ?string $payerUserAgent,
+        ?string $walletAppId,
+        ?string $sid,
+        ?string $requireKytForConfirmation,
+        ?string $user = null,
+        ?string $payerKycPin = null,
+        string $autoAcceptLatePayment = 'false',
+        ?string $webhookUrl = null,
+        ?string $onSuccessRedirectUrl = null,
+        ?string $onFailureRedirectUrl = null,
+        ?string $autoAcceptOverpaymentMax = null,
+        ?array $payer = null
+    ): StartPaymentResponse {
+        $httpResult = $this->apiCaller->post(
+            Actions::START_PAYMENT,
+            [
+                'pos_id' => $posId,
+                'invoice_currency' => $invoiceCurrency,
+                'payment_id' => $paymentId,
+                'invoice_amount' => $invoiceAmount,
+                'currency' => $currency,
+                'reference_no' => $referenceNo,
+                'accept_zero_confirmations' => $acceptZeroConfirmations,
+                'payer_ip_address' => $payerIpAddress,
+                'payer_email' => $payerEmail,
+                'payer_id' => $payerId,
+                'auto_accept_underpayment' => $autoAcceptUnderpayment,
+                'auto_accept_underpayment_min' => $autoAcceptUnderpaymentMin,
+                'auto_accept_overpayment' => $autoAcceptOverpayment,
+                'auto_accept_late_payment' => $autoAcceptLatePayment,
+                'payer_user_agent' => $payerUserAgent,
+                'wallet_app_id' => $walletAppId,
+                'sid' => $sid,
+                'require_kyt_for_confirmation' => $requireKytForConfirmation,
+                'locale' => $this->locale,
+            ] + ($user !== null ? [
+                'user' => $user,
+            ] : []) + ($payerKycPin !== null ? [
+                'payer_kyc_pin' => $payerKycPin,
+            ] : []) + ($webhookUrl !== null ? [
+                'webhook_url' => $webhookUrl,
+            ] : []) + ($onSuccessRedirectUrl !== null ? [
+                'on_success_redirect_url' => $onSuccessRedirectUrl,
+            ] : []) + ($onFailureRedirectUrl !== null ? [
+                'on_failure_redirect_url' => $onFailureRedirectUrl,
+            ] : []) + ($autoAcceptOverpaymentMax !== null ? [
+                'auto_accept_overpayment_max' => $autoAcceptOverpaymentMax,
+            ] : []) + ($payer !== null ? $payer : [])
+        );
+
+        return $this->responseFactory->createStartPaymentResponse($httpResult);
+    }
+
+    /**
+     * @throws ApiExceptionInterface
+     */
+    public function checkPayment(
+        string $posId,
+        string $currency,
+        string $paymentId,
+        string $address,
+        ?string $user = null
+    ): CheckPaymentResponse {
+        $httpResult = $this->apiCaller->get(
+            Actions::CHECK_PAYMENT,
+            [
+                'pos_id' => $posId,
+                'currency' => $currency,
+                'payment_id' => $paymentId,
+                'address' => $address,
+                'locale' => $this->locale,
+            ] + ($user !== null ? [
+                'user' => $user,
+            ] : [])
+        );
+
+        return $this->responseFactory->createCheckPaymentResponse($httpResult);
+    }
+
+    /**
+     * @throws ApiExceptionInterface
+     */
+    public function getTransactions(
+        ?int $offset = null,
+        ?int $limit = null,
+        ?string $referenceNo = null,
+        ?string $user = null
+    ): GetTransactionsResponse {
+        $httpResult = $this->apiCaller->get(
+            Actions::GET_TRANSACTIONS,
+            [
+                'offset' => $offset,
+                'limit' => $limit,
+                'reference_no' => $referenceNo,
+                'locale' => $this->locale,
+            ] + ($user !== null ? [
+                'user' => $user,
+            ] : [])
+        );
+
+        return $this->responseFactory->createGetTransactionsResponse($httpResult);
+    }
+
+    /**
+     * @throws ApiExceptionInterface
+     */
+    public function cancelPayment(
+        string $posId,
+        string $currency,
+        string $paymentId,
+        string $address,
+        string $reason,
+        string $comment,
+        ?string $user = null
+    ): CancelPaymentResponse {
+        $httpResult = $this->apiCaller->get(
+            Actions::CANCEL_PAYMENT,
+            [
+                'pos_id' => $posId,
+                'currency' => $currency,
+                'payment_id' => $paymentId,
+                'address' => $address,
+                'reason' => $reason,
+                'comment' => $comment,
+                'locale' => $this->locale,
+            ] + ($user !== null ? [
+                'user' => $user,
+            ] : [])
+        );
+
+        return $this->responseFactory->createCancelPaymentResponse($httpResult);
+    }
+
+    /**
+     * @throws ApiExceptionInterface
+     */
+    public function getCurrencyList(
+        string $invoiceCurrency,
+        ?string $user = null
+    ): GetCurrencyListResponse {
+        $httpResult = $this->apiCaller->get(
+            Actions::GET_CURRENCY_LIST,
+            [
+                'invoice_currency' => $invoiceCurrency,
+                'locale' => $this->locale,
+            ] + ($user !== null ? [
+                'user' => $user,
+            ] : [])
+        );
+
+        return $this->responseFactory->createGetCurrencyListResponse($httpResult);
+    }
+
+    /**
+     * @throws ApiExceptionInterface
+     */
+    public function requestKyc(
+        string $email,
+        ?string $user = null
+    ): RequestKycResponse {
+        $httpResult = $this->apiCaller->post(
+            Actions::REQUEST_KYC,
+            [
+                'email' => $email,
+                'locale' => $this->locale,
+            ] + ($user !== null ? [
+                'user' => $user,
+            ] : [])
+        );
+
+        return $this->responseFactory->createRequestKycResponse($httpResult);
+    }
+
+    /**
+     * Get a list of all possible wallet apps
+     *
+     * @throws ApiExceptionInterface
+     */
+    public function getWalletApps(): GetWalletAppsResponse
+    {
+        $httpResult = $this->apiCaller->get(
+            Actions::GET_WALLET_APPS,
+            [
+                'locale' => $this->locale,
+            ]
+        );
+
+        return $this->responseFactory->createGetWalletAppsResponse($httpResult);
+    }
+}

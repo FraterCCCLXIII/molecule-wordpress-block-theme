@@ -1,0 +1,104 @@
+# Copyright (C) 2026 bPlugins
+# This file is distributed under the GPLv3.
+msgid ""
+msgstr ""
+"Project-Id-Version: Carousel Block 1.2.1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/b-carousel-block\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-02-10T05:21:22+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: carousel-block\n"
+
+#. Plugin Name of the plugin
+#: index.php
+#: includes/admin/SubMenu.php:15
+msgid "Carousel Block"
+msgstr ""
+
+#. Description of the plugin
+#: index.php
+msgid "Create stunning responsive carousels effortlessly."
+msgstr ""
+
+#. Author of the plugin
+#: index.php
+msgid "bPlugins"
+msgstr ""
+
+#. Author URI of the plugin
+#: index.php
+msgid "https://bplugins.com"
+msgstr ""
+
+#: includes/admin/CPT.php:23
+msgid "Help & Demos - Carousel"
+msgstr ""
+
+#: includes/admin/CPT.php:24
+msgid "Help & Demos"
+msgstr ""
+
+#: includes/admin/CPT.php:44
+#: includes/admin/CPT.php:45
+#: includes/Patterns.php:19
+msgid "Carousel"
+msgstr ""
+
+#: includes/admin/CPT.php:46
+#: includes/admin/CPT.php:47
+msgid "Add New"
+msgstr ""
+
+#: includes/admin/CPT.php:48
+msgid "Edit"
+msgstr ""
+
+#: includes/admin/CPT.php:49
+msgid "New"
+msgstr ""
+
+#: includes/admin/CPT.php:50
+msgid "View"
+msgstr ""
+
+#: includes/admin/CPT.php:51
+msgid "Search"
+msgstr ""
+
+#: includes/admin/CPT.php:52
+msgid "Sorry, we couldn't find the that you are looking for."
+msgstr ""
+
+#: includes/admin/SubMenu.php:14
+msgid "Carousel Block - bPlugins"
+msgstr ""
+
+#: build/block.json
+msgctxt "block title"
+msgid "Carousel"
+msgstr ""
+
+#: build/block.json
+msgctxt "block description"
+msgid " Create stunning responsive carousels effortlessly."
+msgstr ""
+
+#: build/block.json
+msgctxt "block keyword"
+msgid "image slider"
+msgstr ""
+
+#: build/block.json
+msgctxt "block keyword"
+msgid "logo carousel"
+msgstr ""
+
+#: build/block.json
+msgctxt "block keyword"
+msgid "client logo slider"
+msgstr ""

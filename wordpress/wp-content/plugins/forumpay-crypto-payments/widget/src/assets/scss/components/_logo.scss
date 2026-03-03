@@ -1,0 +1,28 @@
+.forumpay-pgw {
+  &-logo {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    margin-top: 28px;
+    width: 100%;
+
+    &-img {
+      width: auto;
+      height: 25px!important;
+    }
+
+    &-powered-by {
+      display: flex;
+      flex-direction: row;
+      justify-content: start;
+      align-items: center;
+      color: var(--wlx-gray-2);
+      margin-left: 3px;
+
+      &-copy {
+        font-size: 10px;
+      }
+    }
+  }
+}

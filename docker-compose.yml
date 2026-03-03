@@ -1,0 +1,41 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: molecule_test2_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - wp_network
+
+  wordpress:
+    image: wordpress:latest
+    container_name: molecule_test2_wp
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "8085:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_TABLE_PREFIX: wp_
+    volumes:
+      - ./wordpress:/var/www/html
+      - ./php.ini:/usr/local/etc/php/conf.d/uploads.ini
+    networks:
+      - wp_network
+
+volumes:
+  db_data:
+
+networks:
+  wp_network:
+    driver: bridge

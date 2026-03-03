@@ -1,0 +1,41 @@
+<?php return array(
+    'root' => array(
+        'name' => 'forumpay/forumpay-wordpress',
+        'pretty_version' => '0.0.1',
+        'version' => '0.0.1.0',
+        'reference' => null,
+        'type' => 'wordpress-plugin',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'dev' => false,
+    ),
+    'versions' => array(
+        'forumpay/forumpay-wordpress' => array(
+            'pretty_version' => '0.0.1',
+            'version' => '0.0.1.0',
+            'reference' => null,
+            'type' => 'wordpress-plugin',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'forumpay/payment-gateway-php-client' => array(
+            'pretty_version' => 'v1.5.1',
+            'version' => '1.5.1.0',
+            'reference' => '92c05ebc40c9651ce16e9e007ec0536a78f4c449',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../forumpay/payment-gateway-php-client',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'psr/log' => array(
+            'pretty_version' => '3.0.2',
+            'version' => '3.0.2.0',
+            'reference' => 'f16e1d5863e37f8d8c2a01719f5b34baa2b714d3',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../psr/log',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+    ),
+);

@@ -1,0 +1,127 @@
+/* ==========================================================================
+Side Cart (Xootix) Theme Overrides
+========================================================================== */
+
+/* Make side-cart open/close feel snappier than plugin defaults. */
+.xoo-wsc-container,
+.xoo-wsc-slider,
+.xoo-wsc-basket {
+  transition-duration: 0.2s !important;
+  transition-timing-function: var(--default-transition-timing-function) !important;
+}
+
+.xoo-wsc-opac {
+  transition: height 0s 0.2s, opacity 0.2s 0s !important;
+}
+
+.xoo-wsc-cart-active .xoo-wsc-opac {
+  transition: height 0s 0s, opacity 0.2s !important;
+}
+
+/* Match side-cart icon with the header cart outline icon. */
+.xoo-wsc-container .xoo-wsc-bki,
+.xoo-wsc-container .xoo-wsch-bki {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  font-size: 0;
+  line-height: 0;
+}
+
+.xoo-wsc-container .xoo-wsc-bki::before,
+.xoo-wsc-container .xoo-wsch-bki::before {
+  content: "";
+  display: block;
+  width: 1.6rem;
+  height: 1.6rem;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 1.6rem 1.6rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' stroke-width='2' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M12 8H3.902a2 2 0 0 0-1.937 2.497l2.238 8.7A2 2 0 0 0 6.14 20.7h11.72a2 2 0 0 0 1.937-1.503l2.238-8.7A2 2 0 0 0 20.098 8H12Zm0 0V2' stroke='%23111827' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* Remove icon + count pill at top of side-cart header. */
+.xoo-wsc-container .xoo-wsch-basket {
+  display: none !important;
+}
+
+/* Match side-cart close button with mobile nav close style. */
+.xoo-wsc-container .xoo-wsch-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.25rem;
+  border-radius: calc(var(--radius) - 2px);
+  color: #111827;
+  background: transparent;
+  font-size: 0;
+  line-height: 0;
+  cursor: pointer;
+}
+
+.xoo-wsc-container .xoo-wsch-close::before {
+  content: "";
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 1rem 1rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' stroke-width='2' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='m18 6-12 12M6 6l12 12' stroke='%23111827' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+.xoo-wsc-container .xoo-wsch-close:hover,
+.xoo-wsc-container .xoo-wsch-close:focus-visible {
+  background-color: #f3f4f6;
+}
+
+/* Keep side-cart action buttons consistent with global pill button style. */
+.xoo-wsc-container .xoo-wsc-ft-btn,
+.xoo-wsc-container .xoo-wsc-btn {
+  border-radius: 9999px !important;
+}
+
+/* Secondary side-cart actions: outlined grey, white fill, light-grey hover. */
+.xoo-wsc-container .xoo-wsc-ft-btn-cart,
+.xoo-wsc-container .xoo-wsc-ft-btn-continue {
+  border: 1px solid var(--border) !important;
+  background-color: var(--background) !important;
+  color: #000000 !important;
+}
+
+.xoo-wsc-container .xoo-wsc-ft-btn-cart:hover,
+.xoo-wsc-container .xoo-wsc-ft-btn-cart:focus-visible,
+.xoo-wsc-container .xoo-wsc-ft-btn-continue:hover,
+.xoo-wsc-container .xoo-wsc-ft-btn-continue:focus-visible {
+  background-color: var(--accent) !important;
+  color: #000000 !important;
+}
+
+/* Remove "View Cart" and "Continue Shopping" from side-cart footer. */
+.xoo-wsc-container .xoo-wsc-ft-btn-cart,
+.xoo-wsc-container .xoo-wsc-ft-btn-continue {
+  display: none !important;
+}
+
+/* Keep checkout as a single full-width footer action. */
+.xoo-wsc-container .xoo-wsc-ft-btn-checkout {
+  width: 100%;
+}
+
+/* Side-cart helper text: smaller and muted. */
+.xoo-wsc-container .xoo-wsc-footer-txt {
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+/* Preserve contrast + focus visibility for keyboard accessibility. */
+.xoo-wsc-container .xoo-wsc-ft-btn:focus-visible,
+.xoo-wsc-container .xoo-wsc-btn:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}

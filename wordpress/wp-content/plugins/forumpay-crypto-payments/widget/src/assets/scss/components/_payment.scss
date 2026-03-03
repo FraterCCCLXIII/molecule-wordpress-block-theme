@@ -1,0 +1,273 @@
+.forumpay-pgw {
+  &-payment {
+    .forumpay-pgw-container--gap {
+      gap: 20px;
+    }
+
+    &-header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      &-circle {
+        height: 25px;
+        width: 25px;
+        background-color: var(--pgw-color-warning-1);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      &-icon-qr {
+        width: 12px;
+        height: 12px;
+      }
+
+      &-amount {
+        &-total {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          font-weight: 800;
+          font-size: 1.0em;
+
+          &-icon {
+            width: 25px;
+            height: 25px;
+            margin-left: 5px;
+          }
+        }
+      }
+    }
+
+    hr {
+      margin: 0px -20px;
+    }
+
+    &-qr {
+      display: block;
+      margin: 0 auto;
+      width: 65%;
+    }
+
+    &-return-qr {
+      margin: 0 auto;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      img {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+      }
+    }
+
+    &-backup-qr {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      button {
+        background-color: var(--pgw-color-white);
+        color: var(--pgw-color-primary);
+        border: 1px solid var(--pgw-color-primary);
+        border-radius: 5px;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 4px 10px;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+
+      img {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+      }
+
+      button:hover {
+        color: var(--pgw-color-text-primary);
+      }
+
+      &-help-text {
+        color: var(--pgw-color-gray-2);
+        font-size: 11px;
+        font-weight: 600;
+        padding-right: 10px;
+
+        &--pointer {
+          cursor: pointer;
+        }
+      }
+    }
+
+    &-notice {
+      color: var(--pgw-color-text-primary);
+      text-align: center;
+      font-size: 13px;
+      font-weight: 800;
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    &-link-wrapper {
+      display: flex;
+    }
+
+    &-details {
+      display: flex;
+      align-items: center;
+
+      &-text {
+        color: var(--pgw-color-gray-2);
+        font-size: 11px;
+        font-weight: 600;
+      }
+
+      &-info {
+        position: relative;
+
+        &:hover {
+          .forumpay-pgw-payment-details-info-tooltip {
+            display: block;
+          }
+        }
+
+        img {
+          margin-left: 5px;
+          width: 24px;
+          height: 24px;
+        }
+
+        &-tooltip {
+          display: none;
+          min-width: 200px;
+          padding: 15px;
+          margin-top: -10px;
+          position: absolute;
+          right: -10px;
+          z-index: 10;
+
+          p {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--pgw-color-gray-2);
+            text-align: left;
+            margin: 0;
+          }
+        }
+      }
+    }
+
+    &-amount {
+      &-label {
+        box-sizing: border-box;
+        font-weight: 800;
+        font-size: 14px;
+      }
+
+      &-field {
+        box-sizing: border-box;
+        padding: 10px;
+        display: flex;
+        width: 100%;
+        background-color: rgba(236, 236, 236, 0.788);
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 5px;
+
+        span {
+          box-sizing: border-box;
+          font-weight: 600;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 85%;
+          display: inline-block;
+        }
+
+          &-copy_button:focus {
+             outline: 0;
+          }
+
+        &--address {
+          span {
+            font-size: 13px;
+          }
+        }
+        &--beneficiary-details {
+          span {
+            font-size: 13px;
+          }
+        }
+      }
+    }
+
+    &-confirm {
+      color: var(--pgw-color-gray-2);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    &-transaction {
+      cursor: pointer;
+      text-align: right;
+      padding-top: 10px;
+
+      span {
+        padding: 10px;
+        color: var(--pgw-color-gray-2);
+        font-size: 13px;
+        font-weight: 600;
+
+        &::after {
+          content: "";
+          border: solid var(--pgw-color-gray-2);
+          border-width: 0 2px 2px 0;
+          display: inline-block;
+          padding: 2px;
+          margin: 0 0 3px 5px;
+          transform: rotate(45deg);
+        }
+      }
+
+      &-content {
+        &-ul {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+        }
+
+        &-li {
+          display: flex;
+          justify-content: space-between;
+          list-style: none;
+          margin: 0;
+          border-bottom: 1px solid var(--pgw-color-gray-4);
+          padding: 10px 0;
+
+          &__title-font {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--pgw-color-text-primary);
+          }
+
+          &__data-font {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--pgw-color-text-primary);
+          }
+        }
+
+        &__margin {
+          margin: 10px 0 10px 0;
+        }
+      }
+    }
+  }
+}

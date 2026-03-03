@@ -1,0 +1,259 @@
+{
+  "apiVersion": 2,
+  "name": "bicb/carousel",
+  "title": "Carousel",
+  "description": " Create stunning responsive carousels effortlessly.",
+  "category": "widgets",
+  "keywords": [
+    "image slider",
+    "logo carousel",
+    "client logo slider"
+  ],
+  "version": "1.2.1",
+  "textdomain": "carousel-block",
+  "attributes": {
+    "align": {
+      "type": "string",
+      "default": ""
+    },
+    "layout": {
+      "type": "string",
+      "default": ""
+    },
+    "carousels": {
+      "type": "array",
+      "default": [
+        {
+          "image": {
+            "id": null,
+            "url": "https://placehold.co/809x500/f96c96/fff/svg",
+            "alt": "LightCrimson",
+            "title": ""
+          },
+          "action": "none",
+          "link": "",
+          "caption": "LightCrimson"
+        },
+        {
+          "image": {
+            "id": null,
+            "url": "https://placehold.co/809x500/20b759/fff/svg",
+            "alt": "Green (Crayola)",
+            "title": ""
+          },
+          "action": "none",
+          "link": "",
+          "caption": "Green (Crayola)"
+        },
+        {
+          "image": {
+            "id": null,
+            "url": "https://placehold.co/809x500/0c8af0/fff/svg",
+            "alt": "Azure",
+            "title": ""
+          },
+          "action": "none",
+          "link": "",
+          "caption": "Azure"
+        },
+        {
+          "image": {
+            "id": null,
+            "url": "https://placehold.co/809x500/f29830/fff/svg",
+            "alt": "Deep Saffron",
+            "title": ""
+          },
+          "action": "none",
+          "link": "",
+          "caption": "Deep Saffron"
+        },
+        {
+          "image": {
+            "id": null,
+            "url": "https://placehold.co/809x500/9791fb/fff/svg",
+            "alt": "Maximum Blue Purple",
+            "title": ""
+          },
+          "action": "none",
+          "link": "",
+          "caption": "Maximum Blue Purple"
+        }
+      ]
+    },
+    "width": {
+      "type": "object",
+      "default": {
+        "desktop": "100%",
+        "tablet": "100%",
+        "mobile": "100%"
+      }
+    },
+    "height": {
+      "type": "object",
+      "default": {
+        "desktop": "",
+        "tablet": "",
+        "mobile": ""
+      }
+    },
+    "elements": {
+      "type": "object",
+      "default": {
+        "linkNewTab": false,
+        "linkOn": "image"
+      }
+    },
+    "alignment": {
+      "type": "string",
+      "default": "center"
+    },
+    "carouselOptions": {
+      "type": "object",
+      "default": {
+        "columns": {
+          "desktop": 3,
+          "tablet": 2,
+          "mobile": 1
+        },
+        "columnGap": 30,
+        "rows": {
+          "desktop": 3
+        },
+        "rowGap": 5,
+        "rowHeights": [
+          "200px",
+          "240px",
+          "180px"
+        ],
+        "isLoop": true,
+        "allowTouchMove": false,
+        "speed": 1.5,
+        "scrollSpeed": 40,
+        "autoplayOptions": {
+          "enabled": true,
+          "delay": 1.5,
+          "disableOnInteraction": false,
+          "reverseDirection": false,
+          "pauseOnMouseEnter": false,
+          "stopOnLastSlide": false
+        },
+        "freeMode": {
+          "enabled": false,
+          "sticky": false
+        },
+        "effect": "slide",
+        "mousewheel": {
+          "enabled": false
+        },
+        "pagination": {
+          "inTablet": true,
+          "inMobile": true,
+          "clickable": true,
+          "dynamicBullets": false,
+          "border": {}
+        },
+        "navigation": {
+          "inTablet": true,
+          "inMobile": true
+        }
+      }
+    },
+    "background": {
+      "type": "object",
+      "default": {
+        "color": "#0000"
+      }
+    },
+    "padding": {
+      "type": "object",
+      "default": {
+        "vertical": "30px",
+        "horizontal": "10px"
+      }
+    },
+    "isPage": {
+      "type": "boolean",
+      "default": true
+    },
+    "pageSize": {
+      "type": "string",
+      "default": "12px"
+    },
+    "pageColor": {
+      "type": "string",
+      "default": "#146ef5"
+    },
+    "isPrevNext": {
+      "type": "boolean",
+      "default": true
+    },
+    "prevNextSize": {
+      "type": "string",
+      "default": "25px"
+    },
+    "prevNextColor": {
+      "type": "string",
+      "default": "#fff"
+    },
+    "image": {
+      "type": "object",
+      "default": {
+        "width": "100%"
+      }
+    },
+    "caption": {
+      "type": "object",
+      "default": {
+        "display": "none",
+        "position": "onImage",
+        "verticalAlign": "bottom",
+        "typo": {
+          "fontSize": {
+            "desktop": 16,
+            "tablet": 15,
+            "mobile": 15
+          }
+        },
+        "textAlign": "left",
+        "colors": {
+          "color": "#fff",
+          "bg": "#0000"
+        },
+        "overlay": {
+          "type": "gradient",
+          "gradient": "linear-gradient(0deg, #000 0%, #0000 50%, #0000 100%)"
+        },
+        "padding": {
+          "top": "5px",
+          "right": "8px",
+          "bottom": "5px",
+          "left": "8px"
+        }
+      }
+    }
+  },
+  "supports": {
+    "align": [
+      "wide",
+      "full"
+    ],
+    "html": false
+  },
+  "example": {
+    "attributes": {
+      "preview": true
+    }
+  },
+  "editorScript": [
+    "file:./index.js",
+    "wp-api",
+    "wp-util"
+  ],
+  "editorStyle": "file:./index.css",
+  "style": "file:./view.css",
+  "render": "file:./render.php",
+  "viewScript": [
+    "file:./view.js",
+    "wp-util"
+  ]
+}

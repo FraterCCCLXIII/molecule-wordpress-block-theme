@@ -1,0 +1,154 @@
+.forumpay-pgw {
+  &-dropdown {
+    position: relative;
+    width: 100% !important;
+    max-width: 100% !important;
+
+    &-selected {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 15px;
+
+      span {
+        white-space: nowrap;
+        font-weight: 500;
+      }
+
+      img {
+        width: 18px;
+        height: 18px;
+      }
+    }
+
+    &-field {
+      justify-content: space-between;
+      box-sizing: border-box;
+      display: flex !important;
+      flex-direction: row;
+      width: 100% !important;
+      max-width: 100% !important;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: -0.080px;
+      padding: 8px 16px;
+      border: 0;
+      border-bottom: 1px solid #f8f9fa;
+      white-space: normal;
+      cursor: pointer;
+      align-items: center;
+      float: none !important;
+      background-color: var(--pgw-color-white);
+      border-radius: 0;
+      margin-bottom: 0;
+
+      img {
+        width: 25px;
+        height: 25px;
+      }
+
+      &:hover,
+      &.active-field {
+        background-color: var(--pgw-color-background-tertiary);
+      }
+    }
+
+    &-label {
+      display: block !important;
+      text-align: left !important;
+      float: none !important;
+      width: 100% !important;
+      padding: 0 !important;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 3px;
+      color: var(--pgw-color-black);
+
+      span {
+        color: var(--pgw-color-gray-2);
+        font-weight: 400;
+      }
+    }
+
+    &-search {
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      text-align: left !important;
+      background-color: var(--pgw-color-gray-3) !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-height: 36px;
+      max-height: 36px;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 1.4;
+      padding: 8px 10px;
+      border: 1px solid transparent !important;
+      border-radius: var(--pgw-default-radius-1);
+      white-space: normal;
+      margin-bottom: 0;
+      float: none !important;
+      box-shadow: none !important;
+
+      &::after {
+        box-sizing: border-box;
+        content: "\276F";
+        color: #bbb;
+        padding: 4px;
+        transform: rotate(90deg) scale(0.9);
+        text-align: center;
+        cursor: default;
+        opacity: 0.7;
+      }
+
+      input {
+        overflow: auto;
+        width: 100% !important;
+        max-width: 100% !important;
+        border: none !important;
+        background-color: var(--pgw-color-gray-3);
+        box-shadow: none !important;
+        float: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: auto !important;
+        min-height: auto !important;
+
+        &:focus {
+          border: none !important;
+          box-shadow: none !important;
+        }
+      }
+
+      &:focus-within {
+        outline: 1px solid var(--pgw-color-gray-4) !important;
+      }
+    }
+
+    &-list {
+      max-height: 200px;
+      background-color: var(--pgw-color-white);
+      box-shadow: 0 5px 15px hsla(0, 0%, 0.1%, 0.1);
+      overflow: auto;
+      position: absolute;
+      z-index: 10;
+      width: 100% !important;
+      margin-top: 1px;
+      border-bottom-left-radius: 15px;
+      border-bottom-right-radius: 15px;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      mark {
+        background: rgba(125, 168, 208, 0.2);
+        color: var(--pgw-color-gray-1);
+      }
+    }
+  }
+}

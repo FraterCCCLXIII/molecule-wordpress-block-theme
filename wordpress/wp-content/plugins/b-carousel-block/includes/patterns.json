@@ -1,0 +1,242 @@
+[
+	{
+		"name": "bicb-patterns/default",
+		"title": "Carousel- Default",
+		"description": "Carousel Default skin",
+		"type": "patterns",
+		"categories": [
+			"slider",
+			"carousel"
+		],
+		"keywords": [
+			"slider",
+			"carousel block",
+			"carousel slider"
+		],
+		"blockTypes": [
+			"bicb/carousel"
+		],
+		"pro": false,
+		"content": "<!-- wp:bicb/carousel {\"carousels\":[{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/JtoU4Gt.jpeg\",\"alt\":\"\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Green Leafed Plant\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/Rzt48K3.jpeg\",\"alt\":\"Green Grass Field\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Green Grass Field\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/bpJqk36.jpeg\",\"alt\":\"White Daisy On Grass\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"White Daisy on Grass\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/osdXVcc.jpeg\",\"alt\":\"Wheat Plants\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Wheat Plants\"}],\"pageColor\":\"rgba(255, 255, 255, 1)\",\"prevNextColor\":\"rgba(255, 255, 255, 1)\"} /-->"
+	},
+	{
+		"name": "bicb-patterns/caption",
+		"title": "Carousel- Caption",
+		"description": "Carousel with Caption",
+		"type": "patterns",
+		"categories": [
+			"slider",
+			"carousel"
+		],
+		"keywords": [
+			"slider",
+			"carousel block",
+			"carousel slider"
+		],
+		"blockTypes": [
+			"bicb/carousel"
+		],
+		"pro": false,
+		"content": "<!-- wp:bicb/carousel {\"carousels\":[{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/JtoU4Gt.jpeg\",\"alt\":\"\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Green Leafed Plant\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/Rzt48K3.jpeg\",\"alt\":\"Green Grass Field\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Green Grass Field\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/bpJqk36.jpeg\",\"alt\":\"White Daisy On Grass\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"White Daisy on Grass\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/osdXVcc.jpeg\",\"alt\":\"Wheat Plants\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Wheat Plants\"}],\"pageColor\":\"rgba(255, 255, 255, 1)\",\"prevNextColor\":\"rgba(255, 255, 255, 1)\",\"caption\":{\"display\":\"normal\",\"position\":\"onImage\",\"verticalAlign\":\"bottom\",\"typo\":{\"fontSize\":{\"desktop\":16,\"tablet\":15,\"mobile\":15}},\"textAlign\":\"left\",\"colors\":{\"color\":\"#fff\",\"bg\":\"#0000\"},\"overlay\":{\"type\":\"gradient\",\"gradient\":\"linear-gradient(0deg, #000 0%, #0000 50%, #0000 100%)\"},\"padding\":{\"top\":\"5px\",\"right\":\"8px\",\"bottom\":\"5px\",\"left\":\"8px\"}}} /-->"
+	},
+	{
+		"name": "bicb-patterns/hover-caption",
+		"title": "Carousel- Caption on Hover",
+		"description": "Carousel with Caption on Hover",
+		"type": "patterns",
+		"categories": [
+			"slider",
+			"carousel"
+		],
+		"keywords": [
+			"slider",
+			"carousel block",
+			"carousel slider"
+		],
+		"blockTypes": [
+			"bicb/carousel"
+		],
+		"pro": true,
+		"content": "<!-- wp:bicb/carousel {\"carousels\":[{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/JtoU4Gt.jpeg\",\"alt\":\"\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Green Leafed Plant\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/Rzt48K3.jpeg\",\"alt\":\"Green Grass Field\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Green Grass Field\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/bpJqk36.jpeg\",\"alt\":\"White Daisy On Grass\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"White Daisy on Grass\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/osdXVcc.jpeg\",\"alt\":\"Wheat Plants\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Wheat Plants\"}],\"pageColor\":\"rgba(255, 255, 255, 1)\",\"prevNextColor\":\"rgba(255, 255, 255, 1)\",\"caption\":{\"display\":\"hover\",\"position\":\"onImage\",\"verticalAlign\":\"bottom\",\"typo\":{\"fontSize\":{\"desktop\":16,\"tablet\":15,\"mobile\":15}},\"textAlign\":\"left\",\"colors\":{\"color\":\"#fff\",\"bg\":\"#0000\"},\"overlay\":{\"type\":\"gradient\",\"gradient\":\"linear-gradient(0deg, #000 0%, #0000 50%, #0000 100%)\"},\"padding\":{\"top\":\"5px\",\"right\":\"8px\",\"bottom\":\"5px\",\"left\":\"8px\"}}} /-->"
+	},
+	{
+		"name": "bicb-patterns/center-caption",
+		"title": "Carousel- Center Caption",
+		"description": "Carousel with center caption",
+		"type": "patterns",
+		"categories": [
+			"slider",
+			"carousel"
+		],
+		"keywords": [
+			"slider",
+			"carousel block",
+			"carousel slider"
+		],
+		"blockTypes": [
+			"bicb/carousel"
+		],
+		"pro": false,
+		"content": "<!-- wp:bicb/carousel {\"carousels\":[{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/JtoU4Gt.jpeg\",\"alt\":\"\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Green Leafed Plant\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/Rzt48K3.jpeg\",\"alt\":\"Green Grass Field\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Green Grass Field\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/bpJqk36.jpeg\",\"alt\":\"White Daisy On Grass\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"White Daisy on Grass\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/osdXVcc.jpeg\",\"alt\":\"Wheat Plants\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Wheat Plants\"}],\"pageColor\":\"rgba(255, 255, 255, 1)\",\"prevNextColor\":\"rgba(255, 255, 255, 1)\",\"caption\":{\"display\":\"normal\",\"position\":\"onImage\",\"verticalAlign\":\"center\",\"typo\":{\"fontSize\":{\"desktop\":20,\"tablet\":15,\"mobile\":15}},\"textAlign\":\"center\",\"colors\":{\"color\":\"#fff\",\"bg\":\"#0000\"},\"overlay\":{\"type\":\"solid\",\"gradient\":\"linear-gradient(0deg, #000 0%, #0000 50%, #0000 100%)\",\"color\":\"rgba(0, 0, 0, 0.2)\"},\"padding\":{\"top\":\"5px\",\"right\":\"8px\",\"bottom\":\"5px\",\"left\":\"8px\"}}} /-->"
+	},
+	{
+		"name": "bicb-patterns/bellow-caption",
+		"title": "Carousel- Bellow Caption",
+		"description": "Carousel with caption bellow of the image",
+		"type": "patterns",
+		"categories": [
+			"slider",
+			"carousel"
+		],
+		"keywords": [
+			"slider",
+			"carousel block",
+			"carousel slider"
+		],
+		"blockTypes": [
+			"bicb/carousel"
+		],
+		"pro": true,
+		"content": "<!-- wp:bicb/carousel {\"carousels\":[{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/JtoU4Gt.jpeg\",\"alt\":\"\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Green Leafed Plant\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/Rzt48K3.jpeg\",\"alt\":\"Green Grass Field\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Green Grass Field\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/bpJqk36.jpeg\",\"alt\":\"White Daisy On Grass\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"White Daisy on Grass\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/osdXVcc.jpeg\",\"alt\":\"Wheat Plants\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Wheat Plants\"}],\"pageColor\":\"rgba(255, 255, 255, 1)\",\"prevNextColor\":\"rgba(255, 255, 255, 1)\",\"caption\":{\"display\":\"normal\",\"position\":\"bellowImage\",\"verticalAlign\":\"bottom\",\"typo\":{\"fontSize\":{\"desktop\":16,\"tablet\":15,\"mobile\":15},\"lineHeight\":\"185%\"},\"textAlign\":\"left\",\"colors\":{\"color\":\"#fff\",\"bg\":\"rgba(0, 0, 0, 1)\"},\"overlay\":{\"type\":\"gradient\",\"gradient\":\"linear-gradient(0deg, #000 0%, #0000 50%, #0000 100%)\"},\"padding\":{\"top\":\"5px\",\"right\":\"8px\",\"bottom\":\"5px\",\"left\":\"8px\"}}} /-->"
+	},
+	{
+		"name": "bicb-patterns/lightbox",
+		"title": "Carousel- Lightbox",
+		"description": "Carousel with image in lightbox",
+		"type": "patterns",
+		"categories": [
+			"slider",
+			"carousel"
+		],
+		"keywords": [
+			"slider",
+			"carousel block",
+			"carousel slider"
+		],
+		"blockTypes": [
+			"bicb/carousel"
+		],
+		"pro": true,
+		"content": "<!-- wp:bicb/carousel {\"carousels\":[{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/JtoU4Gt.jpeg\",\"alt\":\"\",\"title\":\"\"},\"action\":\"lightbox\",\"link\":\"\",\"caption\":\"Green Leafed Plant\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/Rzt48K3.jpeg\",\"alt\":\"Green Grass Field\",\"title\":\"\"},\"action\":\"lightbox\",\"link\":\"\",\"caption\":\"Green Grass Field\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/bpJqk36.jpeg\",\"alt\":\"White Daisy On Grass\",\"title\":\"\"},\"action\":\"lightbox\",\"link\":\"\",\"caption\":\"White Daisy on Grass\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/osdXVcc.jpeg\",\"alt\":\"Wheat Plants\",\"title\":\"\"},\"action\":\"lightbox\",\"link\":\"\",\"caption\":\"Wheat Plants\"}],\"pageColor\":\"rgba(255, 255, 255, 1)\",\"prevNextColor\":\"rgba(255, 255, 255, 1)\"} /-->"
+	},
+	{
+		"name": "bicb-patterns/fade",
+		"title": "Carousel- Fade",
+		"description": "Carousel Fade effect",
+		"type": "patterns",
+		"categories": [
+			"slider",
+			"carousel"
+		],
+		"keywords": [
+			"slider",
+			"carousel block",
+			"carousel slider"
+		],
+		"blockTypes": [
+			"bicb/carousel"
+		],
+		"pro": false,
+		"content": "<!-- wp:bicb/carousel {\"carousels\":[{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/JtoU4Gt.jpeg\",\"alt\":\"\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Green Leafed Plant\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/Rzt48K3.jpeg\",\"alt\":\"Green Grass Field\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Green Grass Field\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/bpJqk36.jpeg\",\"alt\":\"White Daisy On Grass\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"White Daisy on Grass\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/osdXVcc.jpeg\",\"alt\":\"Wheat Plants\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Wheat Plants\"}],\"height\":{\"desktop\":\"450px\",\"tablet\":\"400px\",\"mobile\":\"350px\"},\"carouselOptions\":{\"columns\":{\"desktop\":1,\"tablet\":1,\"mobile\":1},\"columnGap\":30,\"isLoop\":true,\"allowTouchMove\":false,\"speed\":1.5,\"autoplayOptions\":{\"enabled\":true,\"delay\":1.5,\"disableOnInteraction\":false,\"reverseDirection\":false,\"pauseOnMouseEnter\":false,\"stopOnLastSlide\":false},\"freeMode\":{\"enabled\":false,\"sticky\":false},\"effect\":\"fade\",\"mousewheel\":{\"enabled\":false},\"pagination\":{\"inTablet\":true,\"inMobile\":true,\"clickable\":true,\"dynamicBullets\":false,\"border\":[]},\"navigation\":{\"inTablet\":true,\"inMobile\":true}},\"pageColor\":\"rgba(255, 255, 255, 1)\",\"prevNextColor\":\"rgba(255, 255, 255, 1)\"} /-->"
+	},
+	{
+		"name": "bicb-patterns/cube",
+		"title": "Carousel- Cube",
+		"description": "Carousel Cube effect",
+		"type": "patterns",
+		"categories": [
+			"slider",
+			"carousel"
+		],
+		"keywords": [
+			"slider",
+			"carousel block",
+			"carousel slider"
+		],
+		"blockTypes": [
+			"bicb/carousel"
+		],
+		"pro": true,
+		"content": "<!-- wp:bicb/carousel {\"carousels\":[{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/JtoU4Gt.jpeg\",\"alt\":\"\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Green Leafed Plant\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/Rzt48K3.jpeg\",\"alt\":\"Green Grass Field\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Green Grass Field\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/bpJqk36.jpeg\",\"alt\":\"White Daisy On Grass\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"White Daisy on Grass\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/osdXVcc.jpeg\",\"alt\":\"Wheat Plants\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Wheat Plants\"}],\"width\":{\"desktop\":\"350px\",\"tablet\":\"350px\",\"mobile\":\"350px\"},\"height\":{\"desktop\":\"400px\",\"tablet\":\"400px\",\"mobile\":\"400px\"},\"carouselOptions\":{\"columns\":{\"desktop\":1,\"tablet\":1,\"mobile\":1},\"columnGap\":30,\"isLoop\":true,\"allowTouchMove\":false,\"speed\":1.5,\"autoplayOptions\":{\"enabled\":true,\"delay\":1.5,\"disableOnInteraction\":false,\"reverseDirection\":false,\"pauseOnMouseEnter\":false,\"stopOnLastSlide\":false},\"freeMode\":{\"enabled\":false,\"sticky\":false},\"effect\":\"cube\",\"mousewheel\":{\"enabled\":false},\"pagination\":{\"inTablet\":true,\"inMobile\":true,\"clickable\":true,\"dynamicBullets\":false,\"border\":[]},\"navigation\":{\"inTablet\":true,\"inMobile\":true}},\"padding\":{\"top\":\"0px\",\"right\":\"50px\",\"bottom\":\"30px\",\"left\":\"50px\"},\"pageColor\":\"rgba(255, 255, 255, 1)\",\"prevNextColor\":\"rgba(255, 255, 255, 1)\"} /-->"
+	},
+	{
+		"name": "bicb-patterns/creative",
+		"title": "Carousel- Creative",
+		"description": "Carousel Creative effect",
+		"type": "patterns",
+		"categories": [
+			"slider",
+			"carousel"
+		],
+		"keywords": [
+			"slider",
+			"carousel block",
+			"carousel slider"
+		],
+		"blockTypes": [
+			"bicb/carousel"
+		],
+		"pro": false,
+		"content": "<!-- wp:bicb/carousel {\"carousels\":[{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/JtoU4Gt.jpeg\",\"alt\":\"\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Green Leafed Plant\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/Rzt48K3.jpeg\",\"alt\":\"Green Grass Field\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Green Grass Field\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/bpJqk36.jpeg\",\"alt\":\"White Daisy On Grass\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"White Daisy on Grass\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/osdXVcc.jpeg\",\"alt\":\"Wheat Plants\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Wheat Plants\"}],\"height\":{\"desktop\":\"450px\",\"tablet\":\"400px\",\"mobile\":\"350px\"},\"carouselOptions\":{\"columns\":{\"desktop\":1,\"tablet\":1,\"mobile\":1},\"columnGap\":30,\"isLoop\":true,\"allowTouchMove\":false,\"speed\":1.5,\"autoplayOptions\":{\"enabled\":true,\"delay\":1.5,\"disableOnInteraction\":false,\"reverseDirection\":false,\"pauseOnMouseEnter\":false,\"stopOnLastSlide\":false},\"freeMode\":{\"enabled\":false,\"sticky\":false},\"effect\":\"creative\",\"mousewheel\":{\"enabled\":false},\"pagination\":{\"inTablet\":true,\"inMobile\":true,\"clickable\":true,\"dynamicBullets\":false,\"border\":[]},\"navigation\":{\"inTablet\":true,\"inMobile\":true}},\"pageColor\":\"rgba(255, 255, 255, 1)\",\"prevNextColor\":\"rgba(255, 255, 255, 1)\"} /-->"
+	},
+	{
+		"name": "bicb-patterns/coverflow",
+		"title": "Carousel- Coverflow",
+		"description": "Carousel Coverflow effect",
+		"type": "patterns",
+		"categories": [
+			"slider",
+			"carousel"
+		],
+		"keywords": [
+			"slider",
+			"carousel block",
+			"carousel slider"
+		],
+		"blockTypes": [
+			"bicb/carousel"
+		],
+		"pro": true,
+		"content": "<!-- wp:bicb/carousel {\"carousels\":[{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/JtoU4Gt.jpeg\",\"alt\":\"\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Green Leafed Plant\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/Rzt48K3.jpeg\",\"alt\":\"Green Grass Field\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Green Grass Field\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/bpJqk36.jpeg\",\"alt\":\"White Daisy On Grass\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"White Daisy on Grass\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/osdXVcc.jpeg\",\"alt\":\"Wheat Plants\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Wheat Plants\"}],\"carouselOptions\":{\"columns\":{\"desktop\":3,\"tablet\":2,\"mobile\":1},\"columnGap\":30,\"isLoop\":true,\"allowTouchMove\":false,\"speed\":1.5,\"autoplayOptions\":{\"enabled\":true,\"delay\":1.5,\"disableOnInteraction\":false,\"reverseDirection\":false,\"pauseOnMouseEnter\":false,\"stopOnLastSlide\":false},\"freeMode\":{\"enabled\":false,\"sticky\":false},\"effect\":\"coverflow\",\"mousewheel\":{\"enabled\":false},\"pagination\":{\"inTablet\":true,\"inMobile\":true,\"clickable\":true,\"dynamicBullets\":false,\"border\":[]},\"navigation\":{\"inTablet\":true,\"inMobile\":true}},\"padding\":{\"vertical\":\"10px\",\"horizontal\":\"0px\"},\"pageColor\":\"rgba(255, 255, 255, 1)\",\"prevNextColor\":\"rgba(69, 39, 164, 1)\"} /-->"
+	},
+	{
+		"name": "bicb-patterns/flip",
+		"title": "Carousel- Flip",
+		"description": "Carousel Flip effect",
+		"type": "patterns",
+		"categories": [
+			"slider",
+			"carousel"
+		],
+		"keywords": [
+			"slider",
+			"carousel block",
+			"carousel slider"
+		],
+		"blockTypes": [
+			"bicb/carousel"
+		],
+		"pro": true,
+		"content": "<!-- wp:bicb/carousel {\"carousels\":[{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/JtoU4Gt.jpeg\",\"alt\":\"\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Green Leafed Plant\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/Rzt48K3.jpeg\",\"alt\":\"Green Grass Field\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Green Grass Field\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/bpJqk36.jpeg\",\"alt\":\"White Daisy On Grass\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"White Daisy on Grass\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/osdXVcc.jpeg\",\"alt\":\"Wheat Plants\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Wheat Plants\"}],\"width\":{\"desktop\":\"350px\",\"tablet\":\"350px\",\"mobile\":\"350px\"},\"height\":{\"desktop\":\"400px\",\"tablet\":\"400px\",\"mobile\":\"400px\"},\"carouselOptions\":{\"columns\":{\"desktop\":1,\"tablet\":1,\"mobile\":1},\"columnGap\":30,\"isLoop\":true,\"allowTouchMove\":false,\"speed\":1.5,\"autoplayOptions\":{\"enabled\":true,\"delay\":1.5,\"disableOnInteraction\":false,\"reverseDirection\":false,\"pauseOnMouseEnter\":false,\"stopOnLastSlide\":false},\"freeMode\":{\"enabled\":false,\"sticky\":false},\"effect\":\"flip\",\"mousewheel\":{\"enabled\":false},\"pagination\":{\"inTablet\":true,\"inMobile\":true,\"clickable\":true,\"dynamicBullets\":false,\"border\":[]},\"navigation\":{\"inTablet\":true,\"inMobile\":true}},\"padding\":{\"top\":\"0px\",\"right\":\"50px\",\"bottom\":\"30px\",\"left\":\"50px\"},\"pageColor\":\"rgba(255, 255, 255, 1)\",\"prevNextColor\":\"rgba(255, 255, 255, 1)\"} /-->"
+	},
+	{
+		"name": "bicb-patterns/cards",
+		"title": "Carousel- Cards",
+		"description": "Carousel Cards effect",
+		"type": "patterns",
+		"categories": [
+			"slider",
+			"carousel"
+		],
+		"keywords": [
+			"slider",
+			"carousel block",
+			"carousel slider"
+		],
+		"blockTypes": [
+			"bicb/carousel"
+		],
+		"pro": true,
+		"content": "<!-- wp:bicb/carousel {\"carousels\":[{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/JtoU4Gt.jpeg\",\"alt\":\"\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Green Leafed Plant\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/Rzt48K3.jpeg\",\"alt\":\"Green Grass Field\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Green Grass Field\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/bpJqk36.jpeg\",\"alt\":\"White Daisy On Grass\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"White Daisy on Grass\"},{\"image\":{\"id\":null,\"url\":\"https://i.imgur.com/osdXVcc.jpeg\",\"alt\":\"Wheat Plants\",\"title\":\"\"},\"action\":\"none\",\"link\":\"\",\"caption\":\"Wheat Plants\"}],\"width\":{\"desktop\":\"350px\",\"tablet\":\"350px\",\"mobile\":\"350px\"},\"height\":{\"desktop\":\"400px\",\"tablet\":\"400px\",\"mobile\":\"400px\"},\"carouselOptions\":{\"columns\":{\"desktop\":1,\"tablet\":1,\"mobile\":1},\"columnGap\":30,\"isLoop\":true,\"allowTouchMove\":false,\"speed\":1.5,\"autoplayOptions\":{\"enabled\":true,\"delay\":1.5,\"disableOnInteraction\":false,\"reverseDirection\":false,\"pauseOnMouseEnter\":false,\"stopOnLastSlide\":false},\"freeMode\":{\"enabled\":false,\"sticky\":false},\"effect\":\"cards\",\"mousewheel\":{\"enabled\":false},\"pagination\":{\"inTablet\":true,\"inMobile\":true,\"clickable\":true,\"dynamicBullets\":false,\"border\":[]},\"navigation\":{\"inTablet\":true,\"inMobile\":true}},\"padding\":{\"top\":\"0px\",\"right\":\"50px\",\"bottom\":\"30px\",\"left\":\"50px\"},\"pageColor\":\"rgba(255, 255, 255, 1)\",\"prevNextColor\":\"rgba(255, 255, 255, 1)\"} /-->"
+	}
+]
