@@ -5,7 +5,7 @@
 .molecule-promo-popup {
   position: fixed;
   inset: 0;
-  z-index: 99999;
+  z-index: 2147483000 !important;
   display: grid;
   place-items: center;
   padding: 1rem;

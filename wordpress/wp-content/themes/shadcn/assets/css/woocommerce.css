@@ -42,7 +42,7 @@ button.single_add_to_cart_button.button.alt.wp-element-button {
   align-items: center;
   column-gap: 12px;
   margin: 0;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 1rem 0.75rem 0;
 }
 
 .single-product .molecule-available-sizes__label {

@@ -18,6 +18,16 @@ Side Cart (Xootix) Theme Overrides
   transition: height 0s 0s, opacity 0.2s !important;
 }
 
+/* Keep the age verification gate above all cart layers until accepted. */
+body.molecule-promo-popup-open .xoo-wsc-opac,
+body.molecule-promo-popup-open .xoo-wsc-container,
+body.molecule-promo-popup-open .xoo-wsc-slider,
+body.molecule-promo-popup-open .xoo-wsc-basket {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
 /* Match side-cart icon with the header cart outline icon. */
 .xoo-wsc-container .xoo-wsc-bki,
 .xoo-wsc-container .xoo-wsch-bki {
