@@ -169,6 +169,15 @@ button.single_add_to_cart_button.button.alt.wp-element-button {
   font-size: 0.875rem;
 }
 
+/* Tighten top spacing on My Account page only. */
+.woocommerce-account main.wp-block-group {
+  margin-top: calc(var(--spacing) * 8) !important;
+}
+
+.woocommerce-account main.wp-block-group > .wp-block-group.alignfull {
+  padding-top: calc(var(--spacing) * 8) !important;
+}
+
 /* Add Lucide-style icons to My Account navigation links. */
 .woocommerce-account .woocommerce-MyAccount-navigation {
   width: 22%;
