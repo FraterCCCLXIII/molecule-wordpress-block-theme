@@ -1799,3 +1799,295 @@ h6,
 .wp-block-heading {
   font-weight: 400 !important;
 }
+
+/* ==========================================================================
+   Search Modal
+   ========================================================================== */
+
+.molecule-search-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0;
+}
+
+.molecule-search-modal.is-open {
+  display: flex;
+}
+
+.molecule-search-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 50%);
+  backdrop-filter: blur(4px);
+}
+
+.molecule-search-modal__container {
+  position: relative;
+  width: min(52rem, 100%);
+  margin: 5rem 1rem 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 1rem;
+  background: #fff;
+  color: #111827;
+  box-shadow:
+    0 25px 50px -12px rgb(0 0 0 / 0.25),
+    0 12px 24px -12px rgb(0 0 0 / 0.2);
+  overflow: hidden;
+}
+
+.molecule-search-modal__header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.molecule-search-modal__input {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0;
+  background: transparent;
+  color: #111827;
+  font-size: 1.125rem !important;
+  font-weight: 400;
+  line-height: 1.75rem;
+  font-family: inherit;
+  outline: none;
+  height: auto !important;
+  box-shadow: none !important;
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  appearance: none;
+}
+
+.molecule-search-modal__input::placeholder {
+  color: #6b7280;
+  opacity: 1;
+}
+
+.molecule-search-modal__input:focus-visible {
+  outline: none;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.molecule-search-modal__input:focus {
+  outline: none;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.molecule-search-modal__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  padding: 0.5rem;
+  border: 0;
+  border-radius: 9999px;
+  background: transparent;
+  color: #374151;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color var(--default-transition-duration)
+    var(--default-transition-timing-function);
+}
+
+.molecule-search-modal__close:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.molecule-search-modal__close svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.molecule-search-modal__results {
+  max-height: 60vh;
+  overflow: auto;
+  padding: 0;
+}
+
+.molecule-search-modal__state {
+  margin: 0;
+  padding: 2rem;
+  color: #6b7280;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.molecule-search-modal__list {
+  display: block;
+  border-top: 1px solid #f3f4f6;
+}
+
+.molecule-search-modal__item {
+  display: block;
+  padding: 1rem;
+  border: 0;
+  border-bottom: 1px solid #f3f4f6;
+  border-radius: 0;
+  background: #fff;
+  color: inherit;
+  text-decoration: none;
+  transition: background-color var(--default-transition-duration)
+    var(--default-transition-timing-function);
+}
+
+.molecule-search-modal__item:last-child {
+  border-bottom: 0;
+}
+
+.molecule-search-modal__item-content {
+  min-width: 0;
+}
+
+.molecule-search-modal__item::before {
+  content: "";
+  display: table;
+}
+
+.molecule-search-modal__item::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.molecule-search-modal__item .molecule-search-modal__thumb {
+  float: left;
+  width: 4rem;
+  height: 4rem;
+  margin-right: 1rem;
+}
+
+.molecule-search-modal__item .molecule-search-modal__item-content {
+  overflow: hidden;
+}
+
+.molecule-search-modal__item-meta {
+  display: flex;
+  align-items: start;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.molecule-search-modal__item:hover,
+.molecule-search-modal__item:focus-visible {
+  border-color: transparent;
+  background: #f9fafb;
+  color: inherit;
+}
+
+.molecule-search-modal__thumb {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 0.5rem;
+  border: 0;
+  overflow: hidden;
+  background: #f3f4f6;
+}
+
+.molecule-search-modal__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.molecule-search-modal__thumb-fallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.molecule-search-modal__item-content {
+  min-width: 0;
+}
+
+.molecule-search-modal__badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  line-height: 1;
+  text-transform: capitalize;
+  border: 0;
+  border-radius: 9999px;
+  padding: 0.25rem 0.5rem;
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.molecule-search-modal__item-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #111827;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.molecule-search-modal__item-excerpt {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: #4b5563;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+body.molecule-search-modal-open {
+  overflow: hidden;
+}
+
+/* Hide Safari/Chromium native search clear icon (blue X). */
+.molecule-search-modal__input::-webkit-search-decoration,
+.molecule-search-modal__input::-webkit-search-cancel-button,
+.molecule-search-modal__input::-webkit-search-results-button,
+.molecule-search-modal__input::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+
+.molecule-search-modal__input::-ms-clear,
+.molecule-search-modal__input::-ms-reveal {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+@media (max-width: 767px) {
+  .molecule-search-modal__container {
+    margin-top: 4rem;
+    margin-inline: 0.75rem;
+    width: calc(100% - 1.5rem);
+  }
+
+  .molecule-search-modal__header {
+    padding: 1rem;
+  }
+
+  .molecule-search-modal__item .molecule-search-modal__thumb {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+}

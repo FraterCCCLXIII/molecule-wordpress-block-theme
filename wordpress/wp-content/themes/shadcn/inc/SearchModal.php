@@ -12,9 +12,12 @@ class SearchModal {
 
 	private const REST_NAMESPACE = 'shadcn/v1';
 	private const REST_ROUTE = '/search';
+	/** @var bool */
+	private $has_rendered_markup = false;
 
 	public function __construct() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_front_assets' ) );
+		add_action( 'wp_body_open', array( $this, 'render_modal_markup' ) );
 		add_action( 'wp_footer', array( $this, 'render_modal_markup' ) );
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 	}
@@ -32,7 +35,7 @@ class SearchModal {
 			get_template_directory_uri() . '/assets/js/search-modal.js',
 			array(),
 			$script_ver,
-			true
+			false
 		);
 
 		wp_localize_script(
@@ -150,6 +153,12 @@ class SearchModal {
 		if ( is_admin() ) {
 			return;
 		}
+
+		if ( $this->has_rendered_markup ) {
+			return;
+		}
+
+		$this->has_rendered_markup = true;
 		?>
 		<div class="molecule-search-modal" data-search-modal hidden>
 			<div class="molecule-search-modal__backdrop" data-search-modal-close></div>
@@ -157,14 +166,14 @@ class SearchModal {
 				<h2 id="molecule-search-modal-title" class="screen-reader-text"><?php esc_html_e( 'Site search', 'shadcn' ); ?></h2>
 				<div class="molecule-search-modal__header">
 					<input
-						type="search"
+						type="text"
 						class="molecule-search-modal__input"
 						data-search-modal-input
 						placeholder="<?php esc_attr_e( 'Search products, pages, and articles...', 'shadcn' ); ?>"
 						autocomplete="off"
 					/>
 					<button type="button" class="molecule-search-modal__close" data-search-modal-close aria-label="<?php esc_attr_e( 'Close search', 'shadcn' ); ?>">
-						<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+						<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
 							<line x1="15" y1="5" x2="5" y2="15"></line>
 							<line x1="5" y1="5" x2="15" y2="15"></line>
 						</svg>

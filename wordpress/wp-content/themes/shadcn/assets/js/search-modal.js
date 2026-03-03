@@ -2,13 +2,13 @@
 	function initSearchModal() {
 		var modal = document.querySelector( '[data-search-modal]' );
 		var triggerForms = document.querySelectorAll(
-			'.molecule-header-search form, .molecule-top-nav .wp-block-search form'
+			'.molecule-header-search form, .molecule-top-nav .wp-block-search form, .molecule-top-nav-icons .wp-block-search form'
 		);
 		var triggerButtons = document.querySelectorAll(
-			'.molecule-header-search .wp-block-search__button, .molecule-top-nav .wp-block-search__button'
+			'.molecule-header-search .wp-block-search__button, .molecule-top-nav .wp-block-search__button, .molecule-top-nav-icons .wp-block-search__button'
 		);
 		var triggerLinks = document.querySelectorAll(
-			'.molecule-top-nav a.molecule-icon-link[aria-label="Search"], .molecule-top-nav a[href*="?s="][aria-label="Search"]'
+			'.molecule-top-nav a.molecule-icon-link[aria-label="Search"], .molecule-top-nav a[href*="?s="][aria-label="Search"], .molecule-top-nav-icons a.molecule-icon-link[aria-label="Search"], .molecule-top-nav-icons a[href*="?s="][aria-label="Search"], .molecule-mobile-drawer-quick-icons a[aria-label="Search"]'
 		);
 		if (
 			! modal ||
@@ -223,7 +223,9 @@
 					return;
 				}
 
-				link = link.closest( '.molecule-top-nav a' );
+				link = link.closest(
+					'.molecule-top-nav a, .molecule-top-nav-icons a, .molecule-mobile-drawer-quick-icons a'
+				);
 				if ( ! link ) {
 					return;
 				}
@@ -252,7 +254,10 @@
 					return;
 				}
 
-				if ( ! form.closest( '.molecule-top-nav .wp-block-search' ) ) {
+				if (
+					! form.closest( '.molecule-top-nav .wp-block-search' ) &&
+					! form.closest( '.molecule-top-nav-icons .wp-block-search' )
+				) {
 					return;
 				}
 
