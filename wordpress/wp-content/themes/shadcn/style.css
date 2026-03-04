@@ -777,8 +777,8 @@ body.admin-bar .molecule-top-nav {
 
 .molecule-desktop-navigation > a:hover,
 .molecule-desktop-navigation > a:focus-visible {
-  background-color: var(--accent);
-  color: var(--accent-foreground, #111827);
+  background-color: #f3f4f6;
+  color: #111827;
 }
 
 /* PHP dropdown wrapper */
@@ -805,8 +805,8 @@ body.admin-bar .molecule-top-nav {
 
 .molecule-desktop-dropdown-toggle:hover,
 .molecule-desktop-dropdown-toggle:focus-visible {
-  background-color: var(--accent);
-  color: var(--accent-foreground, #111827);
+  background-color: #f3f4f6;
+  color: #111827;
 }
 
 .molecule-desktop-dropdown-toggle svg {
@@ -828,10 +828,11 @@ body.admin-bar .molecule-top-nav {
   z-index: 1001;
   min-width: 10rem;
   padding: 0.25rem;
-  background-color: var(--popover, #ffffff);
-  border: 1px solid var(--border, #e5e7eb);
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
   border-radius: var(--radius, 0.5rem);
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  overflow: hidden;
 }
 
 /* Transparent bridge so the cursor can travel from toggle to panel */
@@ -859,8 +860,8 @@ body.admin-bar .molecule-top-nav {
 
 .molecule-desktop-dropdown-panel a:hover,
 .molecule-desktop-dropdown-panel a:focus-visible {
-  background-color: var(--accent);
-  color: var(--accent-foreground, #111827);
+  background-color: #f3f4f6;
+  color: #111827;
 }
 
 /* Keep page titles aligned with constrained page content. */

@@ -140,7 +140,7 @@ $cart_count      = ( function_exists( 'WC' ) && WC()->cart )
 					>
 						<?php esc_html_e( 'Research', 'shadcn' ); ?>
 						<svg role="presentation" stroke-width="1.5" focusable="false" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
-							<path d="M1.5 4L6 8L10.5 4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+							<path d="M1.5 4L6 8L10.5 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
 						</svg>
 					</button>
 					<div class="molecule-desktop-dropdown-panel" hidden>
