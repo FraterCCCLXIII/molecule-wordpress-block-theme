@@ -520,6 +520,10 @@ body.admin-bar .molecule-top-nav {
   column-gap: 1rem;
 }
 
+.molecule-top-nav-mobile .molecule-top-nav-icons {
+  justify-content: flex-end;
+}
+
 /* Custom hamburger button */
 .molecule-mobile-menu-button {
   display: inline-flex;
