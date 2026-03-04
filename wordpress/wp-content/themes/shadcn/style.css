@@ -663,25 +663,7 @@ body.admin-bar .molecule-top-nav {
   gap: 0.25rem;
 }
 
-/* core/navigation-link InnerBlocks render a <ul> → <li> structure; flatten it */
-.molecule-mobile-drawer-nav ul,
-.molecule-mobile-drawer-nav ol {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.molecule-mobile-drawer-nav li {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.molecule-mobile-drawer-nav a,
-.molecule-mobile-drawer-nav .wp-block-navigation-item__content {
+.molecule-mobile-drawer-nav a {
   display: block;
   padding: 0.625rem 0.75rem;
   border-radius: calc(var(--radius) - 2px);
@@ -694,9 +676,7 @@ body.admin-bar .molecule-top-nav {
 }
 
 .molecule-mobile-drawer-nav a:hover,
-.molecule-mobile-drawer-nav a:focus-visible,
-.molecule-mobile-drawer-nav .wp-block-navigation-item__content:hover,
-.molecule-mobile-drawer-nav .wp-block-navigation-item__content:focus-visible {
+.molecule-mobile-drawer-nav a:focus-visible {
   background-color: var(--accent);
 }
 
@@ -720,57 +700,6 @@ body.admin-bar .molecule-top-nav {
   margin: 0 !important;
 }
 
-/* Mini-cart button hit area — mirrors .molecule-icon-link sizing. */
-.molecule-header-cart .wc-block-mini-cart__button {
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: calc(var(--radius) - 2px) !important;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: #111827;
-  transition: background-color var(--default-transition-duration)
-    var(--default-transition-timing-function);
-  /* Kill WooCommerce's circle pseudo-element hover layer */
-  position: relative;
-  overflow: hidden;
-}
-
-/* WooCommerce uses ::before for its circle ripple — flatten it to match our square style */
-.molecule-header-cart .wc-block-mini-cart__button::before,
-.molecule-header-cart .wc-block-mini-cart__button::after {
-  content: none !important;
-  display: none !important;
-}
-
-.molecule-header-cart .wc-block-mini-cart__button:hover,
-.molecule-header-cart .wc-block-mini-cart__button:focus-visible {
-  background-color: #f3f4f6 !important;
-  color: #111827;
-  border-radius: calc(var(--radius) - 2px) !important;
-}
-
-.molecule-header-cart .wc-block-mini-cart__badge {
-  background: #000000;
-  color: #ffffff;
-}
-
-/* WooCommerce auto-injects account/cart blocks into navigation.
-   Hide those injected icons to keep a single icon set. */
-.molecule-top-nav-mobile-menu > .wp-block-woocommerce-customer-account,
-.molecule-top-nav-mobile-menu > .wc-block-mini-cart,
-.molecule-top-nav-desktop > .wp-block-woocommerce-customer-account,
-.molecule-top-nav-desktop > .wc-block-mini-cart,
-.molecule-mobile-navigation .wp-block-woocommerce-customer-account,
-.molecule-mobile-navigation .wc-block-mini-cart,
-.molecule-desktop-navigation .wp-block-woocommerce-customer-account,
-.molecule-desktop-navigation .wc-block-mini-cart {
-  display: none !important;
-}
 
 .molecule-icon-link {
   color: #111827;
@@ -819,7 +748,22 @@ body.admin-bar .molecule-top-nav {
   margin-top: 0 !important;
 }
 
-.molecule-desktop-navigation .wp-block-navigation-item__content {
+/* Ensure desktop dropdown panels render above adjacent header content. */
+.molecule-top-nav,
+.molecule-top-nav-inner,
+.molecule-top-nav-desktop,
+.molecule-desktop-navigation {
+  overflow: visible;
+}
+
+/* Desktop nav: flex row of links and dropdown */
+.molecule-desktop-navigation {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.molecule-desktop-navigation > a {
   color: #111827;
   font-size: var(--wp--preset--font-size--sm);
   text-decoration: none;
@@ -829,62 +773,67 @@ body.admin-bar .molecule-top-nav {
     var(--default-transition-timing-function);
 }
 
-.molecule-desktop-navigation .wp-block-navigation-item__content:hover,
-.molecule-desktop-navigation .wp-block-navigation-item__content:focus-visible {
+.molecule-desktop-navigation > a:hover,
+.molecule-desktop-navigation > a:focus-visible {
   background-color: var(--accent);
   color: var(--accent-foreground, #111827);
 }
 
-.molecule-desktop-navigation .wp-block-navigation-item.has-child {
-  display: inline-flex;
-  align-items: center;
+/* PHP dropdown wrapper */
+.molecule-desktop-nav-dropdown {
+  position: relative;
 }
 
-.molecule-desktop-navigation .wp-block-navigation-item.has-child > .wp-block-navigation-item__content {
-  padding-right: 0.2rem;
-}
-
-.molecule-desktop-navigation .wp-block-navigation-submenu__toggle {
-  width: auto;
+/* Dropdown toggle button — same rounded icon-link style */
+.molecule-desktop-dropdown-toggle {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.2rem;
   color: #111827;
-  padding: 0.2rem 0;
+  font-size: var(--wp--preset--font-size--sm);
+  text-decoration: none;
+  padding: 0.375rem 0.5rem;
+  border-radius: calc(var(--radius) - 2px);
+  border: 0;
+  background: transparent;
   cursor: pointer;
+  transition: background-color var(--default-transition-duration)
+    var(--default-transition-timing-function);
 }
 
-.molecule-desktop-navigation .wp-block-navigation-submenu__toggle:hover,
-.molecule-desktop-navigation .wp-block-navigation-submenu__toggle:focus-visible {
-  color: #374151;
+.molecule-desktop-dropdown-toggle:hover,
+.molecule-desktop-dropdown-toggle:focus-visible {
+  background-color: var(--accent);
+  color: var(--accent-foreground, #111827);
 }
 
-.molecule-desktop-navigation .wp-block-navigation-submenu__toggle svg {
+.molecule-desktop-dropdown-toggle svg {
   width: 0.85rem;
   height: 0.85rem;
+  transition: transform var(--default-transition-duration)
+    var(--default-transition-timing-function);
 }
 
-/* Ensure desktop dropdown panels render above adjacent header content. */
-.molecule-top-nav,
-.molecule-top-nav-inner,
-.molecule-top-nav-desktop,
-.molecule-desktop-navigation {
-  overflow: visible;
+.molecule-desktop-nav-dropdown.is-open .molecule-desktop-dropdown-toggle svg {
+  transform: rotate(180deg);
 }
 
-.molecule-desktop-navigation .wp-block-navigation__submenu-container {
+/* Dropdown panel */
+.molecule-desktop-dropdown-panel {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  left: 0;
   z-index: 1001;
-  margin-top: 0.35rem;
+  min-width: 10rem;
   padding: 0.25rem;
   background-color: var(--popover, #ffffff);
   border: 1px solid var(--border, #e5e7eb);
   border-radius: var(--radius, 0.5rem);
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  min-width: 10rem;
 }
 
-/* Transparent bridge so the cursor can travel from nav item to dropdown */
-.molecule-desktop-navigation .wp-block-navigation__submenu-container::before {
+/* Transparent bridge so the cursor can travel from toggle to panel */
+.molecule-desktop-dropdown-panel::before {
   content: "";
   position: absolute;
   left: 0;
@@ -893,15 +842,7 @@ body.admin-bar .molecule-top-nav {
   height: 0.35rem;
 }
 
-/* Dropdown items get the same rounded hover as top-level links */
-.molecule-desktop-navigation .wp-block-navigation__submenu-container
-  > .wp-block-navigation-item {
-  border-radius: calc(var(--radius) - 4px);
-}
-
-.molecule-desktop-navigation .wp-block-navigation__submenu-container
-  > .wp-block-navigation-item
-  > .wp-block-navigation-item__content {
+.molecule-desktop-dropdown-panel a {
   display: block;
   width: 100%;
   padding: 0.375rem 0.5rem;
@@ -914,32 +855,10 @@ body.admin-bar .molecule-top-nav {
     var(--default-transition-timing-function);
 }
 
-.molecule-desktop-navigation .wp-block-navigation__submenu-container
-  > .wp-block-navigation-item
-  > .wp-block-navigation-item__content:hover,
-.molecule-desktop-navigation .wp-block-navigation__submenu-container
-  > .wp-block-navigation-item
-  > .wp-block-navigation-item__content:focus-visible {
+.molecule-desktop-dropdown-panel a:hover,
+.molecule-desktop-dropdown-panel a:focus-visible {
   background-color: var(--accent);
   color: var(--accent-foreground, #111827);
-}
-
-.molecule-desktop-links {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-}
-
-.molecule-desktop-links a {
-  color: #111827;
-  text-decoration: none;
-  font-size: var(--wp--preset--font-size--sm);
-}
-
-.molecule-desktop-links a:hover,
-.molecule-desktop-links a:focus-visible {
-  color: #374151;
 }
 
 /* Keep page titles aligned with constrained page content. */
@@ -1008,70 +927,7 @@ body {
   }
 }
 
-/* Nav outer wrapper has zero side padding at all breakpoints — padding is
-   on .molecule-top-nav-inner instead. This rule must follow the responsive
-   block above so it wins the !important specificity tie. */
-.molecule-top-nav.has-global-padding {
-  padding-right: 0 !important;
-  padding-left: 0 !important;
-}
 
-.molecule-mobile-navigation .wp-block-navigation__responsive-container {
-  background: transparent !important;
-}
-
-.molecule-mobile-navigation
-  .wp-block-navigation__responsive-container.is-menu-open::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: rgb(0 0 0 / 0.5);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  z-index: 1040;
-}
-
-.molecule-mobile-navigation .wp-block-navigation__responsive-close {
-  position: fixed;
-  left: 0;
-  top: 0;
-  bottom: auto;
-  height: 100vh;
-  height: 100dvh;
-  max-height: 100dvh;
-  width: min(85vw, 320px);
-  background: #ffffff;
-  color: #111827;
-  box-shadow: 0 10px 35px rgb(0 0 0 / 0.2);
-  z-index: 1050;
-  padding: 1rem 1.25rem 1.5rem;
-}
-
-.molecule-mobile-navigation .wp-block-navigation__responsive-dialog {
-  height: 100%;
-}
-
-.molecule-mobile-navigation .wp-block-navigation__responsive-container-close {
-  margin-left: auto;
-  border-radius: calc(var(--radius) - 2px);
-}
-
-.molecule-mobile-navigation
-  .wp-block-navigation__responsive-container-content
-  .wp-block-navigation__container {
-  align-items: flex-start;
-  gap: 1.25rem;
-  padding-top: 1rem;
-}
-
-.molecule-mobile-navigation
-  .wp-block-navigation__responsive-container-content
-  .wp-block-navigation-item__content {
-  color: #111827;
-  font-size: 1.35rem;
-  font-weight: 500;
-  text-decoration: none;
-}
 
 
 /* Keep mobile drawer fixed to viewport, not header bounds. */

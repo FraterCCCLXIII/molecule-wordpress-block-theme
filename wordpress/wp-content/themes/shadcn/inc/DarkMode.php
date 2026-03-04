@@ -42,6 +42,16 @@ class DarkMode {
 			$drawer_ver,
 			true
 		);
+
+		$dropdown_script = get_template_directory() . '/assets/js/desktop-dropdown.js';
+		$dropdown_ver    = file_exists( $dropdown_script ) ? (string) filemtime( $dropdown_script ) : $style_version;
+		wp_enqueue_script(
+			'shadcn-desktop-dropdown',
+			get_template_directory_uri() . '/assets/js/desktop-dropdown.js',
+			array(),
+			$dropdown_ver,
+			true
+		);
 	}
 
 	/**

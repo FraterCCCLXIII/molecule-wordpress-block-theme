@@ -7,9 +7,7 @@ use Shadcn\Traits\SingletonTrait;
 class Core {
 	use SingletonTrait;
 
-	private const COMMENTS_MIGRATION_OPTION      = 'shadcn_comments_disabled_for_posts_v1';
-	private const HEADER_NATIVE_MIGRATION_OPTION = 'shadcn_native_header_migrated_v5';
-	private const HEADER_NATIVE_ROLLBACK_OPTION  = 'shadcn_native_header_rollback_v5';
+	private const COMMENTS_MIGRATION_OPTION = 'shadcn_comments_disabled_for_posts_v1';
 
 	public function __construct() {
 		add_action( 'after_setup_theme', array( $this, 'setup_theme' ) );
@@ -17,11 +15,9 @@ class Core {
 		add_action( 'after_setup_theme', array( $this, 'starter_content_setup' ) );
 		add_action( 'init', array( $this, 'close_comments_for_existing_posts_once' ) );
 		add_action( 'after_switch_theme', array( $this, 'close_comments_for_existing_posts' ) );
-		add_action( 'init', array( $this, 'migrate_to_native_header_once' ) );
-		add_filter( 'render_block', array( $this, 'override_mini_cart_icon' ), 20, 2 );
 		add_filter( 'comments_open', array( $this, 'disable_post_comments' ), 20, 2 );
 		add_filter( 'pings_open', array( $this, 'disable_post_comments' ), 20, 2 );
-		add_filter( 'woocommerce_blocks_template_content', array( $this, 'suppress_wc_customer_account_injection' ), 20, 3 );
+		add_filter( 'pre_render_block', array( $this, 'render_php_header' ), 5, 2 );
 
 		require_once __DIR__ . '/Core/Blocks.php';
 		require_once __DIR__ . '/Core/Patterns.php';
@@ -148,193 +144,43 @@ class Core {
 	}
 
 	/**
-	 * One-time migration: replace legacy custom-HTML-block header template parts
-	 * with the canonical native-block content from parts/header.html.
+	 * Intercept the core/template-part "header" slot on the frontend and
+	 * return the output of template-parts/header.php instead.
 	 *
-	 * A full rollback snapshot is saved to the DB before any changes are made.
-	 * To roll back, call rollback_native_header_migration() directly or via
-	 * WP-CLI: wp eval 'Shadcn\Core::get_instance()->rollback_native_header_migration();'
+	 * The block editor (admin + REST requests) is left untouched so the Site
+	 * Editor continues to show the block-based header for reference.
 	 *
-	 * @return void
+	 * @param string|null $pre_render Existing pre-render override (null = none).
+	 * @param array       $block      Parsed block data.
+	 * @return string|null PHP-rendered header HTML, or the original $pre_render.
 	 */
-	public function migrate_to_native_header_once() {
-		if ( get_option( self::HEADER_NATIVE_MIGRATION_OPTION ) ) {
-			return;
+	public function render_php_header( $pre_render, $block ) {
+		if ( 'core/template-part' !== ( $block['blockName'] ?? '' ) ) {
+			return $pre_render;
 		}
 
-		$canonical = $this->get_canonical_header_content();
-
-		if ( empty( $canonical ) ) {
-			return;
+		if ( 'header' !== ( $block['attrs']['slug'] ?? '' ) ) {
+			return $pre_render;
 		}
 
-		$template_parts = get_posts(
-			array(
-				'post_type'      => 'wp_template_part',
-				'post_status'    => 'any',
-				'posts_per_page' => -1,
-				'fields'         => 'ids',
-			)
-		);
-
-		$rollback = array();
-
-		foreach ( $template_parts as $id ) {
-			$content = get_post_field( 'post_content', $id );
-
-			if ( ! is_string( $content ) || '' === $content ) {
-				continue;
-			}
-
-			if ( ! $this->is_legacy_custom_html_header( $content ) ) {
-				continue;
-			}
-
-			$rollback[ $id ] = $content;
-
-			wp_update_post(
-				array(
-					'ID'           => $id,
-					'post_content' => $canonical,
-				)
-			);
+		// Skip override inside the block editor (admin screens) and REST requests.
+		if ( is_admin() ) {
+			return $pre_render;
 		}
 
-		if ( ! empty( $rollback ) ) {
-			update_option( self::HEADER_NATIVE_ROLLBACK_OPTION, $rollback, false );
+		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+			return $pre_render;
 		}
 
-		update_option( self::HEADER_NATIVE_MIGRATION_OPTION, gmdate( 'c' ) );
-	}
+		$template = get_template_directory() . '/template-parts/header.php';
 
-	/**
-	 * Restore the pre-migration header content from the rollback snapshot and
-	 * clear the migration flag so migrate_to_native_header_once() can re-run.
-	 *
-	 * Usage via WP-CLI:
-	 *   wp eval 'Shadcn\Core::get_instance()->rollback_native_header_migration();'
-	 *
-	 * @return bool True if rollback ran, false if no snapshot exists.
-	 */
-	public function rollback_native_header_migration() {
-		$rollback = get_option( self::HEADER_NATIVE_ROLLBACK_OPTION );
-
-		if ( empty( $rollback ) || ! is_array( $rollback ) ) {
-			return false;
+		if ( ! file_exists( $template ) ) {
+			return $pre_render;
 		}
 
-		foreach ( $rollback as $id => $content ) {
-			wp_update_post(
-				array(
-					'ID'           => (int) $id,
-					'post_content' => $content,
-				)
-			);
-		}
-
-		delete_option( self::HEADER_NATIVE_MIGRATION_OPTION );
-
-		return true;
-	}
-
-	/**
-	 * Replace the WooCommerce mini-cart block's default icon SVG with the
-	 * custom stroke-based cart icon used throughout this theme.
-	 *
-	 * Only acts on header cart blocks (identified by molecule-header-cart class).
-	 * Runs on every render but is fast — two early-exit string checks before
-	 * any regex work.
-	 *
-	 * @param string $block_content Rendered block HTML.
-	 * @param array  $block         Parsed block metadata.
-	 * @return string
-	 */
-	public function override_mini_cart_icon( $block_content, $block ) {
-		if ( empty( $block['blockName'] ) || 'woocommerce/mini-cart' !== $block['blockName'] ) {
-			return $block_content;
-		}
-
-		if ( ! is_string( $block_content ) || false === strpos( $block_content, 'molecule-header-cart' ) ) {
-			return $block_content;
-		}
-
-		$custom_svg = '<svg class="wc-block-mini-cart__icon" role="presentation" stroke-width="2" focusable="false" width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">'
-			. '<path d="M11 7H3.577A2 2 0 0 0 1.64 9.497l2.051 8A2 2 0 0 0 5.63 19H16.37a2 2 0 0 0 1.937-1.503l2.052-8A2 2 0 0 0 18.422 7H11Zm0 0V1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>'
-			. '</svg>';
-
-		return preg_replace(
-			'/<svg\b[^>]*class="[^"]*wc-block-mini-cart__icon[^"]*"[^>]*>.*?<\/svg>/s',
-			$custom_svg,
-			$block_content,
-			1
-		);
-	}
-
-	/**
-	 * Prevent WooCommerce from auto-injecting a woocommerce/customer-account
-	 * block into this theme's header template part.
-	 *
-	 * WooCommerce's block template system injects account/cart blocks into FSE
-	 * templates via the `woocommerce_blocks_template_content` filter. This
-	 * theme manages its own icon set (molecule/icon-link) so the injected block
-	 * is redundant and clutters the block editor.
-	 *
-	 * @param string $content     Template content.
-	 * @param object $template    Template object.
-	 * @param array  $template_types Template types.
-	 * @return string
-	 */
-	public function suppress_wc_customer_account_injection( $content, $template, $template_types ) {
-		if ( ! is_string( $content ) ) {
-			return $content;
-		}
-
-		// Only act on the main header template part.
-		if ( false === strpos( $content, 'molecule-top-nav' ) ) {
-			return $content;
-		}
-
-		// Strip any auto-injected standalone customer-account block that WC
-		// places outside of our managed icon group.
-		$content = preg_replace(
-			'/<!-- wp:woocommerce\/customer-account\b[^\/]*\/-->\s*/s',
-			'',
-			$content
-		);
-
-		return $content;
-	}
-
-	/**
-	 * Identify header template part content managed by this theme.
-	 *
-	 * Matches both legacy custom-HTML versions and any canonical native-block
-	 * version so that migration version bumps always update the DB record.
-	 *
-	 * @param string $content Template part post_content.
-	 * @return bool
-	 */
-	private function is_legacy_custom_html_header( $content ) {
-		return false !== strpos( $content, 'molecule-top-nav' )
-			|| false !== strpos( $content, 'molecule-mobile-menu-button' )
-			|| false !== strpos( $content, 'molecule-mobile-drawer' )
-			|| false !== strpos( $content, 'molecule-desktop-links' );
-	}
-
-	/**
-	 * Read the canonical native-block header content from the theme file.
-	 *
-	 * @return string Block markup, or empty string if the file is missing.
-	 */
-	private function get_canonical_header_content() {
-		$path = get_template_directory() . '/parts/header.html';
-
-		if ( ! file_exists( $path ) ) {
-			return '';
-		}
-
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-		return trim( (string) file_get_contents( $path ) );
+		ob_start();
+		include $template;
+		return ob_get_clean();
 	}
 }
 
