@@ -17,7 +17,9 @@ class Core {
 		add_action( 'after_switch_theme', array( $this, 'close_comments_for_existing_posts' ) );
 		add_filter( 'comments_open', array( $this, 'disable_post_comments' ), 20, 2 );
 		add_filter( 'pings_open', array( $this, 'disable_post_comments' ), 20, 2 );
-		add_filter( 'pre_render_block', array( $this, 'render_php_header' ), 5, 2 );
+		// Priority 20 — must run after WordPress core's _wp_add_block_level_preset_styles (priority 10)
+		// which returns null when it receives a non-null value, nullifying any earlier pre-render.
+		add_filter( 'pre_render_block', array( $this, 'render_php_header' ), 20, 2 );
 
 		require_once __DIR__ . '/Core/Blocks.php';
 		require_once __DIR__ . '/Core/Patterns.php';
