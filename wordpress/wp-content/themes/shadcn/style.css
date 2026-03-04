@@ -693,6 +693,8 @@ body.admin-bar .molecule-top-nav {
 }
 
 .molecule-top-nav-icons {
+  display: flex;
+  align-items: center;
   gap: 0.5rem;
 }
 
@@ -923,7 +925,25 @@ body {
 
   .molecule-top-nav-desktop {
     display: flex !important;
+    align-items: center;
+    justify-content: space-between;
     margin-top: 0 !important;
+  }
+
+  /* Give logo and icons equal flex so the nav sits in the true center */
+  .molecule-top-nav-desktop .molecule-top-nav-logo,
+  .molecule-top-nav-desktop .molecule-top-nav-icons {
+    flex: 1;
+  }
+
+  .molecule-top-nav-desktop .molecule-top-nav-logo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .molecule-top-nav-desktop .molecule-top-nav-icons {
+    justify-content: flex-end;
   }
 }
 
