@@ -522,6 +522,7 @@ body.admin-bar .molecule-top-nav {
 
 .molecule-top-nav-mobile .molecule-top-nav-icons {
   justify-content: flex-end;
+  padding-right: 0.25rem;
 }
 
 /* Custom hamburger button */
