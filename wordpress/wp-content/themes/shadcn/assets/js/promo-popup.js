@@ -130,36 +130,12 @@
 			}
 		}
 
-		root.addEventListener( 'click', function( event ) {
-			event.stopPropagation();
-		}, true );
-
-		root.addEventListener( 'keydown', function( event ) {
-			if ( 'Escape' === event.key || 'Esc' === event.key ) {
-				event.stopPropagation();
-			}
-		}, true );
-
-		root.addEventListener( 'keyup', function( event ) {
-			if ( 'Escape' === event.key || 'Esc' === event.key ) {
-				event.stopPropagation();
-			}
-		}, true );
-
-		var backdrop = root.querySelector( '.molecule-promo-popup__backdrop' );
-		if ( backdrop ) {
-			backdrop.addEventListener( 'click', function() {
-				closePopup();
-			} );
-		}
-
 		acceptButton.addEventListener( 'click', function() {
 			if ( rememberInput.checked ) {
 				persistRemembered( config );
 			}
 
 			closePopup();
-			document.dispatchEvent( new CustomEvent( 'molecule-age-gate-accepted' ) );
 		} );
 
 		declineButton.addEventListener( 'click', function() {
