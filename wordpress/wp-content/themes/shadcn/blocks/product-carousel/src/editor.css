@@ -1,0 +1,49 @@
+/* =============================================================================
+   Block: molecule/product-carousel — editor-only styles
+   ============================================================================= */
+
+/* In the block editor the track must not clip to a fixed height — let it
+   wrap or display as a visible row so all skeleton cards are readable.      */
+.molecule-product-carousel__track--editor {
+	overflow: visible;
+	flex-wrap: wrap;
+	padding-bottom: 0.5rem;
+	/* Cancel the negative margin trick used on the frontend */
+	margin-left: 0;
+	padding-left: 0;
+	margin-right: 0;
+	padding-right: 0;
+}
+
+/* Shimmer skeleton for the product image placeholder */
+@keyframes molecule-skeleton-shimmer {
+	0%   { background-position: 200% 0; }
+	100% { background-position: -200% 0; }
+}
+
+.molecule-product-carousel__img-placeholder {
+	position: absolute;
+	inset: 0;
+	border-radius: 0.5rem;
+	background: linear-gradient(
+		90deg,
+		#f3f4f6 25%,
+		#e5e7eb 50%,
+		#f3f4f6 75%
+	);
+	background-size: 200% 100%;
+	animation: molecule-skeleton-shimmer 1.8s ease-in-out infinite;
+}
+
+/* "N more products" overflow card */
+.molecule-product-carousel__more {
+	aspect-ratio: 1 / 1;
+	border-radius: 0.5rem;
+	border: 2px dashed #d1d5db;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #6b7280;
+	font-size: 0.875rem;
+	font-weight: 500;
+}

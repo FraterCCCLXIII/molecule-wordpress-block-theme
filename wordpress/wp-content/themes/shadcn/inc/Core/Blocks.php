@@ -43,6 +43,8 @@ class Blocks {
 
 		register_block_type( get_template_directory() . '/blocks/mobile-drawer' );
 		register_block_type( get_template_directory() . '/blocks/icon-link' );
+		register_block_type( get_template_directory() . '/blocks/product-carousel' );
+		register_block_type( get_template_directory() . '/blocks/features-list' );
 	}
 
 	/**

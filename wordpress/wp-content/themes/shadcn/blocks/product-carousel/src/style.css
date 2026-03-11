@@ -1,0 +1,242 @@
+/* =============================================================================
+   Block: molecule/product-carousel
+   ============================================================================= */
+
+.molecule-product-carousel {
+	width: 100%;
+	padding-top: 3rem;
+	padding-bottom: 4rem;
+	background: #ffffff;
+}
+
+.molecule-product-carousel__inner {
+	max-width: 1280px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 1rem;
+	padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+	.molecule-product-carousel__inner {
+		padding-left: 1.5rem;
+		padding-right: 1.5rem;
+	}
+}
+
+@media (min-width: 1024px) {
+	.molecule-product-carousel__inner {
+		padding-left: 2rem;
+		padding-right: 2rem;
+	}
+}
+
+/* Inner-blocks header area -------------------------------------------------- */
+
+.molecule-product-carousel__header-blocks {
+	margin-bottom: 2rem;
+}
+
+/* Carousel wrapper ---------------------------------------------------------- */
+
+.molecule-product-carousel__wrap {
+	position: relative;
+}
+
+/* Scroll buttons */
+
+.molecule-product-carousel__btn {
+	display: none;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	z-index: 20;
+	background: #ffffff;
+	border: none;
+	border-radius: 9999px;
+	padding: 0.5rem;
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+	cursor: pointer;
+	transition: background-color 0.2s;
+	line-height: 0;
+}
+
+.molecule-product-carousel__btn:hover {
+	background: #f3f4f6;
+}
+
+@media (min-width: 768px) {
+	.molecule-product-carousel__btn {
+		display: block;
+	}
+}
+
+.molecule-product-carousel__btn--left {
+	left: 0;
+}
+
+.molecule-product-carousel__btn--right {
+	right: 0;
+}
+
+/* Scrollable track ---------------------------------------------------------- */
+
+.molecule-product-carousel__track {
+	display: flex;
+	gap: 1.5rem;
+	overflow-x: auto;
+	padding-bottom: 1rem;
+	margin-left: -1rem;
+	padding-left: 1rem;
+	margin-right: -1rem;
+	padding-right: 1rem;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+.molecule-product-carousel__track::-webkit-scrollbar {
+	display: none;
+}
+
+@media (min-width: 768px) {
+	.molecule-product-carousel__track {
+		margin-left: -1.5rem;
+		padding-left: 1.5rem;
+		margin-right: -1.5rem;
+		padding-right: 1.5rem;
+	}
+}
+
+/* Product card -------------------------------------------------------------- */
+
+.molecule-product-carousel__item {
+	flex-shrink: 0;
+	width: 280px;
+}
+
+@media (min-width: 640px) {
+	.molecule-product-carousel__item {
+		width: 320px;
+	}
+}
+
+.molecule-product-carousel__card-group {
+	display: block;
+}
+
+.molecule-product-carousel__image-wrap {
+	position: relative;
+	aspect-ratio: 1 / 1;
+	overflow: hidden;
+	background: #f3f4f6;
+	border-radius: 0.5rem;
+}
+
+.molecule-product-carousel__image-wrap a {
+	display: block;
+	position: absolute;
+	inset: 0;
+}
+
+.molecule-product-carousel__img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+	border-radius: 0.5rem;
+	transition: transform 0.3s ease;
+}
+
+.molecule-product-carousel__card-group:hover .molecule-product-carousel__img {
+	transform: scale(1.05);
+}
+
+.molecule-product-carousel__info-link {
+	display: block;
+	text-decoration: none;
+	color: inherit;
+}
+
+.molecule-product-carousel__info-link:hover {
+	text-decoration: none;
+	color: inherit;
+}
+
+.molecule-product-carousel__info {
+	margin-top: 0.75rem;
+}
+
+.molecule-product-carousel__meta {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 0.75rem;
+}
+
+.molecule-product-carousel__name {
+	font-size: 1rem;
+	font-weight: 600;
+	color: #111827;
+	transition: color 0.2s;
+	margin: 0;
+	cursor: pointer;
+}
+
+.molecule-product-carousel__info-link:hover .molecule-product-carousel__name {
+	color: #4b5563;
+}
+
+.molecule-product-carousel__price {
+	font-size: 0.875rem;
+	font-weight: 600;
+	color: #111827;
+	white-space: nowrap;
+	flex-shrink: 0;
+}
+
+/* Editor placeholder (admin only) ------------------------------------------ */
+
+.molecule-product-carousel__editor-placeholder {
+	border: 2px dashed #d1d5db;
+	border-radius: 0.5rem;
+	padding: 1.5rem 1rem;
+	background: #f9fafb;
+}
+
+.molecule-product-carousel__editor-placeholder-label {
+	font-size: 0.8125rem;
+	color: #6b7280;
+	margin: 0 0 1rem;
+	text-align: center;
+}
+
+.molecule-product-carousel__editor-cards {
+	display: flex;
+	gap: 1rem;
+	overflow: hidden;
+}
+
+.molecule-product-carousel__editor-card {
+	flex-shrink: 0;
+	width: 140px;
+}
+
+.molecule-product-carousel__editor-card-img {
+	aspect-ratio: 1 / 1;
+	border-radius: 0.375rem;
+	background: #e5e7eb;
+	margin-bottom: 0.5rem;
+}
+
+.molecule-product-carousel__editor-card-line {
+	height: 0.75rem;
+	border-radius: 0.25rem;
+	background: #e5e7eb;
+	margin-bottom: 0.375rem;
+}
+
+.molecule-product-carousel__editor-card-line--short {
+	width: 55%;
+}

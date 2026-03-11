@@ -1,0 +1,55 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "molecule/features-list",
+	"version": "1.0.0",
+	"title": "Features List",
+	"category": "molecule",
+	"description": "An interactive features accordion with image switcher — showcase your key selling points with animated image transitions.",
+	"keywords": [ "features", "accordion", "benefits", "why choose", "list" ],
+	"textdomain": "shadcn",
+	"editorScript": "file:./build/index.js",
+	"viewScript": "file:./build/view.js",
+	"viewStyle": "file:./build/style-view.css",
+	"render": "file:./render.php",
+	"attributes": {
+		"heading": {
+			"type": "string",
+			"default": "Why Choose Our Peptides"
+		},
+		"features": {
+			"type": "array",
+			"default": [
+				{
+					"id": 1,
+					"title": "Third-Party Tested",
+					"description": "Every batch of our peptides undergoes independent laboratory testing to verify identity, purity, and composition. We provide full Certificates of Analysis (CoA) for complete transparency.",
+					"iconType": "shield-check",
+					"imageUrl": "https://store.moleculepeptides.com/wp-content/uploads/2025/12/pexels-polina-tankilevitch-3735766.jpg",
+					"imageAlt": "Scientist preparing samples in the lab"
+				},
+				{
+					"id": 2,
+					"title": "USA-Shipped & Fast Delivery",
+					"description": "We ship directly from our U.S. facility, ensuring fast delivery times and eliminating customs clearance delays. Professional packaging and tracking updates ensure your research materials arrive safely and on time.",
+					"iconType": "truck",
+					"imageUrl": "https://store.moleculepeptides.com/wp-content/uploads/2025/12/pexels-polina-tankilevitch-3735769.jpg",
+					"imageAlt": "USA-Shipped & Fast Delivery"
+				},
+				{
+					"id": 3,
+					"title": "Research-Grade Quality",
+					"description": "All products are strictly intended for laboratory research use only. We understand the critical importance of purity and reliability in research applications, ensuring every product meets rigorous quality standards.",
+					"iconType": "microscope",
+					"imageUrl": "https://store.moleculepeptides.com/wp-content/uploads/2025/12/pexels-thirdman-8940517.jpg",
+					"imageAlt": "Research-Grade Quality"
+				}
+			]
+		}
+	},
+	"supports": {
+		"html": false,
+		"inserter": true,
+		"multiple": true
+	}
+}

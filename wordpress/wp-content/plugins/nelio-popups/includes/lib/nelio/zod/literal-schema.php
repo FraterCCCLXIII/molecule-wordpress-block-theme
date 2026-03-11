@@ -1,0 +1,46 @@
+<?php
+
+namespace Nelio_Popups\Zod;
+
+class LiteralSchema extends Schema {
+
+	/** @var string|bool|number */
+	private $value;
+
+	/**
+	 * Creates a literal schema.
+	 *
+	 * @param string|bool|number $value Value.
+	 *
+	 * @return LiteralSchema
+	 */
+	public static function make( $value ) {
+		$instance        = new self();
+		$instance->value = $value;
+		return $instance;
+	}
+
+	public function parse_value( $value ) {
+		if ( gettype( $value ) !== gettype( $this->value ) ) {
+			throw new \Exception(
+				sprintf(
+					'Expected %1$s, but %2$s found.',
+					esc_html( gettype( $this->value ) ),
+					esc_html( gettype( $value ) )
+				)
+			);
+		}
+
+		if ( $value !== $this->value ) {
+			throw new \Exception(
+				sprintf(
+					'Expected %1$s, but %2$s found.',
+					esc_html( $this->value ),
+					esc_html( $value )
+				)
+			);
+		}
+
+		return $value;
+	}
+}
