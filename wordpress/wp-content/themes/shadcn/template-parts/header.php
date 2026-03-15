@@ -63,10 +63,11 @@ if ( class_exists( 'WC_Shipping_Zones' ) ) {
 // Fallback: read free-shipping instance settings directly from wp_options.
 if ( null === $free_shipping_min_amount ) {
 	global $wpdb;
+	$like_pattern = $wpdb->esc_like( 'woocommerce_free_shipping_' ) . '%_settings';
 	$option_rows = $wpdb->get_results(
 		$wpdb->prepare(
 			"SELECT option_value FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name = %s",
-			'woocommerce_free_shipping\_%\_settings',
+			$like_pattern,
 			'woocommerce_free_shipping_settings'
 		)
 	);
@@ -107,6 +108,10 @@ if ( $show_shipping_banner ) {
 }
 ?>
 <style>
+	:root {
+		--molecule-shipping-banner-padding: <?php echo $show_shipping_banner ? '10px' : '0px'; ?>;
+	}
+
 	.molecule-top-nav-announcement {
 		display: flex;
 		align-items: center;

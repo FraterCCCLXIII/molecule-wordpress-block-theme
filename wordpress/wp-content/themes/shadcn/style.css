@@ -451,7 +451,9 @@ input[type="reset"],
 }
 
 .wp-site-blocks {
-  padding-top: var(--molecule-top-nav-offset, 0px);
+  padding-top: calc(
+    var(--molecule-top-nav-offset, 0px) + var(--molecule-shipping-banner-padding, 0px)
+  );
 }
 
 /* Keep separators subtle and flat across patterns/pages. */
