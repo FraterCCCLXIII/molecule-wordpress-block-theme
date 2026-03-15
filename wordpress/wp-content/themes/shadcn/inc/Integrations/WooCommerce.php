@@ -62,17 +62,32 @@ class WooCommerce {
 			return $tabs;
 		}
 
-		if ( isset( $tabs['additional_information'] ) ) {
-			$tabs['additional_information']['title']    = esc_html__( 'Research', 'shadcn' );
-			$tabs['additional_information']['callback'] = array( $this, 'render_additional_information_tab' );
-		}
+		return array(
+			'description' => array(
+				'title'    => esc_html__( 'Description', 'shadcn' ),
+				'priority' => 10,
+				'callback' => array( $this, 'render_description_tab' ),
+			),
+			'research'    => array(
+				'title'    => esc_html__( 'Research', 'shadcn' ),
+				'priority' => 20,
+				'callback' => array( $this, 'render_additional_information_tab' ),
+			),
+			'coa'         => array(
+				'title'    => esc_html__( 'COA', 'shadcn' ),
+				'priority' => 30,
+				'callback' => array( $this, 'render_reviews_tab' ),
+			),
+		);
+	}
 
-		if ( isset( $tabs['reviews'] ) ) {
-			$tabs['reviews']['title']    = esc_html__( 'COA', 'shadcn' );
-			$tabs['reviews']['callback'] = array( $this, 'render_reviews_tab' );
+	/**
+	 * Render the Description tab from product post content.
+	 */
+	public function render_description_tab( $key = '', $tab = array() ) {
+		if ( function_exists( 'woocommerce_product_description_tab' ) ) {
+			woocommerce_product_description_tab();
 		}
-
-		return $tabs;
 	}
 
 	/**
