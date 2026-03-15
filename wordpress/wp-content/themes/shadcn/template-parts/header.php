@@ -36,7 +36,7 @@ if ( class_exists( 'WC_Shipping_Zones' ) ) {
 		$shipping_methods = array_merge( $shipping_methods, $zone['shipping_methods'] );
 	}
 
-	$rest_of_world = new \WC_Shipping_Zone( 0 );
+	$rest_of_world  = new \WC_Shipping_Zone( 0 );
 	$shipping_methods = array_merge( $shipping_methods, $rest_of_world->get_shipping_methods( true ) );
 
 	foreach ( $shipping_methods as $method ) {
@@ -44,13 +44,8 @@ if ( class_exists( 'WC_Shipping_Zones' ) ) {
 			continue;
 		}
 
-		$is_enabled = $method->get_option( 'enabled', 'no' );
+		$is_enabled = (string) $method->get_option( 'enabled', 'no' );
 		if ( 'yes' !== $is_enabled ) {
-			continue;
-		}
-
-		$requires = (string) $method->get_option( 'requires', '' );
-		if ( ! in_array( $requires, array( 'min_amount', 'either', 'both' ), true ) ) {
 			continue;
 		}
 
@@ -61,6 +56,41 @@ if ( class_exists( 'WC_Shipping_Zones' ) ) {
 
 		if ( null === $free_shipping_min_amount || $min_amount < $free_shipping_min_amount ) {
 			$free_shipping_min_amount = $min_amount;
+		}
+	}
+}
+
+// Fallback: read free-shipping instance settings directly from wp_options.
+if ( null === $free_shipping_min_amount ) {
+	global $wpdb;
+	$option_rows = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT option_value FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name = %s",
+			'woocommerce_free_shipping\_%\_settings',
+			'woocommerce_free_shipping_settings'
+		)
+	);
+
+	if ( is_array( $option_rows ) ) {
+		foreach ( $option_rows as $row ) {
+			$settings = maybe_unserialize( $row->option_value ?? null );
+			if ( ! is_array( $settings ) ) {
+				continue;
+			}
+
+			$is_enabled = isset( $settings['enabled'] ) ? (string) $settings['enabled'] : 'yes';
+			if ( 'yes' !== $is_enabled ) {
+				continue;
+			}
+
+			$min_amount = (float) wc_format_decimal( $settings['min_amount'] ?? 0 );
+			if ( $min_amount <= 0 ) {
+				continue;
+			}
+
+			if ( null === $free_shipping_min_amount || $min_amount < $free_shipping_min_amount ) {
+				$free_shipping_min_amount = $min_amount;
+			}
 		}
 	}
 }
@@ -100,6 +130,7 @@ if ( $show_shipping_banner ) {
 		padding-top: 0;
 		padding-bottom: 0;
 		opacity: 0;
+		display: none;
 	}
 </style>
 <header class="molecule-top-nav" role="banner">
