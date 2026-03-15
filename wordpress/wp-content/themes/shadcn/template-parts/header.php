@@ -24,7 +24,36 @@ $cart_count      = ( function_exists( 'WC' ) && WC()->cart )
 	? (int) WC()->cart->get_cart_contents_count()
 	: 0;
 ?>
+<style>
+	.molecule-top-nav-announcement {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: #000000;
+		color: #ffffff;
+		text-align: center;
+		font-size: 0.8125rem;
+		line-height: 1.35;
+		letter-spacing: 0.01em;
+		padding: 0.45rem 1rem;
+		max-height: 3rem;
+		overflow: hidden;
+		transition: max-height var(--default-transition-duration) var(--default-transition-timing-function),
+			padding var(--default-transition-duration) var(--default-transition-timing-function),
+			opacity var(--default-transition-duration) var(--default-transition-timing-function);
+	}
+
+	.molecule-top-nav.is-announcement-hidden .molecule-top-nav-announcement {
+		max-height: 0;
+		padding-top: 0;
+		padding-bottom: 0;
+		opacity: 0;
+	}
+</style>
 <header class="molecule-top-nav" role="banner">
+	<div class="molecule-top-nav-announcement" aria-label="<?php esc_attr_e( 'Shipping announcement', 'shadcn' ); ?>">
+		<?php esc_html_e( 'Free shipping on orders of $350 or more', 'shadcn' ); ?>
+	</div>
 	<div class="molecule-top-nav-inner">
 
 		<?php /* ── Mobile row (3-column grid: hamburger | logo | icons) ── */ ?>

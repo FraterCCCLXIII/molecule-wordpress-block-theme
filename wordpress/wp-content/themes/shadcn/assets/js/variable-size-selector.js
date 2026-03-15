@@ -115,7 +115,7 @@
 		} );
 
 		optionData.forEach( function ( option ) {
-			var button = $( '<button type="button" class="molecule-variable-size-selector__option"></button>' );
+			var button = $( '<button type="button" class="molecule-variable-size-selector__option molecule-available-sizes__option"></button>' );
 			button.attr( 'data-value', option.value );
 			button.attr( 'aria-pressed', 'false' );
 			button.text( option.label );
@@ -123,11 +123,14 @@
 		} );
 
 		$form.addClass( 'molecule-size-enhanced' );
+		$sizeRow.attr( 'hidden', true ).css( 'display', 'none' );
 
 		// Hide the original table only when every row is transformed/hidden.
-		var visibleRows = $form.find( 'table.variations tr' ).not( '.molecule-size-row' );
+		var $table = $form.find( 'table.variations' ).first();
+		var visibleRows = $table.find( 'tr' ).not( '.molecule-size-row' );
 		if ( ! visibleRows.length ) {
 			$form.addClass( 'molecule-hide-variations-table' );
+			$table.attr( 'hidden', true ).css( 'display', 'none' );
 		}
 
 		function syncFromSelect() {

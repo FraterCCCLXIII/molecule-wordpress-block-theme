@@ -334,9 +334,9 @@ class WooCommerce {
 			return;
 		}
 		?>
-		<div class="molecule-variable-size-selector" data-molecule-variable-size-selector>
-			<p class="molecule-variable-size-selector__label"><?php esc_html_e( 'Size', 'shadcn' ); ?></p>
-			<div class="molecule-variable-size-selector__options" role="group" aria-label="<?php esc_attr_e( 'Size options', 'shadcn' ); ?>"></div>
+		<div class="molecule-variable-size-selector molecule-available-sizes" data-molecule-variable-size-selector>
+			<p class="molecule-variable-size-selector__label molecule-available-sizes__label"><?php esc_html_e( 'Size', 'shadcn' ); ?></p>
+			<div class="molecule-variable-size-selector__options molecule-available-sizes__options" role="group" aria-label="<?php esc_attr_e( 'Size options', 'shadcn' ); ?>"></div>
 		</div>
 		<?php
 	}

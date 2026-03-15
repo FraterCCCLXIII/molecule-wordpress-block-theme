@@ -1,4 +1,7 @@
 ( function() {
+	let lastScrollY = 0;
+	let lastKnownAnnouncementHidden = false;
+
 	function getAdminOffset( bodyEl ) {
 		if ( ! bodyEl.classList.contains( 'admin-bar' ) ) {
 			return 0;
@@ -32,8 +35,43 @@
 		);
 	}
 
+	function syncAnnouncementScrollState() {
+		const nav = document.querySelector( '.molecule-top-nav' );
+		if ( ! nav ) {
+			return;
+		}
+
+		const announcement = nav.querySelector( '.molecule-top-nav-announcement' );
+		if ( ! announcement ) {
+			return;
+		}
+
+		const currentScrollY = window.scrollY || 0;
+		const delta = currentScrollY - lastScrollY;
+		const minDelta = 6;
+		const shouldReveal = currentScrollY <= 8 || delta < -minDelta;
+		const shouldHide = currentScrollY > 8 && delta > minDelta;
+
+		if ( shouldReveal ) {
+			nav.classList.remove( 'is-announcement-hidden' );
+		} else if ( shouldHide ) {
+			nav.classList.add( 'is-announcement-hidden' );
+		}
+
+		const isHidden = nav.classList.contains( 'is-announcement-hidden' );
+		if ( isHidden !== lastKnownAnnouncementHidden ) {
+			lastKnownAnnouncementHidden = isHidden;
+			window.setTimeout( syncStickyTopNav, 170 );
+		}
+
+		lastScrollY = currentScrollY;
+	}
+
 	const rafSync = function() {
-		window.requestAnimationFrame( syncStickyTopNav );
+		window.requestAnimationFrame( function() {
+			syncStickyTopNav();
+			syncAnnouncementScrollState();
+		} );
 	};
 
 	if ( document.readyState === 'loading' ) {
@@ -44,4 +82,5 @@
 
 	window.addEventListener( 'load', rafSync );
 	window.addEventListener( 'resize', rafSync, { passive: true } );
+	window.addEventListener( 'scroll', syncAnnouncementScrollState, { passive: true } );
 } )();
