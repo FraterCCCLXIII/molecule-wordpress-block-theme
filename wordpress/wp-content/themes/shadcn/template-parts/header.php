@@ -79,7 +79,7 @@ if ( null === $free_shipping_min_amount ) {
 				continue;
 			}
 
-			$is_enabled = isset( $settings['enabled'] ) ? (string) $settings['enabled'] : 'yes';
+			$is_enabled = isset( $settings['enabled'] ) ? (string) $settings['enabled'] : 'no';
 			if ( 'yes' !== $is_enabled ) {
 				continue;
 			}

@@ -108,8 +108,7 @@ button.single_add_to_cart_button.button.alt.wp-element-button {
 }
 
 .single-product .variations_form.molecule-size-enhanced .single_variation_wrap {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
+  margin-top: 1rem !important;
 }
 
 /* Use only the primary product price block; avoid duplicate variation price
