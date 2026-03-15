@@ -24,6 +24,7 @@ function enqueue_block_editor_assets() {
 	$settings = apply_filters( 'nelio_popups_editor_settings', $settings );
 
 	nelio_popups_enqueue_script( 'popup-editor' );
+	nelio_popups_enqueue_script( 'popup-editor-labels' );
 	wp_add_inline_script(
 		'nelio-popups-popup-editor',
 		sprintf(

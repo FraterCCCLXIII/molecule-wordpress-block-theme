@@ -94,7 +94,28 @@ function get_condition_scripts() {
 		'nelio_popups.is_popup_temporarily_disabled',
 		'nelio_popups/molecule-frequency',
 		function( disabled, popup ) {
-			var freq = popup && popup.config && popup.config.display && popup.config.display.frequency;
+			function getPopupFrequency( currentPopup ) {
+				var freq = currentPopup && currentPopup.config && currentPopup.config.display && currentPopup.config.display.frequency;
+				if ( freq ) {
+					return freq;
+				}
+
+				try {
+					var settings = window.NelioPopupsFrontendSettings;
+					var popups = settings && Array.isArray( settings.popups ) ? settings.popups : [];
+					var id = currentPopup && currentPopup.id;
+					var rawPopup = popups.find( function( candidate ) {
+						return String( candidate && candidate.id ) === String( id );
+					} );
+					return rawPopup && rawPopup.config && rawPopup.config.display
+						? rawPopup.config.display.frequency || null
+						: null;
+				} catch ( e ) {}
+
+				return null;
+			}
+
+			var freq = getPopupFrequency( popup );
 			if ( ! freq || freq.audience === 'always' ) {
 				return disabled;
 			}
@@ -119,7 +140,8 @@ function get_condition_scripts() {
 				var maxVisit = freq.maxDisplaysPerVisit;
 				if ( maxVisit && maxVisit !== 'unlimited' && window.sessionStorage ) {
 					var count = parseInt( sessionStorage.getItem( visitKey ) || '0', 10 );
-					if ( count >= maxVisit ) return true;
+					var maxVisitNum = parseInt( maxVisit, 10 );
+					if ( ! isNaN( maxVisitNum ) && count >= maxVisitNum ) return true;
 				}
 			} catch ( e ) {}
 			return disabled;
@@ -130,7 +152,28 @@ function get_condition_scripts() {
 		'nelio_popups.update_cookies',
 		'nelio_popups/molecule-frequency-cookie',
 		function( popup ) {
-			var freq = popup && popup.config && popup.config.display && popup.config.display.frequency;
+			function getPopupFrequency( currentPopup ) {
+				var freq = currentPopup && currentPopup.config && currentPopup.config.display && currentPopup.config.display.frequency;
+				if ( freq ) {
+					return freq;
+				}
+
+				try {
+					var settings = window.NelioPopupsFrontendSettings;
+					var popups = settings && Array.isArray( settings.popups ) ? settings.popups : [];
+					var id = currentPopup && currentPopup.id;
+					var rawPopup = popups.find( function( candidate ) {
+						return String( candidate && candidate.id ) === String( id );
+					} );
+					return rawPopup && rawPopup.config && rawPopup.config.display
+						? rawPopup.config.display.frequency || null
+						: null;
+				} catch ( e ) {}
+
+				return null;
+			}
+
+			var freq = getPopupFrequency( popup );
 			if ( ! freq || freq.audience === 'always' ) return;
 			var id = popup.id;
 			var cookieName = 'nelio_popup_freq_' + id;

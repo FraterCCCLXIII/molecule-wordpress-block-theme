@@ -23,6 +23,58 @@ $cart_url        = function_exists( 'wc_get_cart_url' )
 $cart_count      = ( function_exists( 'WC' ) && WC()->cart )
 	? (int) WC()->cart->get_cart_contents_count()
 	: 0;
+$free_shipping_min_amount = null;
+
+if ( class_exists( 'WC_Shipping_Zones' ) ) {
+	$shipping_methods = array();
+	$zones            = \WC_Shipping_Zones::get_zones();
+
+	foreach ( $zones as $zone ) {
+		if ( empty( $zone['shipping_methods'] ) || ! is_array( $zone['shipping_methods'] ) ) {
+			continue;
+		}
+		$shipping_methods = array_merge( $shipping_methods, $zone['shipping_methods'] );
+	}
+
+	$rest_of_world = new \WC_Shipping_Zone( 0 );
+	$shipping_methods = array_merge( $shipping_methods, $rest_of_world->get_shipping_methods( true ) );
+
+	foreach ( $shipping_methods as $method ) {
+		if ( ! $method instanceof \WC_Shipping_Method || 'free_shipping' !== $method->id ) {
+			continue;
+		}
+
+		$is_enabled = $method->get_option( 'enabled', 'no' );
+		if ( 'yes' !== $is_enabled ) {
+			continue;
+		}
+
+		$requires = (string) $method->get_option( 'requires', '' );
+		if ( ! in_array( $requires, array( 'min_amount', 'either', 'both' ), true ) ) {
+			continue;
+		}
+
+		$min_amount = (float) wc_format_decimal( $method->get_option( 'min_amount', 0 ) );
+		if ( $min_amount <= 0 ) {
+			continue;
+		}
+
+		if ( null === $free_shipping_min_amount || $min_amount < $free_shipping_min_amount ) {
+			$free_shipping_min_amount = $min_amount;
+		}
+	}
+}
+
+$show_shipping_banner = null !== $free_shipping_min_amount;
+$shipping_banner_text = '';
+if ( $show_shipping_banner ) {
+	$formatted_amount    = html_entity_decode( wp_strip_all_tags( wc_price( $free_shipping_min_amount ) ), ENT_QUOTES, get_bloginfo( 'charset' ) );
+	$shipping_banner_text = sprintf(
+		/* translators: %s: minimum order amount for free shipping */
+		__( 'Free shipping on orders of %s or more', 'shadcn' ),
+		$formatted_amount
+	);
+}
 ?>
 <style>
 	.molecule-top-nav-announcement {
@@ -51,9 +103,11 @@ $cart_count      = ( function_exists( 'WC' ) && WC()->cart )
 	}
 </style>
 <header class="molecule-top-nav" role="banner">
-	<div class="molecule-top-nav-announcement" aria-label="<?php esc_attr_e( 'Shipping announcement', 'shadcn' ); ?>">
-		<?php esc_html_e( 'Free shipping on orders of $350 or more', 'shadcn' ); ?>
-	</div>
+	<?php if ( $show_shipping_banner ) : ?>
+		<div class="molecule-top-nav-announcement" aria-label="<?php esc_attr_e( 'Shipping announcement', 'shadcn' ); ?>">
+			<?php echo esc_html( $shipping_banner_text ); ?>
+		</div>
+	<?php endif; ?>
 	<div class="molecule-top-nav-inner">
 
 		<?php /* ── Mobile row (3-column grid: hamburger | logo | icons) ── */ ?>

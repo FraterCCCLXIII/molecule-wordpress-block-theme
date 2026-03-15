@@ -157,6 +157,8 @@ class Core {
 	 * @return string|null PHP-rendered header HTML, or the original $pre_render.
 	 */
 	public function render_php_header( $pre_render, $block ) {
+		static $did_render_php_header = false;
+
 		if ( 'core/template-part' !== ( $block['blockName'] ?? '' ) ) {
 			return $pre_render;
 		}
@@ -174,6 +176,12 @@ class Core {
 			return $pre_render;
 		}
 
+		// Some templates/content paths can include the header template-part more
+		// than once. Ensure our fixed top-nav header is emitted only once.
+		if ( $did_render_php_header ) {
+			return '';
+		}
+
 		$template = get_template_directory() . '/template-parts/header.php';
 
 		if ( ! file_exists( $template ) ) {
@@ -182,6 +190,7 @@ class Core {
 
 		ob_start();
 		include $template;
+		$did_render_php_header = true;
 		return ob_get_clean();
 	}
 }

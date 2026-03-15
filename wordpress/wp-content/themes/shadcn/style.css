@@ -951,16 +951,17 @@ body {
   }
 
   .molecule-top-nav-desktop {
-    display: flex !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
-    justify-content: space-between;
+    column-gap: 1rem;
     margin-top: 0 !important;
   }
 
-  /* Give logo and icons equal flex so the nav sits in the true center */
+  /* Give logo and icons equal outer columns so center links stay centered. */
   .molecule-top-nav-desktop .molecule-top-nav-logo,
   .molecule-top-nav-desktop .molecule-top-nav-icons {
-    flex: 1;
+    min-width: 0;
   }
 
   .molecule-top-nav-desktop .molecule-top-nav-logo {
@@ -970,7 +971,15 @@ body {
   }
 
   .molecule-top-nav-desktop .molecule-top-nav-icons {
+    display: flex;
+    align-items: center;
     justify-content: flex-end;
+  }
+
+  .molecule-top-nav-desktop .molecule-desktop-navigation {
+    justify-self: center;
+    justify-content: center;
+    min-width: 0;
   }
 }
 
