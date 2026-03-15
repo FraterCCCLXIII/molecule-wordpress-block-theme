@@ -15,6 +15,7 @@ class WooCommerce {
 	public function init() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'woocommerce_before_add_to_cart_form', array( $this, 'render_available_sizes_module' ), 8 );
+		add_action( 'woocommerce_before_variations_form', array( $this, 'render_variable_size_selector' ), 8 );
 		add_filter( 'woocommerce_product_tabs', array( $this, 'override_product_detail_tabs' ), 20 );
 		add_filter( 'woocommerce_account_menu_items', array( $this, 'reorder_my_account_menu_items' ), 20 );
 		add_filter( 'woocommerce_process_login_errors', array( $this, 'require_email_for_login' ), 10, 3 );
@@ -25,6 +26,16 @@ class WooCommerce {
 	public function enqueue_scripts() {
 		wp_enqueue_style( 'shadcn-woocommerce', get_template_directory_uri() . '/assets/css/woocommerce.css', array(), wp_get_theme()->get( 'Version' ) );
 		wp_enqueue_style( 'shadcn-side-cart', get_template_directory_uri() . '/assets/css/side-cart.css', array( 'shadcn-woocommerce' ), wp_get_theme()->get( 'Version' ) );
+
+		if ( function_exists( 'is_product' ) && is_product() ) {
+			wp_enqueue_script(
+				'shadcn-variable-size-selector',
+				get_template_directory_uri() . '/assets/js/variable-size-selector.js',
+				array( 'jquery', 'wc-add-to-cart-variation' ),
+				wp_get_theme()->get( 'Version' ),
+				true
+			);
+		}
 
 		if ( function_exists( 'is_account_page' ) && is_account_page() && is_user_logged_in() ) {
 			wp_enqueue_script(
@@ -303,6 +314,29 @@ class WooCommerce {
 					<span class="molecule-available-sizes__option" aria-pressed="false"><?php echo esc_html( $size ); ?></span>
 				<?php endforeach; ?>
 			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Render a custom row-style selector placeholder for variable product sizes.
+	 *
+	 * The options are hydrated from WooCommerce's native <select> by frontend JS
+	 * so variation validation and stock logic remain untouched.
+	 */
+	public function render_variable_size_selector() {
+		if ( ! function_exists( 'is_product' ) || ! is_product() ) {
+			return;
+		}
+
+		$product = wc_get_product( get_the_ID() );
+		if ( ! $product || ! $product->is_type( 'variable' ) ) {
+			return;
+		}
+		?>
+		<div class="molecule-variable-size-selector" data-molecule-variable-size-selector>
+			<p class="molecule-variable-size-selector__label"><?php esc_html_e( 'Size', 'shadcn' ); ?></p>
+			<div class="molecule-variable-size-selector__options" role="group" aria-label="<?php esc_attr_e( 'Size options', 'shadcn' ); ?>"></div>
 		</div>
 		<?php
 	}

@@ -77,6 +77,69 @@ button.single_add_to_cart_button.button.alt.wp-element-button {
   transition: all 0.2s ease;
 }
 
+.single-product .molecule-variable-size-selector {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  align-items: center;
+  column-gap: 12px;
+  margin: 0;
+  padding: 0.75rem 1rem 0.75rem 0;
+}
+
+.single-product .molecule-variable-size-selector__label {
+  margin: 0;
+  color: var(--foreground);
+  font-size: 0.875rem;
+  line-height: 40px;
+  font-weight: 600;
+}
+
+.single-product .molecule-variable-size-selector__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.single-product .molecule-variable-size-selector__option {
+  display: inline-flex;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  min-width: 88px;
+  height: 40px;
+  padding: 0 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 9999px;
+  background: #f9fafb;
+  color: #111827;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.single-product .molecule-variable-size-selector__option:hover,
+.single-product .molecule-variable-size-selector__option:focus-visible {
+  border-color: #9ca3af;
+  background: #f3f4f6;
+  outline: none;
+}
+
+.single-product .molecule-variable-size-selector__option.is-active {
+  border-color: #111827;
+  background: #111827;
+  color: #ffffff;
+}
+
+.single-product .variations_form.molecule-size-enhanced tr.molecule-size-row {
+  display: none;
+}
+
+.single-product .variations_form.molecule-hide-variations-table table.variations {
+  display: none;
+}
+
 /* Keep variation labels flush-left (override global table cell padding). */
 .single-product table.variations th.label {
   padding-left: 0 !important;
