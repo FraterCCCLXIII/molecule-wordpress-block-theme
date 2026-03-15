@@ -108,10 +108,6 @@ if ( $show_shipping_banner ) {
 }
 ?>
 <style>
-	:root {
-		--molecule-shipping-banner-padding: <?php echo $show_shipping_banner ? '10px' : '0px'; ?>;
-	}
-
 	.molecule-top-nav-announcement {
 		display: flex;
 		align-items: center;
@@ -135,7 +131,6 @@ if ( $show_shipping_banner ) {
 		padding-top: 0;
 		padding-bottom: 0;
 		opacity: 0;
-		display: none;
 	}
 </style>
 <header class="molecule-top-nav" role="banner">

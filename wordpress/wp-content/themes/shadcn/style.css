@@ -448,12 +448,22 @@ input[type="reset"],
   /* Side padding lives on .molecule-top-nav-inner, not here */
   padding-right: 0 !important;
   padding-left: 0 !important;
+  transition: transform var(--default-transition-duration)
+    var(--default-transition-timing-function);
+  transform: translateY(0);
+}
+
+.molecule-top-nav.is-announcement-hidden {
+  transform: translateY(calc(-1 * var(--molecule-announcement-height, 0px)));
 }
 
 .wp-site-blocks {
-  padding-top: calc(
-    var(--molecule-top-nav-offset, 0px) + var(--molecule-shipping-banner-padding, 0px)
-  );
+  padding-top: var(--molecule-top-nav-offset, 0px);
+}
+
+/* Prevent global root block spacing from pushing the fixed header down. */
+:where(.wp-site-blocks) > .molecule-top-nav {
+  margin-block-start: 0 !important;
 }
 
 /* Keep separators subtle and flat across patterns/pages. */
