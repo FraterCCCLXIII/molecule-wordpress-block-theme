@@ -82,6 +82,12 @@
 
 		var $sizeRow = $sizeSelect.closest( 'tr' );
 		$sizeRow.addClass( 'molecule-size-row' );
+		var $topPrice = $form
+			.closest( '.wp-block-add-to-cart-form' )
+			.siblings( '.wp-block-woocommerce-product-price' )
+			.find( '.wc-block-components-product-price' )
+			.first();
+		var originalTopPriceHtml = $topPrice.length ? $topPrice.html() : '';
 
 		var $optionsHost = $ui.find( '.molecule-variable-size-selector__options' ).first();
 		var optionData = [];
@@ -143,6 +149,21 @@
 			} );
 		}
 
+		function resetTopPrice() {
+			if ( $topPrice.length && originalTopPriceHtml ) {
+				$topPrice.html( originalTopPriceHtml );
+			}
+		}
+
+		function setTopPriceFromVariation( variation ) {
+			if ( ! $topPrice.length || ! variation || ! variation.price_html ) {
+				resetTopPrice();
+				return;
+			}
+
+			$topPrice.html( String( variation.price_html ) );
+		}
+
 		$optionsHost.on( 'click', '.molecule-variable-size-selector__option', function () {
 			var $button = $( this );
 			var value = String( $button.attr( 'data-value' ) || '' );
@@ -155,6 +176,12 @@
 
 		$sizeSelect.on( 'change', syncFromSelect );
 		$form.on( 'woocommerce_update_variation_values reset_data hide_variation show_variation', syncFromSelect );
+		$form.on( 'found_variation', function ( event, variation ) {
+			setTopPriceFromVariation( variation );
+		} );
+		$form.on( 'reset_data hide_variation', function () {
+			resetTopPrice();
+		} );
 		syncFromSelect();
 	}
 

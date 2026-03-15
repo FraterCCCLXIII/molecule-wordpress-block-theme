@@ -102,6 +102,15 @@ button.single_add_to_cart_button.button.alt.wp-element-button {
   display: none !important;
 }
 
+/* Use only the primary product price block; avoid duplicate variation price
+   output inside the add-to-cart form. */
+.single-product
+  .variations_form.molecule-size-enhanced
+  .single_variation
+  .woocommerce-variation-price {
+  display: none !important;
+}
+
 /* Keep variation labels flush-left (override global table cell padding). */
 .single-product table.variations th.label {
   padding-left: 0 !important;
