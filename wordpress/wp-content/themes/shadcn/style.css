@@ -448,13 +448,6 @@ input[type="reset"],
   /* Side padding lives on .molecule-top-nav-inner, not here */
   padding-right: 0 !important;
   padding-left: 0 !important;
-  transition: transform var(--default-transition-duration)
-    var(--default-transition-timing-function);
-  transform: translateY(0);
-}
-
-.molecule-top-nav.is-announcement-hidden {
-  transform: translateY(calc(-1 * var(--molecule-announcement-height, 0px)));
 }
 
 .wp-site-blocks {

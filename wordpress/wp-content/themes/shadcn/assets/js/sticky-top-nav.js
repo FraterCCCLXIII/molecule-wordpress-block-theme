@@ -1,7 +1,6 @@
 ( function() {
 	let lastScrollY = 0;
 	let lastKnownAnnouncementHidden = false;
-	let announcementHeight = 0;
 
 	function getAdminOffset( bodyEl ) {
 		if ( ! bodyEl.classList.contains( 'admin-bar' ) ) {
@@ -34,23 +33,6 @@
 			'--molecule-top-nav-offset',
 			navHeight + adminOffset + 'px'
 		);
-	}
-
-	function syncAnnouncementHeight() {
-		const nav = document.querySelector( '.molecule-top-nav' );
-		if ( ! nav ) {
-			return;
-		}
-
-		const announcement = nav.querySelector( '.molecule-top-nav-announcement' );
-		if ( ! announcement ) {
-			announcementHeight = 0;
-			nav.style.setProperty( '--molecule-announcement-height', '0px' );
-			return;
-		}
-
-		announcementHeight = Math.ceil( announcement.scrollHeight || announcement.offsetHeight || 0 );
-		nav.style.setProperty( '--molecule-announcement-height', announcementHeight + 'px' );
 	}
 
 	function syncAnnouncementScrollState() {
@@ -87,7 +69,6 @@
 
 	const rafSync = function() {
 		window.requestAnimationFrame( function() {
-			syncAnnouncementHeight();
 			syncStickyTopNav();
 			syncAnnouncementScrollState();
 		} );

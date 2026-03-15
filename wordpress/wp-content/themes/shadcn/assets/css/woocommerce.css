@@ -102,6 +102,16 @@ button.single_add_to_cart_button.button.alt.wp-element-button {
   display: none !important;
 }
 
+/* Remove WooCommerce variation-summary spacer under custom size selector. */
+.single-product .variations_form.molecule-size-enhanced .single_variation {
+  display: none !important;
+}
+
+.single-product .variations_form.molecule-size-enhanced .single_variation_wrap {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
 /* Use only the primary product price block; avoid duplicate variation price
    output inside the add-to-cart form. */
 .single-product
