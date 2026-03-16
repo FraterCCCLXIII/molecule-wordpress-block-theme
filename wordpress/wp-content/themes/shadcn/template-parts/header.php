@@ -23,6 +23,7 @@ $cart_url        = function_exists( 'wc_get_cart_url' )
 $cart_count      = ( function_exists( 'WC' ) && WC()->cart )
 	? (int) WC()->cart->get_cart_contents_count()
 	: 0;
+$free_shipping_enabled    = false;
 $free_shipping_min_amount = null;
 
 if ( class_exists( 'WC_Shipping_Zones' ) ) {
@@ -48,21 +49,63 @@ if ( class_exists( 'WC_Shipping_Zones' ) ) {
 		if ( 'yes' !== $is_enabled ) {
 			continue;
 		}
+		$free_shipping_enabled = true;
 
 		$min_amount = (float) wc_format_decimal( $method->get_option( 'min_amount', 0 ) );
-		if ( $min_amount <= 0 ) {
-			continue;
-		}
-
-		if ( null === $free_shipping_min_amount || $min_amount < $free_shipping_min_amount ) {
+		if ( $min_amount > 0 && ( null === $free_shipping_min_amount || $min_amount < $free_shipping_min_amount ) ) {
 			$free_shipping_min_amount = $min_amount;
 		}
 	}
 }
 
-// Fallback: read free-shipping instance settings directly from wp_options.
-if ( null === $free_shipping_min_amount ) {
+// Fallback: use WooCommerce shipping zone method rows + wp_options settings.
+if ( ! $free_shipping_enabled || null === $free_shipping_min_amount ) {
 	global $wpdb;
+	$zone_methods_table = $wpdb->prefix . 'woocommerce_shipping_zone_methods';
+	$enabled_instance_ids = array();
+	$zone_methods_exist = $wpdb->get_var(
+		$wpdb->prepare( 'SHOW TABLES LIKE %s', $zone_methods_table )
+	);
+
+	if ( $zone_methods_exist === $zone_methods_table ) {
+		$enabled_instance_ids = $wpdb->get_col(
+			"SELECT instance_id
+			FROM {$zone_methods_table}
+			WHERE method_id = 'free_shipping' AND is_enabled = 1"
+		);
+	}
+
+	if ( ! empty( $enabled_instance_ids ) ) {
+		$free_shipping_enabled = true;
+
+		foreach ( $enabled_instance_ids as $instance_id ) {
+			$option_name = 'woocommerce_free_shipping_' . absint( $instance_id ) . '_settings';
+			$option_rows = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT option_value FROM {$wpdb->options} WHERE option_name = %s",
+					$option_name
+				)
+			);
+
+			if ( empty( $option_rows ) ) {
+				continue;
+			}
+
+			foreach ( $option_rows as $row ) {
+				$settings = maybe_unserialize( $row->option_value ?? null );
+				if ( ! is_array( $settings ) ) {
+					continue;
+				}
+
+				$min_amount = (float) wc_format_decimal( $settings['min_amount'] ?? 0 );
+				if ( $min_amount > 0 && ( null === $free_shipping_min_amount || $min_amount < $free_shipping_min_amount ) ) {
+					$free_shipping_min_amount = $min_amount;
+				}
+			}
+		}
+	}
+
+	// Final fallback for hosts where zone methods table is unavailable.
 	$like_pattern = $wpdb->esc_like( 'woocommerce_free_shipping_' ) . '%_settings';
 	$option_rows = $wpdb->get_results(
 		$wpdb->prepare(
@@ -72,7 +115,7 @@ if ( null === $free_shipping_min_amount ) {
 		)
 	);
 
-	if ( is_array( $option_rows ) ) {
+	if ( is_array( $option_rows ) && ! empty( $option_rows ) ) {
 		foreach ( $option_rows as $row ) {
 			$settings = maybe_unserialize( $row->option_value ?? null );
 			if ( ! is_array( $settings ) ) {
@@ -84,27 +127,28 @@ if ( null === $free_shipping_min_amount ) {
 				continue;
 			}
 
+			$free_shipping_enabled = true;
 			$min_amount = (float) wc_format_decimal( $settings['min_amount'] ?? 0 );
-			if ( $min_amount <= 0 ) {
-				continue;
-			}
-
-			if ( null === $free_shipping_min_amount || $min_amount < $free_shipping_min_amount ) {
+			if ( $min_amount > 0 && ( null === $free_shipping_min_amount || $min_amount < $free_shipping_min_amount ) ) {
 				$free_shipping_min_amount = $min_amount;
 			}
 		}
 	}
 }
 
-$show_shipping_banner = null !== $free_shipping_min_amount;
+$show_shipping_banner = $free_shipping_enabled;
 $shipping_banner_text = '';
 if ( $show_shipping_banner ) {
-	$formatted_amount    = html_entity_decode( wp_strip_all_tags( wc_price( $free_shipping_min_amount ) ), ENT_QUOTES, get_bloginfo( 'charset' ) );
-	$shipping_banner_text = sprintf(
-		/* translators: %s: minimum order amount for free shipping */
-		__( 'Free shipping on orders of %s or more', 'shadcn' ),
-		$formatted_amount
-	);
+	if ( null !== $free_shipping_min_amount && $free_shipping_min_amount > 0 ) {
+		$formatted_amount    = html_entity_decode( wp_strip_all_tags( wc_price( $free_shipping_min_amount ) ), ENT_QUOTES, get_bloginfo( 'charset' ) );
+		$shipping_banner_text = sprintf(
+			/* translators: %s: minimum order amount for free shipping */
+			__( 'Free shipping on orders of %s or more', 'shadcn' ),
+			$formatted_amount
+		);
+	} else {
+		$shipping_banner_text = __( 'Free shipping available', 'shadcn' );
+	}
 }
 ?>
 <style>
