@@ -1,0 +1,47 @@
+<?php
+/**
+ * Plugin Name: Affiliate Coupon Tracker
+ * Description: Track affiliate coupon usage and report monthly order totals for items, shipping, and tax.
+ * Version: 1.0.0
+ * Author: Molecule
+ * Requires Plugins: woocommerce
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+define( 'ACT_VERSION', '1.0.0' );
+define( 'ACT_PLUGIN_FILE', __FILE__ );
+define( 'ACT_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+
+require_once ACT_PLUGIN_DIR . 'includes/class-act-coupon-affiliate-fields.php';
+require_once ACT_PLUGIN_DIR . 'includes/class-act-order-report-repository.php';
+require_once ACT_PLUGIN_DIR . 'includes/class-act-admin-report-page.php';
+
+/**
+ * Bootstrap plugin classes.
+ */
+function act_bootstrap_plugin() {
+	if ( ! class_exists( 'WooCommerce' ) ) {
+		add_action(
+			'admin_notices',
+			static function() {
+				if ( ! current_user_can( 'activate_plugins' ) ) {
+					return;
+				}
+
+				echo '<div class="notice notice-error"><p>';
+				echo esc_html__( 'Affiliate Coupon Tracker requires WooCommerce to be active.', 'affiliate-coupon-tracker' );
+				echo '</p></div>';
+			}
+		);
+		return;
+	}
+
+	$repository    = new ACT_Order_Report_Repository();
+	$coupon_fields = new ACT_Coupon_Affiliate_Fields();
+	$report_page   = new ACT_Admin_Report_Page( $repository );
+
+	$coupon_fields->register_hooks();
+	$report_page->register_hooks();
+}
+add_action( 'plugins_loaded', 'act_bootstrap_plugin' );
