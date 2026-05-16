@@ -8,6 +8,11 @@ class WooCommerce {
 
 	use SingletonTrait;
 
+	/**
+	 * @var bool
+	 */
+	private static $in_stock_toggle_printed = false;
+
 	public function __construct() {
 		add_action( 'init', array( $this, 'init' ) );
 	}
@@ -22,6 +27,7 @@ class WooCommerce {
 		add_filter( 'woocommerce_new_customer_data', array( $this, 'set_customer_username_from_email' ) );
 		add_filter( 'body_class', array( $this, 'add_auth_mode_body_class' ) );
 		add_filter( 'render_block', array( $this, 'inject_shop_loop_out_of_stock_badge_on_product_image' ), 10, 3 );
+		add_filter( 'render_block', array( $this, 'prepend_shop_in_stock_toggle_near_catalog_blocks' ), 5, 2 );
 	}
 
 	public function enqueue_scripts() {
@@ -42,6 +48,16 @@ class WooCommerce {
 			wp_enqueue_script(
 				'shadcn-my-account-nav-mobile',
 				get_template_directory_uri() . '/assets/js/my-account-nav-mobile.js',
+				array(),
+				wp_get_theme()->get( 'Version' ),
+				true
+			);
+		}
+
+		if ( $this->should_show_shop_in_stock_toggle() ) {
+			wp_enqueue_script(
+				'shadcn-shop-in-stock-toggle',
+				get_template_directory_uri() . '/assets/js/shop-in-stock-toggle.js',
 				array(),
 				wp_get_theme()->get( 'Version' ),
 				true
@@ -501,6 +517,112 @@ class WooCommerce {
 		}
 
 		return $block_content;
+	}
+
+	/**
+	 * Whether the in-stock toggle should appear (catalog, and WC not already hiding OOS).
+	 *
+	 * @return bool
+	 */
+	private function should_show_shop_in_stock_toggle() {
+		return $this->is_product_catalog_screen()
+			&& 'yes' !== get_option( 'woocommerce_hide_out_of_stock_items' );
+	}
+
+	/**
+	 * True when URL filter limits catalog to in-stock products only (instock only).
+	 *
+	 * @return bool
+	 */
+	private function is_instock_only_filter_active() {
+		$raw = (string) get_query_var( 'filter_stock_status' );
+		if ( '' === trim( $raw ) ) {
+			return false;
+		}
+
+		$statuses = array_filter( array_map( 'trim', explode( ',', $raw ) ) );
+
+		return array( 'instock' ) === $statuses;
+	}
+
+	/**
+	 * Markup for the "In stock only" control.
+	 *
+	 * @param bool $align_wide Add alignwide for standalone placement above the grid.
+	 * @return string
+	 */
+	private function get_shop_in_stock_toggle_html( $align_wide = false ) {
+		$field_id = wp_unique_id( 'molecule-in-stock-only-' );
+		$checked  = $this->is_instock_only_filter_active();
+		$classes  = 'molecule-shop-in-stock-toggle' . ( $align_wide ? ' alignwide' : '' );
+
+		ob_start();
+		?>
+		<div class="<?php echo esc_attr( $classes ); ?>">
+			<div class="molecule-availability-facet">
+				<label for="<?php echo esc_attr( $field_id ); ?>" class="molecule-availability-facet__label"><?php esc_html_e( 'In stock only', 'shadcn' ); ?></label>
+				<input
+					id="<?php echo esc_attr( $field_id ); ?>"
+					type="checkbox"
+					class="switch molecule-in-stock-only-switch"
+					<?php checked( $checked ); ?>
+					autocomplete="off"
+				/>
+			</div>
+		</div>
+		<?php
+
+		return (string) ob_get_clean();
+	}
+
+	/**
+	 * Place "In stock only" immediately left of the catalog sort dropdown (catalog-sorting row), or above the grid if that block is absent.
+	 *
+	 * @param string               $block_content Block HTML.
+	 * @param array<string, mixed> $parsed_block  Parsed block.
+	 * @return string
+	 */
+	public function prepend_shop_in_stock_toggle_near_catalog_blocks( $block_content, $parsed_block ) {
+		if ( empty( $parsed_block['blockName'] ) ) {
+			return $block_content;
+		}
+
+		if ( ! $this->should_show_shop_in_stock_toggle() ) {
+			return $block_content;
+		}
+
+		$block_name = $parsed_block['blockName'];
+
+		if ( 'woocommerce/catalog-sorting' === $block_name ) {
+			if ( self::$in_stock_toggle_printed ) {
+				return $block_content;
+			}
+			self::$in_stock_toggle_printed = true;
+
+			$toggle = $this->get_shop_in_stock_toggle_html( false );
+
+			return sprintf(
+				'<div class="molecule-shop-catalog-sort-with-stock">%1$s%2$s</div>',
+				$toggle,
+				$block_content
+			);
+		}
+
+		if ( 'woocommerce/product-collection' !== $block_name ) {
+			return $block_content;
+		}
+
+		$query = $parsed_block['attrs']['query'] ?? array();
+		if ( empty( $query['inherit'] ) ) {
+			return $block_content;
+		}
+
+		if ( self::$in_stock_toggle_printed ) {
+			return $block_content;
+		}
+		self::$in_stock_toggle_printed = true;
+
+		return $this->get_shop_in_stock_toggle_html( true ) . $block_content;
 	}
 }
 

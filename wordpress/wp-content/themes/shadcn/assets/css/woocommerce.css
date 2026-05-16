@@ -1014,3 +1014,110 @@ WooCommerce Checkout Block Styles
   pointer-events: none;
   box-sizing: border-box;
 }
+
+/* Shop catalog: "In stock only" left of sort dropdown (inside results/sort flex row). */
+.molecule-shop-catalog-sort-with-stock {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.75rem 1rem;
+  flex: 0 0 auto;
+}
+
+.molecule-shop-catalog-sort-with-stock .molecule-shop-in-stock-toggle {
+  margin-bottom: 0;
+  flex: 0 0 auto;
+}
+
+/* Align tall .orderby control with the in-stock control in the same row */
+.molecule-shop-catalog-sort-with-stock .woocommerce-ordering {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.molecule-shop-catalog-sort-with-stock .wp-block-woocommerce-catalog-sorting,
+.molecule-shop-catalog-sort-with-stock .wc-block-catalog-sorting {
+  flex: 0 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+.molecule-shop-in-stock-toggle {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.molecule-shop-in-stock-toggle.alignwide {
+  width: 100%;
+  max-width: var(--wp--style--global--wide-size, 1200px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.molecule-availability-facet {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.625rem 0.75rem;
+}
+
+.molecule-availability-facet__label {
+  margin: 0;
+  font-weight: 700;
+  font-size: 0.875rem;
+  /* Tight line box so flex align-items:center matches the switch to the glyphs, not extra leading */
+  line-height: 1.1;
+  color: var(--foreground, #0a0a0a);
+  cursor: pointer;
+}
+
+input.switch.molecule-in-stock-only-switch {
+  appearance: none;
+  position: relative;
+  width: 3rem;
+  height: 1.75rem;
+  margin: 0;
+  padding: 0;
+  flex-shrink: 0;
+  align-self: center;
+  border-radius: 9999px;
+  box-sizing: border-box;
+  display: block;
+  background: var(--muted, #e5e5e5);
+  border: 1px solid var(--border, #d4d4d4);
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  /* Align pill optical center with bold label caps (switch often sits low in the row otherwise) */
+  transform: translateY(-0.08rem);
+}
+
+input.switch.molecule-in-stock-only-switch::after {
+  content: '';
+  position: absolute;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  background: #fff;
+  top: 50%;
+  left: 0.25rem;
+  transform: translateY(-50%);
+  box-shadow: 0 1px 3px color-mix(in oklab, #000 20%, transparent);
+  transition: transform 0.2s ease;
+}
+
+input.switch.molecule-in-stock-only-switch:checked {
+  background: #000;
+  border-color: #000;
+}
+
+input.switch.molecule-in-stock-only-switch:checked::after {
+  transform: translate(1.25rem, -50%);
+}
+
+input.switch.molecule-in-stock-only-switch:focus-visible {
+  outline: 2px solid var(--ring, #737373);
+  outline-offset: 2px;
+}
