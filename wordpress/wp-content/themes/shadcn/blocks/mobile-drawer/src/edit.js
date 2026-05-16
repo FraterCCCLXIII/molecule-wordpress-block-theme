@@ -8,7 +8,7 @@ const ALLOWED_BLOCKS = [
 
 const TEMPLATE = [
 	[ 'core/navigation-link', { label: 'Home', url: '/' } ],
-	[ 'core/navigation-link', { label: 'Catalog', url: '/shop' } ],
+	[ 'core/navigation-link', { label: 'Shop', url: '/shop' } ],
 	[ 'core/navigation-link', { label: 'Peptide Guide', url: '/peptide-guide' } ],
 	[ 'core/navigation-link', { label: 'Research', url: '/research' } ],
 ];

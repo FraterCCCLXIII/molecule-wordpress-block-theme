@@ -235,7 +235,7 @@ if ( $show_shipping_banner ) {
 					</div>
 					<nav class="molecule-mobile-drawer-nav" aria-label="<?php esc_attr_e( 'Mobile Navigation', 'shadcn' ); ?>">
 						<a href="<?php echo $home_url; ?>"><?php esc_html_e( 'Home', 'shadcn' ); ?></a>
-						<a href="<?php echo esc_url( home_url( '/shop' ) ); ?>"><?php esc_html_e( 'Catalog', 'shadcn' ); ?></a>
+						<a href="<?php echo esc_url( home_url( '/shop' ) ); ?>"><?php esc_html_e( 'Shop', 'shadcn' ); ?></a>
 						<a href="<?php echo esc_url( home_url( '/peptide-guide' ) ); ?>"><?php esc_html_e( 'Peptide Guide', 'shadcn' ); ?></a>
 						<a href="<?php echo esc_url( home_url( '/research' ) ); ?>"><?php esc_html_e( 'Research', 'shadcn' ); ?></a>
 					</nav>
@@ -288,7 +288,7 @@ if ( $show_shipping_banner ) {
 
 			<nav class="molecule-desktop-navigation" aria-label="<?php esc_attr_e( 'Desktop Navigation', 'shadcn' ); ?>">
 				<a href="<?php echo $home_url; ?>"><?php esc_html_e( 'Home', 'shadcn' ); ?></a>
-				<a href="<?php echo esc_url( home_url( '/shop' ) ); ?>"><?php esc_html_e( 'Catalog', 'shadcn' ); ?></a>
+				<a href="<?php echo esc_url( home_url( '/shop' ) ); ?>"><?php esc_html_e( 'Shop', 'shadcn' ); ?></a>
 				<div class="molecule-desktop-nav-dropdown">
 					<button
 						class="molecule-desktop-dropdown-toggle"
