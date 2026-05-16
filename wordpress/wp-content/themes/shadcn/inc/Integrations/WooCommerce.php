@@ -21,6 +21,7 @@ class WooCommerce {
 		add_filter( 'woocommerce_process_login_errors', array( $this, 'require_email_for_login' ), 10, 3 );
 		add_filter( 'woocommerce_new_customer_data', array( $this, 'set_customer_username_from_email' ) );
 		add_filter( 'body_class', array( $this, 'add_auth_mode_body_class' ) );
+		add_filter( 'render_block', array( $this, 'inject_shop_loop_out_of_stock_badge_on_product_image' ), 10, 3 );
 	}
 
 	public function enqueue_scripts() {
@@ -425,6 +426,81 @@ class WooCommerce {
 		$wp_registration_enabled = (bool) get_option( 'users_can_register', false );
 
 		return $wc_registration_enabled || $wp_registration_enabled;
+	}
+
+	/**
+	 * Whether we are on a product catalog view (shop, categories, etc.), not single product or cart flows.
+	 *
+	 * @return bool
+	 */
+	private function is_product_catalog_screen() {
+		if ( ! function_exists( 'is_shop' ) ) {
+			return false;
+		}
+
+		if ( is_cart() || is_checkout() || is_account_page() || is_product() ) {
+			return false;
+		}
+
+		return is_shop() || is_product_taxonomy() || is_post_type_archive( 'product' );
+	}
+
+	/**
+	 * On catalog pages, overlay an out-of-stock pill on product card images.
+	 *
+	 * @param string                                  $block_content  Rendered block HTML.
+	 * @param array<string, mixed>                    $parsed_block   Block data.
+	 * @param \WP_Block|null                          $block_instance Block instance (contains loop context).
+	 * @return string
+	 */
+	public function inject_shop_loop_out_of_stock_badge_on_product_image( $block_content, $parsed_block, $block_instance ) {
+		if ( empty( $parsed_block['blockName'] ) || 'woocommerce/product-image' !== $parsed_block['blockName'] ) {
+			return $block_content;
+		}
+
+		if ( ! $block_instance instanceof \WP_Block ) {
+			return $block_content;
+		}
+
+		$context = $block_instance->context ?? array();
+		$query   = $context['query'] ?? array();
+
+		if ( empty( $query['isProductCollectionBlock'] ) ) {
+			return $block_content;
+		}
+
+		if ( ! $this->is_product_catalog_screen() ) {
+			return $block_content;
+		}
+
+		$post_id = isset( $context['postId'] ) ? absint( $context['postId'] ) : 0;
+		if ( ! $post_id ) {
+			return $block_content;
+		}
+
+		$product = wc_get_product( $post_id );
+		if ( ! $product || $product->is_in_stock() ) {
+			return $block_content;
+		}
+
+		$availability = $product->get_availability();
+		$text         = isset( $availability['availability'] ) && $availability['availability'] ?
+			$availability['availability'] :
+			__( 'Out of stock', 'woocommerce' );
+
+		$badge = sprintf(
+			'<span class="molecule-product-card-stock-badge molecule-product-card-stock-badge--out-of-stock">%s</span>',
+			wp_kses_post( $text )
+		);
+
+		// Sibling of <a> inside the image wrapper so position:absolute anchors to the full tile, not the link box.
+		if ( preg_match( '/<div\s[^>]*\bwc-block-components-product-image\b[^>]*>/', $block_content, $matches, PREG_OFFSET_CAPTURE ) ) {
+			$insert_at = $matches[0][1] + strlen( $matches[0][0] );
+
+			return substr_replace( $block_content, $badge, $insert_at, 0 );
+		}
+
+		return $block_content;
 	}
 }
 
