@@ -1066,12 +1066,17 @@ WooCommerce Checkout Block Styles
 
 .molecule-availability-facet__label {
   margin: 0;
-  font-weight: 700;
+  font-weight: 400;
   font-size: 0.875rem;
-  /* Tight line box so flex align-items:center matches the switch to the glyphs, not extra leading */
-  line-height: 1.1;
+  line-height: 1;
+  /* Match track height; flex centers the glyph box, not typographic optical center */
+  min-height: 1.75rem;
+  display: inline-flex;
+  align-items: center;
   color: var(--foreground, #0a0a0a);
   cursor: pointer;
+  /* Fine-tune vertical alignment next to the pill track */
+  transform: translateY(5px);
 }
 
 input.switch.molecule-in-stock-only-switch {
@@ -1082,7 +1087,6 @@ input.switch.molecule-in-stock-only-switch {
   margin: 0;
   padding: 0;
   flex-shrink: 0;
-  align-self: center;
   border-radius: 9999px;
   box-sizing: border-box;
   display: block;
@@ -1090,8 +1094,6 @@ input.switch.molecule-in-stock-only-switch {
   border: 1px solid var(--border, #d4d4d4);
   cursor: pointer;
   transition: background-color 0.2s ease, border-color 0.2s ease;
-  /* Align pill optical center with bold label caps (switch often sits low in the row otherwise) */
-  transform: translateY(-0.08rem);
 }
 
 input.switch.molecule-in-stock-only-switch::after {
