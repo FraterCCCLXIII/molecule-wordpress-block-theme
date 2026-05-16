@@ -1114,7 +1114,8 @@ input.switch.molecule-in-stock-only-switch:checked {
 }
 
 input.switch.molecule-in-stock-only-switch:checked::after {
-  transform: translate(1.25rem, -50%);
+  /* Nudge left ~1px so right inset matches top/bottom inset inside the track */
+  transform: translate(calc(1.25rem - 1px), -50%);
 }
 
 input.switch.molecule-in-stock-only-switch:focus-visible {
