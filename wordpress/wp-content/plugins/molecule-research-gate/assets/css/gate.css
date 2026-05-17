@@ -240,6 +240,38 @@
 	min-height: 0;
 }
 
+/* Verified: centered stack + spaced CTAs */
+.mrg-gate__state[data-mrg-state="verified"]:not([hidden]) {
+	flex: 1 1 auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: stretch;
+	text-align: center;
+	min-height: 0;
+	width: 100%;
+	gap: 1rem;
+}
+
+.mrg-gate__state[data-mrg-state="verified"]:not([hidden]) > .mrg-gate__title {
+	margin-bottom: 0;
+}
+
+.mrg-gate__state[data-mrg-state="verified"]:not([hidden]) > .mrg-gate__intro {
+	margin-bottom: 0;
+}
+
+.mrg-gate__state[data-mrg-state="verified"]:not([hidden]) > .mrg-gate__discount {
+	margin: 0;
+}
+
+.mrg-gate__state[data-mrg-state="verified"]:not([hidden]) .mrg-gate__button--link {
+	box-sizing: border-box;
+	border-radius: var(--mrg-radius);
+	display: block;
+	width: 100%;
+}
+
 .mrg-gate__logo {
 	display: block;
 	max-width: 160px;
@@ -276,10 +308,42 @@
 	color: var(--mrg-panel-fg);
 }
 
-.mrg-gate__check input {
-	margin-top: 0.2rem;
+.mrg-gate__check input[type="checkbox"] {
+	appearance: none;
+	-webkit-appearance: none;
+	position: relative;
+	width: 1.25rem;
+	height: 1.25rem;
+	margin-top: 0.12rem;
 	flex-shrink: 0;
-	accent-color: var(--mrg-button-bg);
+	box-sizing: border-box;
+	border: 2px solid var(--muted-foreground, #737373);
+	border-radius: calc(var(--mrg-radius) * 0.35);
+	background: var(--mrg-panel-bg);
+	cursor: pointer;
+	transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.mrg-gate__check input[type="checkbox"]:checked {
+	background: var(--mrg-button-bg);
+	border-color: var(--mrg-button-bg);
+}
+
+.mrg-gate__check input[type="checkbox"]:checked::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 45%;
+	width: 0.22rem;
+	height: 0.45rem;
+	border: solid var(--mrg-button-fg);
+	border-width: 0 2px 2px 0;
+	transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.mrg-gate__check input[type="checkbox"]:focus-visible {
+	outline: 2px solid color-mix(in srgb, var(--ring, #a1a1a1) 65%, transparent);
+	outline-offset: 2px;
 }
 
 .mrg-gate__fields {
