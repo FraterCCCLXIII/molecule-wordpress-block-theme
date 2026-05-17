@@ -1,22 +1,32 @@
 /**
- * Molecule Research Gate — dialog layout (themeable via CSS variables).
+ * Molecule Research Gate — matches Molecule (shadcn) theme tokens when present.
  */
-:root {
-	--mrg-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-	--mrg-brand-bg: #0f172a;
-	--mrg-brand-fg: #e2e8f0;
-	--mrg-brand-accent: #38bdf8;
-	--mrg-panel-bg: #ffffff;
-	--mrg-panel-fg: #0f172a;
-	--mrg-border: #e2e8f0;
-	--mrg-button-bg: #0ea5e9;
-	--mrg-button-fg: #ffffff;
-	--mrg-button-hover: #0284c7;
-	--mrg-error: #b91c1c;
-	--mrg-z: 100000;
-}
-
 .mrg-gate {
+	/* Mirrors theme.json / style.css; fallbacks preserve light appearance without theme */
+	--mrg-font: inherit;
+	--mrg-radius: var(--radius, 0.625rem);
+	--mrg-brand-bg: var(--foreground, #0a0a0a);
+	--mrg-brand-fg: var(--primary-foreground, #fafafa);
+	--mrg-brand-muted: rgba(250, 250, 250, 0.72);
+	--mrg-brand-accent: var(--primary-foreground, #fafafa);
+	--mrg-panel-bg: var(--card, #feffff);
+	--mrg-panel-fg: var(--card-foreground, #0a0a0b);
+	--mrg-border: var(--border, #e5e5e5);
+	--mrg-button-bg: var(--primary, #171717);
+	--mrg-button-fg: var(--primary-foreground, #fafafa);
+	--mrg-button-hover: #262626;
+	--mrg-secondary-bg: var(--secondary, #f5f5f6);
+	--mrg-secondary-fg: var(--secondary-foreground, #171718);
+	--mrg-secondary-hover: var(--muted, #f2f2f2);
+	--mrg-muted-text: var(--muted-foreground, #737373);
+	--mrg-link: var(--foreground, #0a0a0a);
+	--mrg-error: var(--destructive, #e7000b);
+	--mrg-discount-bg: var(--muted, #f2f2f2);
+	--mrg-z: 100000;
+	/* 0–100; overridden via inline style from settings */
+	--mrg-backdrop-pct: 55;
+	--mrg-brand-overlay-pct: 85;
+
 	position: fixed;
 	inset: 0;
 	z-index: var(--mrg-z);
@@ -37,7 +47,17 @@
 .mrg-gate__backdrop {
 	position: absolute;
 	inset: 0;
-	background: rgba(15, 23, 42, 0.72);
+	background: color-mix(
+		in srgb,
+		var(--foreground, #0a0a0a) calc(var(--mrg-backdrop-pct, 55) * 1%),
+		transparent
+	);
+}
+
+@supports not (background: color-mix(in srgb, black 50%, transparent)) {
+	.mrg-gate__backdrop {
+		background: rgba(10, 10, 10, calc(var(--mrg-backdrop-pct, 55) / 100));
+	}
 }
 
 .mrg-gate__shell {
@@ -46,7 +66,9 @@
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
-	box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+	min-height: 0;
+	box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18);
+	border-radius: var(--mrg-radius);
 }
 
 @media (min-width: 840px) {
@@ -56,25 +78,43 @@
 		max-width: 1040px;
 		max-height: 640px;
 		margin: auto;
-		border-radius: 14px;
+		border-radius: calc(var(--mrg-radius) + 0.25rem);
 	}
 }
 
 .mrg-gate__brand-panel {
-	background: linear-gradient(160deg, var(--mrg-brand-bg) 0%, #1e293b 100%);
+	position: relative;
+	background: linear-gradient(
+		160deg,
+		var(--mrg-brand-bg) 0%,
+		color-mix(in srgb, var(--mrg-brand-bg) 82%, #171717) 100%
+	);
 	color: var(--mrg-brand-fg);
 	padding: 2rem 1.75rem;
 	flex: 0 0 auto;
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
+	justify-content: flex-start;
+}
+
+@supports not (background: color-mix(in srgb, black 50%, transparent)) {
+	.mrg-gate__brand-panel {
+		background: linear-gradient(160deg, #0a0a0a 0%, #171717 100%);
+	}
 }
 
 @media (min-width: 840px) {
 	.mrg-gate__brand-panel {
 		flex: 0 0 46%;
 		padding: 2.5rem;
-		justify-content: center;
+	}
+}
+
+@media (max-width: 839px) {
+	/* Give the brand strip height so proof lines can sit toward the bottom. */
+	.mrg-gate__brand-panel {
+		min-height: clamp(11rem, 38vh, 22rem);
 	}
 }
 
@@ -82,7 +122,6 @@
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
-	position: relative;
 	isolation: isolate;
 }
 
@@ -90,11 +129,12 @@
 	content: '';
 	position: absolute;
 	inset: 0;
+	/* Overlay strength 0–100 via --mrg-brand-overlay-pct (matches prior look at ~85). */
 	background: linear-gradient(
 		160deg,
-		rgba(15, 23, 42, 0.9) 0%,
-		rgba(30, 41, 59, 0.85) 55%,
-		rgba(15, 23, 42, 0.82) 100%
+		rgba(10, 10, 10, calc(0.88 * var(--mrg-brand-overlay-pct, 85) / 100)) 0%,
+		rgba(10, 10, 10, calc(0.78 * var(--mrg-brand-overlay-pct, 85) / 100)) 55%,
+		rgba(10, 10, 10, calc(0.82 * var(--mrg-brand-overlay-pct, 85) / 100)) 100%
 	);
 	z-index: 0;
 	pointer-events: none;
@@ -102,8 +142,8 @@
 
 @media (min-width: 840px) {
 	.mrg-gate__brand-panel--has-image::before {
-		border-top-left-radius: 14px;
-		border-bottom-left-radius: 14px;
+		border-top-left-radius: calc(var(--mrg-radius) + 0.25rem);
+		border-bottom-left-radius: calc(var(--mrg-radius) + 0.25rem);
 	}
 }
 
@@ -112,27 +152,37 @@
 	z-index: 1;
 }
 
+/* Eyebrow: top-left of brand / image column */
 .mrg-gate__eyebrow {
+	position: absolute;
+	top: 2rem;
+	left: 1.75rem;
+	margin: 0;
+	width: max-content;
+	max-width: calc(100% - 3.5rem);
+	z-index: 2;
+	text-align: left;
 	text-transform: uppercase;
 	letter-spacing: 0.12em;
 	font-size: 0.7rem;
-	margin: 0;
 	color: var(--mrg-brand-accent);
 	font-weight: 600;
 }
 
-.mrg-gate__brand-title {
-	font-size: clamp(1.35rem, 3vw, 1.85rem);
-	line-height: 1.2;
-	margin: 0;
-	font-weight: 650;
+@media (min-width: 840px) {
+	.mrg-gate__eyebrow {
+		top: 2.5rem;
+		left: 2.5rem;
+		max-width: calc(100% - 5rem);
+	}
 }
 
 .mrg-gate__proof {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 0.6rem 1rem;
-	margin-top: 0.5rem;
+	margin-top: auto;
+	padding-top: 1.25rem;
 }
 
 .mrg-gate__proof-item {
@@ -140,18 +190,22 @@
 	align-items: center;
 	gap: 0.35rem;
 	font-size: 0.8rem;
-	opacity: 0.92;
+	color: var(--mrg-brand-muted);
 }
 
 .mrg-gate__proof-item svg {
 	flex-shrink: 0;
 	color: var(--mrg-brand-accent);
+	opacity: 0.9;
 }
 
 .mrg-gate__panel {
 	background: var(--mrg-panel-bg);
 	color: var(--mrg-panel-fg);
 	flex: 1 1 auto;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
 	overflow: auto;
 }
 
@@ -159,6 +213,11 @@
 	padding: 1.75rem;
 	max-width: 32rem;
 	margin: 0 auto;
+	width: 100%;
+	flex: 1 1 auto;
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
 }
 
 @media (min-width: 840px) {
@@ -169,6 +228,16 @@
 
 .mrg-gate__logo-wrap {
 	margin-bottom: 1.25rem;
+	flex-shrink: 0;
+}
+
+/* Vertically center the pre-auth (compliance + CTA) block; fine print stays at bottom */
+.mrg-gate__state[data-mrg-state="auth"]:not([hidden]) {
+	flex: 1 1 auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	min-height: 0;
 }
 
 .mrg-gate__logo {
@@ -181,11 +250,12 @@
 	font-size: 1.35rem;
 	margin: 0 0 0.5rem;
 	line-height: 1.25;
+	color: var(--mrg-panel-fg);
 }
 
 .mrg-gate__intro {
 	margin: 0 0 1.25rem;
-	color: #475569;
+	color: var(--mrg-muted-text);
 	font-size: 0.95rem;
 	line-height: 1.5;
 }
@@ -203,11 +273,13 @@
 	font-size: 0.85rem;
 	line-height: 1.45;
 	cursor: pointer;
+	color: var(--mrg-panel-fg);
 }
 
 .mrg-gate__check input {
 	margin-top: 0.2rem;
 	flex-shrink: 0;
+	accent-color: var(--mrg-button-bg);
 }
 
 .mrg-gate__fields {
@@ -221,6 +293,7 @@
 	font-size: 0.8rem;
 	font-weight: 600;
 	margin-bottom: 0.35rem;
+	color: var(--mrg-panel-fg);
 }
 
 .mrg-gate__required {
@@ -232,15 +305,22 @@
 	width: 100%;
 	padding: 0.55rem 0.65rem;
 	border: 1px solid var(--mrg-border);
-	border-radius: 6px;
+	border-radius: var(--mrg-radius);
 	font: inherit;
-	background: #fff;
+	background: var(--mrg-panel-bg);
+	color: var(--mrg-panel-fg);
+}
+
+.mrg-gate__select:focus,
+.mrg-gate__input:focus {
+	outline: 2px solid color-mix(in srgb, var(--ring, #a1a1a1) 65%, transparent);
+	outline-offset: 1px;
 }
 
 .mrg-gate__button {
 	appearance: none;
-	border: none;
-	border-radius: 8px;
+	border: 1px solid transparent;
+	border-radius: var(--mrg-radius);
 	padding: 0.75rem 1.15rem;
 	font: inherit;
 	font-weight: 600;
@@ -250,6 +330,7 @@
 	text-align: center;
 	text-decoration: none;
 	display: inline-block;
+	transition: background 0.15s var(--default-transition-timing-function, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
 .mrg-gate__button:hover {
@@ -262,12 +343,13 @@
 }
 
 .mrg-gate__button--secondary {
-	background: #e2e8f0;
-	color: #0f172a;
+	background: var(--mrg-secondary-bg);
+	color: var(--mrg-secondary-fg);
+	border-color: var(--mrg-border);
 }
 
 .mrg-gate__button--secondary:hover {
-	background: #cbd5e1;
+	background: var(--mrg-secondary-hover);
 }
 
 .mrg-gate__button--link {
@@ -283,10 +365,11 @@
 .mrg-gate__discount {
 	margin: 1rem 0;
 	padding: 0.85rem 1rem;
-	border-radius: 8px;
-	border: 2px dashed var(--mrg-border);
+	border-radius: var(--mrg-radius);
+	border: 1px dashed var(--mrg-border);
 	text-align: center;
-	background: #f8fafc;
+	background: var(--mrg-discount-bg);
+	color: var(--mrg-panel-fg);
 }
 
 .mrg-gate__discount-code {
@@ -294,18 +377,27 @@
 	font-weight: 700;
 	letter-spacing: 0.08em;
 	font-family: ui-monospace, monospace;
+	color: var(--mrg-panel-fg);
 }
 
 .mrg-gate__fine-print {
 	font-size: 0.78rem;
-	color: #64748b;
-	margin: 1.25rem 0 0;
+	color: var(--mrg-muted-text);
+	margin: 0;
+	padding-top: 1.25rem;
+	margin-top: auto;
+	flex-shrink: 0;
 	line-height: 1.45;
 }
 
 .mrg-gate__link {
-	color: var(--mrg-button-bg);
+	color: var(--mrg-link);
 	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+.mrg-gate__link:hover {
+	color: #525252;
 }
 
 .mrg-gate-noscript {

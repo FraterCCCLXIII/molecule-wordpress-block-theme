@@ -80,15 +80,15 @@ class MRG_Gate {
 		/**
 		 * Filter final redirect target for gated guests.
 		 *
-		 * @param string $login_url URL with redirect_to and auth mode.
-		 * @param string $redirect_to Intended return URL.
+		 * @param string $account_url URL with redirect_to and auth mode (login or register).
+		 * @param string $redirect_to Intended return URL after authentication.
 		 */
 		$login_url = apply_filters(
 			'molecule_research_gate_guest_redirect',
 			add_query_arg(
 				array(
 					'redirect_to' => $redirect_to,
-					'auth'        => 'login',
+					'auth'        => $this->get_guest_auth_query_value(),
 				),
 				$myaccount
 			),
@@ -104,6 +104,14 @@ class MRG_Gate {
 	 */
 	public function woocommerce_available(): bool {
 		return function_exists( 'wc_get_page_permalink' ) && class_exists( 'WooCommerce' );
+	}
+
+	/**
+	 * `auth` query value when sending guests to My Account (`login` or `register`).
+	 */
+	public function get_guest_auth_query_value(): string {
+		$mode = apply_filters( 'molecule_research_gate_guest_auth_mode', 'register' );
+		return in_array( $mode, array( 'login', 'register' ), true ) ? $mode : 'register';
 	}
 
 	/**

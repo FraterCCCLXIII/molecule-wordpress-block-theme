@@ -32,11 +32,12 @@ class MRG_Admin_Settings {
 			'logo_url'                => '',
 			'brand_panel_attachment_id' => 0,
 			'brand_panel_image_url'   => '',
-			'brand_eyebrow'           => __( 'Research access required', 'molecule-research-gate' ),
-			'brand_title'             => __( 'Verified research compounds.', 'molecule-research-gate' ),
-			'proof_line_1'            => __( 'USA sourced', 'molecule-research-gate' ),
-			'proof_line_2'            => __( 'Third-party COAs', 'molecule-research-gate' ),
-			'proof_line_3'            => __( 'Research use only', 'molecule-research-gate' ),
+			'brand_eyebrow'               => __( 'Research access required', 'molecule-research-gate' ),
+			'brand_image_overlay_opacity' => 85,
+			'modal_backdrop_opacity'      => 55,
+			'proof_line_1'                => __( 'USA sourced', 'molecule-research-gate' ),
+			'proof_line_2'                => __( 'Third-party COAs', 'molecule-research-gate' ),
+			'proof_line_3'                => __( 'Research use only', 'molecule-research-gate' ),
 			'gate_shop'               => 1,
 			'gate_product'            => 1,
 			'gate_product_category'   => 1,
@@ -175,10 +176,17 @@ class MRG_Admin_Settings {
 
 		$out['policy_version'] = isset( $out['policy_version'] ) ? sanitize_text_field( (string) $out['policy_version'] ) : $defaults['policy_version'];
 
-		$text_keys = array( 'brand_eyebrow', 'brand_title', 'proof_line_1', 'proof_line_2', 'proof_line_3' );
+		$text_keys = array( 'brand_eyebrow', 'proof_line_1', 'proof_line_2', 'proof_line_3' );
 		foreach ( $text_keys as $key ) {
 			$out[ $key ] = isset( $out[ $key ] ) ? sanitize_text_field( (string) $out[ $key ] ) : $defaults[ $key ];
 		}
+
+		$out['brand_image_overlay_opacity'] = isset( $out['brand_image_overlay_opacity'] )
+			? min( 100, max( 0, (int) $out['brand_image_overlay_opacity'] ) )
+			: $defaults['brand_image_overlay_opacity'];
+		$out['modal_backdrop_opacity']      = isset( $out['modal_backdrop_opacity'] )
+			? min( 100, max( 0, (int) $out['modal_backdrop_opacity'] ) )
+			: $defaults['modal_backdrop_opacity'];
 
 		$gate_keys = array( 'gate_shop', 'gate_product', 'gate_product_category', 'gate_product_tag', 'gate_cart', 'gate_checkout' );
 		foreach ( $gate_keys as $key ) {
@@ -279,7 +287,21 @@ class MRG_Admin_Settings {
 								}
 								?>
 							</div>
-							<p class="description"><?php esc_html_e( 'Background for the left brand column (eyebrow, headline, proof points) on every gate step. A dark tint keeps text readable.', 'molecule-research-gate' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Background for the left brand column (eyebrow and proof points) on every gate step. Use the overlay control below to keep text readable.', 'molecule-research-gate' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="mrg_brand_overlay"><?php esc_html_e( 'Brand image overlay', 'molecule-research-gate' ); ?></label></th>
+						<td>
+							<input name="<?php echo esc_attr( MRG_OPTION_KEY ); ?>[brand_image_overlay_opacity]" type="number" id="mrg_brand_overlay" min="0" max="100" step="1" value="<?php echo esc_attr( (string) (int) $values['brand_image_overlay_opacity'] ); ?>" class="small-text" />
+							<p class="description"><?php esc_html_e( 'Dark gradient strength over the brand image (0 = image only, 100 = strongest). Default 85.', 'molecule-research-gate' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="mrg_modal_backdrop"><?php esc_html_e( 'Modal backdrop dim', 'molecule-research-gate' ); ?></label></th>
+						<td>
+							<input name="<?php echo esc_attr( MRG_OPTION_KEY ); ?>[modal_backdrop_opacity]" type="number" id="mrg_modal_backdrop" min="0" max="100" step="1" value="<?php echo esc_attr( (string) (int) $values['modal_backdrop_opacity'] ); ?>" class="small-text" />
+							<p class="description"><?php esc_html_e( 'How much the page behind the modal is darkened (0–100). Default 55.', 'molecule-research-gate' ); ?></p>
 						</td>
 					</tr>
 					<tr>

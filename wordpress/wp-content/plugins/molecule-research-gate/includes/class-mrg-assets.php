@@ -80,6 +80,7 @@ class MRG_Assets {
 				'requiresProfile'          => $needs_prof,
 				'profile'                  => $user_id ? MRG_User_Profile::get_profile_for_user( $user_id ) : array(),
 				'myAccountUrl'             => esc_url_raw( (string) wc_get_page_permalink( 'myaccount' ) ),
+				'myAccountAuthMode'        => $this->gate->get_guest_auth_query_value(),
 				'shopUrl'                  => esc_url_raw( (string) wc_get_page_permalink( 'shop' ) ),
 				'cartUrl'                  => esc_url_raw( (string) wc_get_cart_url() ),
 				'strings'                  => array(
@@ -98,7 +99,6 @@ class MRG_Assets {
 				),
 				'brand'                    => array(
 					'eyebrow'        => (string) $this->settings['brand_eyebrow'],
-					'title'          => (string) $this->settings['brand_title'],
 					'proof1'         => (string) $this->settings['proof_line_1'],
 					'proof2'         => (string) $this->settings['proof_line_2'],
 					'proof3'         => (string) $this->settings['proof_line_3'],
@@ -147,15 +147,20 @@ class MRG_Assets {
 		if ( is_admin() || ! $this->gate->woocommerce_available() ) {
 			return;
 		}
+
+		$backdrop_pct = min( 100, max( 0, (int) ( $this->settings['modal_backdrop_opacity'] ?? 55 ) ) );
+		$overlay_pct  = min( 100, max( 0, (int) ( $this->settings['brand_image_overlay_opacity'] ?? 85 ) ) );
+		$mrg_surface  = sprintf(
+			'--mrg-backdrop-pct: %d; --mrg-brand-overlay-pct: %d;',
+			$backdrop_pct,
+			$overlay_pct
+		);
 		?>
-		<div id="mrg-gate" class="mrg-gate" hidden data-mrg-gate-root role="dialog" aria-modal="true" aria-labelledby="mrg-gate-title-auth" aria-hidden="true">
+		<div id="mrg-gate" class="mrg-gate" style="<?php echo esc_attr( $mrg_surface ); ?>" hidden data-mrg-gate-root role="dialog" aria-modal="true" aria-labelledby="mrg-gate-title-auth" aria-hidden="true">
 			<div class="mrg-gate__backdrop" data-mrg-backdrop></div>
 			<div class="mrg-gate__shell">
 				<div class="mrg-gate__brand-panel" aria-hidden="true" data-mrg-brand-panel>
 					<p class="mrg-gate__eyebrow" data-mrg-brand-eyebrow></p>
-					<div class="mrg-gate__brand-copy">
-						<h2 class="mrg-gate__brand-title" data-mrg-brand-title></h2>
-					</div>
 					<div class="mrg-gate__proof" data-mrg-proof></div>
 				</div>
 				<div class="mrg-gate__panel">

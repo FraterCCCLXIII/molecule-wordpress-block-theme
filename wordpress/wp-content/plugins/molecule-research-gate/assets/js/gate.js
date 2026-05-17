@@ -162,23 +162,23 @@
 		}
 	}
 
-	function buildLoginUrl(targetUrl) {
+	function buildMyAccountGateUrl(targetUrl) {
 		var u = new URL(cfg.myAccountUrl);
 		u.searchParams.set('redirect_to', targetUrl);
-		u.searchParams.set('auth', 'login');
+		var mode = cfg.myAccountAuthMode || 'register';
+		if (mode !== 'login' && mode !== 'register') {
+			mode = 'register';
+		}
+		u.searchParams.set('auth', mode);
 		return u.toString();
 	}
 
 	function bindBrand() {
 		var b = cfg.brand || {};
 		var eyebrow = root.querySelector('[data-mrg-brand-eyebrow]');
-		var title = root.querySelector('[data-mrg-brand-title]');
 		var proof = root.querySelector('[data-mrg-proof]');
 		if (eyebrow) {
 			eyebrow.textContent = b.eyebrow || '';
-		}
-		if (title) {
-			title.textContent = b.title || '';
 		}
 		if (proof) {
 			proof.innerHTML =
@@ -306,7 +306,7 @@
 				if (!pendingNavUrl) {
 					pendingNavUrl = cfg.shopUrl || '/';
 				}
-				window.location.href = buildLoginUrl(pendingNavUrl);
+				window.location.href = buildMyAccountGateUrl(pendingNavUrl);
 			});
 		}
 		var research = root.querySelector('[data-mrg-field-research]');
