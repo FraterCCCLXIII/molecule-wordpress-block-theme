@@ -17,6 +17,11 @@ class MRG_Admin_Settings {
 	public const MENU_SLUG = 'molecule-research-gate';
 
 	/**
+	 * Set once legacy proof trio has been rewritten to updated defaults (avoids overwriting custom copy).
+	 */
+	private const OPTION_MIGRATE_PROOF_LINES = 'mrg_migrated_proof_lines_202602';
+
+	/**
 	 * Default settings.
 	 *
 	 * @return array<string, mixed>
@@ -35,9 +40,9 @@ class MRG_Admin_Settings {
 			'brand_eyebrow'               => __( 'Research access required', 'molecule-research-gate' ),
 			'brand_image_overlay_opacity' => 85,
 			'modal_backdrop_opacity'      => 55,
-			'proof_line_1'                => __( 'USA sourced', 'molecule-research-gate' ),
-			'proof_line_2'                => __( 'Third-party COAs', 'molecule-research-gate' ),
-			'proof_line_3'                => __( 'Research use only', 'molecule-research-gate' ),
+			'proof_line_1'                => __( '99%+ Purity', 'molecule-research-gate' ),
+			'proof_line_2'                => __( 'Third-Party Verified', 'molecule-research-gate' ),
+			'proof_line_3'                => __( 'Research Use Only', 'molecule-research-gate' ),
 			'gate_shop'               => 1,
 			'gate_product'            => 1,
 			'gate_product_category'   => 1,
@@ -58,6 +63,44 @@ class MRG_Admin_Settings {
 			$stored = array();
 		}
 		return array_merge( self::get_defaults(), $stored );
+	}
+
+	/**
+	 * One-time rewrite of legacy proof bullets in stored options when they match the shipped defaults from v1 copy.
+	 *
+	 * Front-end localized `brand.proof*` reads from the database option, so changing get_defaults()
+	 * alone does not affect existing sites until settings are saved again.
+	 */
+	public static function maybe_migrate_proof_lines(): void {
+		if ( '' !== get_option( self::OPTION_MIGRATE_PROOF_LINES, '' ) ) {
+			return;
+		}
+
+		$stored = get_option( MRG_OPTION_KEY );
+		if ( ! is_array( $stored ) ) {
+			update_option( self::OPTION_MIGRATE_PROOF_LINES, '1', false );
+			return;
+		}
+
+		$p1 = isset( $stored['proof_line_1'] ) ? (string) $stored['proof_line_1'] : '';
+		$p2 = isset( $stored['proof_line_2'] ) ? (string) $stored['proof_line_2'] : '';
+		$p3 = isset( $stored['proof_line_3'] ) ? (string) $stored['proof_line_3'] : '';
+
+		$legacy_three = (
+			$p1 === 'USA sourced'
+			&& $p2 === 'Third-party COAs'
+			&& $p3 === 'Research use only'
+		);
+
+		if ( $legacy_three ) {
+			$d = self::get_defaults();
+			$stored['proof_line_1'] = $d['proof_line_1'];
+			$stored['proof_line_2'] = $d['proof_line_2'];
+			$stored['proof_line_3'] = $d['proof_line_3'];
+			update_option( MRG_OPTION_KEY, $stored, false );
+		}
+
+		update_option( self::OPTION_MIGRATE_PROOF_LINES, '1', false );
 	}
 
 	/**

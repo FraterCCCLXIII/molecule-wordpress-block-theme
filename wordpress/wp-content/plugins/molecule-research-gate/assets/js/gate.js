@@ -21,9 +21,13 @@
 	var trapHandler = null;
 	var previousActive = null;
 
-	var ICON_PIN = '<svg role="presentation" fill="none" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M20.223 9.51c0 5.526-5.047 10.497-7.233 12.392a1.5 1.5 0 0 1-1.98 0C8.823 20.007 3.776 15.035 3.776 9.51a8.224 8.224 0 0 1 16.447 0Zm-4.855-.484a3.368 3.368 0 1 1-6.736 0 3.368 3.368 0 0 1 6.736 0Z" fill="currentColor" fill-opacity=".12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
-	var ICON_DOC = '<svg role="presentation" fill="none" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.163 4.068a2.544 2.544 0 0 0 2.533 2.307h4.608a2.544 2.544 0 0 0 2.533-2.307l.787.1c.333.042.664.084.993.124a1.731 1.731 0 0 1 1.53 1.584c.352 4.914.352 9.846 0 14.759a1.677 1.677 0 0 1-1.533 1.555c-4.538.38-8.69.38-13.227 0a1.676 1.676 0 0 1-1.533-1.555 103.014 103.014 0 0 1 0-14.759 1.731 1.731 0 0 1 1.53-1.584c.328-.04.66-.082.993-.125l.786-.1Z" fill="currentColor" fill-opacity=".12"></path><path d="M7.163 4.068a2.544 2.544 0 0 0 2.533 2.307h4.608a2.544 2.544 0 0 0 2.533-2.307l.787.1c.333.042.664.084.993.124a1.731 1.731 0 0 1 1.53 1.584c.352 4.914.352 9.846 0 14.759a1.677 1.677 0 0 1-1.533 1.555c-4.538.38-8.69.38-13.227 0a1.676 1.676 0 0 1-1.533-1.555 103.014 103.014 0 0 1 0-14.759 1.731 1.731 0 0 1 1.53-1.584c.328-.04.66-.082.993-.125l.786-.1Z" stroke="currentColor" stroke-width="2"></path><path d="M14.304 1.286H9.696A2.544 2.544 0 0 0 7.152 3.83v.001a2.544 2.544 0 0 0 2.544 2.544h4.608a2.544 2.544 0 0 0 2.544-2.544V3.83a2.544 2.544 0 0 0-2.544-2.544Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M9 11h6M9 16h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>';
-	var ICON_SHIELD = '<svg role="presentation" fill="none" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M1.366 11.571c0-6.337 2.658-9.054 3.546-9.96h14.177c.886.906 3.545 3.623 3.545 9.96 0 7.242-6.982 9.912-10.526 10.818-3.547-.906-10.743-3.576-10.743-10.82l.001.002Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="m12 22.361.106.028c3.545-.906 10.528-3.576 10.528-10.82 0-6.335-2.657-9.05-3.544-9.958H12v20.75Z" fill="currentColor" fill-opacity=".12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
+	/* Icons: lucide-derived (stroke 2); purity / verified / laboratory research. */
+	var ICON_PURITY =
+		'<svg role="presentation" fill="none" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2" fill="currentColor" fill-opacity=".12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M6.453 15h11.094" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><path d="M8.5 2h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>';
+	var ICON_VERIFIED =
+		'<svg role="presentation" fill="none" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" fill="currentColor" fill-opacity=".12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
+	var ICON_RESEARCH_ONLY =
+		'<svg role="presentation" fill="none" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><path d="M3 22h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><path d="M14 22a7 7 0 1 0 0-14h-1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M9 14h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z" fill="currentColor" fill-opacity=".12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>';
 
 	function proofItem(icon, text) {
 		return '<span class="mrg-gate__proof-item">' + icon + text + '</span>';
@@ -182,9 +186,9 @@
 		}
 		if (proof) {
 			proof.innerHTML =
-				proofItem(ICON_PIN, b.proof1 || '') +
-				proofItem(ICON_DOC, b.proof2 || '') +
-				proofItem(ICON_SHIELD, b.proof3 || '');
+				proofItem(ICON_PURITY, b.proof1 || '') +
+				proofItem(ICON_VERIFIED, b.proof2 || '') +
+				proofItem(ICON_RESEARCH_ONLY, b.proof3 || '');
 		}
 		var logoWrap = root.querySelector('[data-mrg-logo-wrap]');
 		var logo = root.querySelector('[data-mrg-logo]');

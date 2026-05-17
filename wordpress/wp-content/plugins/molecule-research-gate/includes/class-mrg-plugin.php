@@ -28,6 +28,7 @@ class MRG_Plugin {
 	 * Init hooks.
 	 */
 	public function init(): void {
+		MRG_Admin_Settings::maybe_migrate_proof_lines();
 		$this->settings = MRG_Admin_Settings::parse( get_option( MRG_OPTION_KEY, array() ) );
 
 		if ( ! class_exists( 'WooCommerce' ) ) {
@@ -44,6 +45,7 @@ class MRG_Plugin {
 
 		if ( is_admin() ) {
 			( new MRG_Admin_Settings() )->register();
+			( new MRG_Admin_User_Profile_Display() )->register();
 		}
 
 		$this->gate = new MRG_Gate( $this->settings );
