@@ -106,7 +106,8 @@
 
 @media (min-width: 840px) {
 	.mrg-gate__brand-panel {
-		flex: 0 0 46%;
+		flex: 0 0 50%;
+		min-width: 0;
 		padding: 2.5rem;
 	}
 }
@@ -207,6 +208,13 @@
 	display: flex;
 	flex-direction: column;
 	overflow: auto;
+}
+
+@media (min-width: 840px) {
+	.mrg-gate__panel {
+		flex: 0 0 50%;
+		min-width: 0;
+	}
 }
 
 .mrg-gate__inner {
