@@ -227,7 +227,6 @@ if (! class_exists('WC_GreenPay_Gateway')) {
 			add_action('init', function () {
 				add_rewrite_endpoint('my-subscriptions', EP_ROOT | EP_PAGES);
 			});
-			add_action('wp_footer', [$this, 'hide_shop_prices_js']);
 			add_action('woocommerce_account_my-subscriptions_endpoint', [$this, 'render_user_subscriptions_page']);
 			add_action('template_redirect', [$this, 'handle_frontend_cancel_request']);
 
@@ -319,18 +318,6 @@ if (! class_exists('WC_GreenPay_Gateway')) {
 					return 'Bank day';
 				default:
 					return '';
-			}
-		}
-
-		public function hide_shop_prices_js()
-		{
-			if (is_shop() || is_product_category() || is_product_tag()) {
-				echo '<script>
-					jQuery(document).ready(function($) {
-						//$(".woocommerce-Price-amount").hide();
-						$(".wp-block-woocommerce-product-price").hide();
-					});
-				</script>';
 			}
 		}
 
@@ -1005,7 +992,7 @@ if (! class_exists('WC_GreenPay_Gateway')) {
 
 		public function enqueue_styles()
 		{
-			if (is_shop() || is_product_category() || is_product_tag()) {
+			if (is_shop() || is_product_category() || is_product_tag() || is_product_taxonomy()) {
 				$css_file = plugin_dir_path(__FILE__) . '../assets/css/hide-subscription-prices.css';
 				wp_enqueue_style(
 					'custom-subscription-style',
@@ -1106,9 +1093,19 @@ if (! class_exists('WC_GreenPay_Gateway')) {
 
 		public function show_product_summary()
 		{
-			global $product;
+			// Blockified shop loops call this from the compatibility layer after each title.
+			// Rely on the current post ID — global $product can be stale for some sessions (e.g. logged-in users)
+			// when other code touches $GLOBALS['product'] during the same request.
+			$post_id = get_the_ID();
+			if ( ! $post_id || 'product' !== get_post_type( $post_id ) ) {
+				return;
+			}
 
-			if (!$product instanceof WC_Product) return;
+			$product = wc_get_product( $post_id );
+			if ( ! $product instanceof \WC_Product ) {
+				return;
+			}
+
 			$is_subscription = $product->get_meta('_is_subscription', true);
 
 			$price_display = $product->get_price_html();
