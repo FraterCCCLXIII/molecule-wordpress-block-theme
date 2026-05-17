@@ -707,6 +707,26 @@ body.admin-bar .molecule-top-nav {
   max-height: 24px;
 }
 
+/* Guest My Account: logo-only top bar; same 24px logo as primary nav. */
+.molecule-top-nav--guest-auth {
+  border-bottom: 1px solid var(--border, #e5e5e5);
+}
+
+.molecule-top-nav-inner--guest-auth {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: none;
+  padding-block: 0.75rem;
+  padding-inline: 1rem;
+}
+
+.molecule-top-nav-logo--guest-auth {
+  margin: 0 auto;
+  text-align: center;
+}
+
 .molecule-top-nav-icons {
   display: flex;
   align-items: center;

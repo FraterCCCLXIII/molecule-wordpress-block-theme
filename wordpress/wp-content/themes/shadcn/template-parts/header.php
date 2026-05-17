@@ -11,6 +11,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/*
+ * Login, registration, and other guest views on My Account: logo-only header.
+ * Skips shipping-banner queries and full navigation for a focused auth layout.
+ */
+$molecule_guest_auth_layout = function_exists( 'is_account_page' ) && is_account_page() && ! is_user_logged_in();
+
+if ( $molecule_guest_auth_layout ) {
+	$logo     = get_custom_logo();
+	$home_url = esc_url( home_url( '/' ) );
+	?>
+	<header class="molecule-top-nav molecule-top-nav--guest-auth" role="banner">
+		<div class="molecule-top-nav-inner molecule-top-nav-inner--guest-auth">
+			<div class="molecule-top-nav-logo molecule-top-nav-logo--guest-auth">
+				<?php if ( $logo ) : ?>
+					<?php echo $logo; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_custom_logo() is safe ?>
+				<?php else : ?>
+					<a href="<?php echo esc_url( $home_url ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a>
+				<?php endif; ?>
+			</div>
+		</div>
+	</header>
+	<?php
+	return;
+}
+
 $logo            = get_custom_logo();
 $home_url        = esc_url( home_url( '/' ) );
 $search_url      = esc_url( home_url( '/?s=' ) );

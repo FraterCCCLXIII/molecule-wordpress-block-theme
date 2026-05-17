@@ -549,6 +549,8 @@ class WooCommerce {
 			return $classes;
 		}
 
+		$classes[] = 'molecule-guest-auth-layout';
+
 		if ( ! $this->is_account_registration_enabled() ) {
 			return $classes;
 		}

@@ -20,6 +20,7 @@ class Core {
 		// Priority 20 — must run after WordPress core's _wp_add_block_level_preset_styles (priority 10)
 		// which returns null when it receives a non-null value, nullifying any earlier pre-render.
 		add_filter( 'pre_render_block', array( $this, 'render_php_header' ), 20, 2 );
+		add_filter( 'pre_render_block', array( $this, 'suppress_footer_guest_account' ), 20, 2 );
 
 		require_once __DIR__ . '/Core/Blocks.php';
 		require_once __DIR__ . '/Core/Patterns.php';
@@ -192,6 +193,38 @@ class Core {
 		include $template;
 		$did_render_php_header = true;
 		return ob_get_clean();
+	}
+
+	/**
+	 * Hide the block footer on guest My Account (login/register/lost password)
+	 * so the page matches a focused auth layout.
+	 *
+	 * @param string|null $pre_render Existing pre-render override.
+	 * @param array       $block      Parsed block data.
+	 * @return string|null
+	 */
+	public function suppress_footer_guest_account( $pre_render, $block ) {
+		if ( 'core/template-part' !== ( $block['blockName'] ?? '' ) ) {
+			return $pre_render;
+		}
+
+		if ( 'footer' !== ( $block['attrs']['slug'] ?? '' ) ) {
+			return $pre_render;
+		}
+
+		if ( is_admin() ) {
+			return $pre_render;
+		}
+
+		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+			return $pre_render;
+		}
+
+		if ( function_exists( 'is_account_page' ) && is_account_page() && ! is_user_logged_in() ) {
+			return '';
+		}
+
+		return $pre_render;
 	}
 }
 
