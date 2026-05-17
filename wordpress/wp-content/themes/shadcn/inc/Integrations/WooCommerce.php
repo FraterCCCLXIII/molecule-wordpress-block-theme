@@ -288,6 +288,20 @@ class WooCommerce {
 
 	public function enqueue_scripts() {
 		wp_enqueue_style( 'shadcn-woocommerce', get_template_directory_uri() . '/assets/css/woocommerce.css', array(), wp_get_theme()->get( 'Version' ) );
+
+		// Late cascade win: login options row must not inherit horizontal padding from global/block styles.
+		wp_add_inline_style(
+			'shadcn-woocommerce',
+			'html body.woocommerce-account form.woocommerce-form.woocommerce-form-login.login .molecule-login-options-row{' .
+			'padding:0!important;padding-block:0!important;padding-inline:0!important;' .
+			'margin-left:0!important;margin-right:0!important;margin-inline:0!important;' .
+			'box-sizing:border-box!important;}' .
+			'html body.woocommerce-account form.woocommerce-form.woocommerce-form-login.login .molecule-login-options-row>.molecule-login-remember-wrap,' .
+			'html body.woocommerce-account form.woocommerce-form.woocommerce-form-login.login .molecule-login-options-row>.molecule-login-lost-password,' .
+			'html body.woocommerce-account form.woocommerce-form.woocommerce-form-login.login .molecule-login-options-row label.woocommerce-form-login__rememberme{' .
+			'padding:0!important;padding-inline:0!important;}'
+		);
+
 		wp_enqueue_style( 'shadcn-side-cart', get_template_directory_uri() . '/assets/css/side-cart.css', array( 'shadcn-woocommerce' ), wp_get_theme()->get( 'Version' ) );
 
 		if ( function_exists( 'is_product' ) && is_product() ) {
