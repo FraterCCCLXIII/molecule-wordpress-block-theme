@@ -7,7 +7,11 @@
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Class ACT_Order_Report_Repository
+ */
 class ACT_Order_Report_Repository {
+
 	/**
 	 * Build a monthly affiliate report.
 	 *
@@ -53,12 +57,19 @@ class ACT_Order_Report_Repository {
 			$tax_total      = (float) $order->get_total_tax();
 			$order_total    = (float) $order->get_total();
 
+			$coupon_display = '';
+			if ( ! empty( $match['coupon_codes'] ) ) {
+				$coupon_display = implode( ', ', $match['coupon_codes'] );
+			} elseif ( ! empty( $match['customer_only'] ) ) {
+				$coupon_display = __( 'Customer profile (no coupon)', 'affiliate-coupon-tracker' );
+			}
+
 			$rows[] = array(
 				'order_id'       => $order->get_id(),
 				'order_number'   => $order->get_order_number(),
 				'created_at'     => $order->get_date_created() ? $order->get_date_created()->date_i18n( 'Y-m-d H:i' ) : '',
 				'customer_name'  => trim( $order->get_formatted_billing_full_name() ),
-				'coupon_codes'   => implode( ', ', $match['coupon_codes'] ),
+				'coupon_codes'   => $coupon_display,
 				'affiliate_name' => implode( ', ', $match['affiliate_labels'] ),
 				'items_total'    => $item_total,
 				'shipping_total' => $shipping_total,
@@ -128,17 +139,44 @@ class ACT_Order_Report_Repository {
 	}
 
 	/**
-	 * Resolve coupon codes in an order to affiliate metadata.
+	 * Resolve affiliate key for a coupon post ID.
 	 *
-	 * @param WC_Order $order         WooCommerce order object.
-	 * @param string   $affiliate_key Selected affiliate filter.
+	 * @param int $coupon_id Coupon ID.
+	 * @return string Canonical key or empty string.
+	 */
+	public function get_affiliate_key_for_coupon_id( $coupon_id ) {
+		$affiliate = $this->get_affiliate_for_coupon_id( (int) $coupon_id );
+		return $affiliate['key'];
+	}
+
+	/**
+	 * Human label for a canonical affiliate key (from coupon configuration).
+	 *
+	 * @param string $key Affiliate key.
+	 * @return string Empty if unknown / stale.
+	 */
+	public function get_affiliate_label_for_key( $key ) {
+		$key = is_string( $key ) ? trim( $key ) : '';
+		if ( '' === $key ) {
+			return '';
+		}
+
+		$options = $this->get_affiliate_options();
+		return isset( $options[ $key ] ) ? $options[ $key ] : '';
+	}
+
+	/**
+	 * Coupon codes, affiliate labels, and filter match for an order.
+	 *
+	 * @param WC_Order $order         Order.
+	 * @param string   $affiliate_key Selected affiliate filter (empty = all).
 	 * @return array<string, mixed>
 	 */
 	private function get_order_affiliate_match( $order, $affiliate_key ) {
-		$coupon_codes     = $order->get_coupon_codes();
-		$matched_codes    = array();
-		$affiliate_labels = array();
-		$matches_filter   = ( '' === $affiliate_key );
+		$coupon_codes          = $order->get_coupon_codes();
+		$matched_codes         = array();
+		$affiliate_labels      = array();
+		$coupon_affiliate_keys = array();
 
 		foreach ( $coupon_codes as $coupon_code ) {
 			$coupon = new WC_Coupon( $coupon_code );
@@ -151,25 +189,51 @@ class ACT_Order_Report_Repository {
 				continue;
 			}
 
-			$matched_codes[]    = $coupon_code;
-			$affiliate_labels[] = $affiliate['label'];
+			$matched_codes[]         = $coupon_code;
+			$affiliate_labels[]      = $affiliate['label'];
+			$coupon_affiliate_keys[] = $affiliate['key'];
+		}
 
-			if ( '' !== $affiliate_key && $affiliate_key === $affiliate['key'] ) {
-				$matches_filter = true;
+		$matched_codes          = array_values( array_unique( $matched_codes ) );
+		$coupon_affiliate_keys  = array_values( array_unique( $coupon_affiliate_keys ) );
+		$has_coupon_affiliate   = ! empty( $matched_codes );
+		$customer_key_effective = '';
+
+		$user_id = (int) $order->get_user_id();
+		if ( $user_id ) {
+			$ck = trim( (string) get_user_meta( $user_id, ACT_Customer_Affiliate::META_KEY, true ) );
+			if ( '' !== $ck ) {
+				$label = $this->get_affiliate_label_for_key( $ck );
+				if ( '' !== $label ) {
+					$customer_key_effective = $ck;
+					$affiliate_labels[]     = $label;
+				}
 			}
 		}
 
-		$matched_codes    = array_values( array_unique( $matched_codes ) );
 		$affiliate_labels = array_values( array_unique( $affiliate_labels ) );
 
-		if ( empty( $matched_codes ) ) {
-			$matches_filter = false;
+		if ( ! $has_coupon_affiliate && '' === $customer_key_effective ) {
+			return array(
+				'matches_filter'  => false,
+				'coupon_codes'    => array(),
+				'affiliate_labels'=> array(),
+				'customer_only'   => false,
+			);
+		}
+
+		$customer_only = ( ! $has_coupon_affiliate ) && ( '' !== $customer_key_effective );
+
+		$matches_filter = ( '' === $affiliate_key );
+		if ( '' !== $affiliate_key ) {
+			$matches_filter = in_array( $affiliate_key, $coupon_affiliate_keys, true ) || ( $affiliate_key === $customer_key_effective );
 		}
 
 		return array(
-			'matches_filter'  => $matches_filter,
-			'coupon_codes'    => $matched_codes,
-			'affiliate_labels'=> $affiliate_labels,
+			'matches_filter'   => $matches_filter,
+			'coupon_codes'     => $matched_codes,
+			'affiliate_labels' => $affiliate_labels,
+			'customer_only'    => $customer_only,
 		);
 	}
 
@@ -179,7 +243,7 @@ class ACT_Order_Report_Repository {
 	 * @param int $coupon_id Coupon post ID.
 	 * @return array{key:string,label:string}
 	 */
-	private function get_affiliate_for_coupon_id( $coupon_id ) {
+	protected function get_affiliate_for_coupon_id( $coupon_id ) {
 		$affiliate_id   = trim( (string) get_post_meta( $coupon_id, ACT_Coupon_Affiliate_Fields::META_AFFILIATE_ID, true ) );
 		$affiliate_name = trim( (string) get_post_meta( $coupon_id, ACT_Coupon_Affiliate_Fields::META_AFFILIATE_NAME, true ) );
 

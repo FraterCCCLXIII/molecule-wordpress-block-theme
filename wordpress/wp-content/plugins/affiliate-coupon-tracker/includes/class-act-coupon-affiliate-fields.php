@@ -21,6 +21,7 @@ class ACT_Coupon_Affiliate_Fields {
 	public function register_hooks() {
 		add_action( 'woocommerce_coupon_options', array( $this, 'render_fields' ) );
 		add_action( 'woocommerce_coupon_options_save', array( $this, 'save_fields' ), 10, 2 );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_coupon_admin_scripts' ) );
 
 		add_filter( 'manage_edit-shop_coupon_columns', array( $this, 'add_coupon_columns' ) );
 		add_action( 'manage_shop_coupon_posts_custom_column', array( $this, 'render_coupon_column' ), 10, 2 );
@@ -59,7 +60,138 @@ class ACT_Coupon_Affiliate_Fields {
 			)
 		);
 
+		$this->render_referral_link_section( $coupon_id );
+
 		echo '</div>';
+	}
+
+	/**
+	 * Enqueue script for referral URL preview + copy on coupon screen.
+	 *
+	 * @param string $hook_suffix Current admin page hook.
+	 * @return void
+	 */
+	public function enqueue_coupon_admin_scripts( $hook_suffix ) {
+		if ( 'post.php' !== $hook_suffix && 'post-new.php' !== $hook_suffix ) {
+			return;
+		}
+
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		if ( ! $screen || 'shop_coupon' !== $screen->post_type ) {
+			return;
+		}
+
+		if ( ! defined( 'ACT_PLUGIN_FILE' ) || ! defined( 'ACT_VERSION' ) ) {
+			return;
+		}
+
+		$handle = 'act-admin-coupon-ref';
+		wp_enqueue_script(
+			$handle,
+			plugins_url( 'assets/js/admin-coupon-ref.js', ACT_PLUGIN_FILE ),
+			array(),
+			ACT_VERSION,
+			true
+		);
+
+		$query_param = class_exists( 'ACT_Customer_Affiliate' ) ? ACT_Customer_Affiliate::QUERY_PARAM : 'act_ref';
+
+		wp_localize_script(
+			$handle,
+			'actCouponRef',
+			array(
+				'homeUrl'    => home_url( '/' ),
+				'queryParam' => $query_param,
+				'i18n'       => array(
+					'copy'     => __( 'Copy link', 'affiliate-coupon-tracker' ),
+					'copied'   => __( 'Copied!', 'affiliate-coupon-tracker' ),
+					'copyFail' => __( 'Could not copy. Select the URL and copy manually.', 'affiliate-coupon-tracker' ),
+				),
+			)
+		);
+	}
+
+	/**
+	 * Instructions + readonly URL + copy for storefront referral.
+	 *
+	 * @param int $coupon_id Coupon post ID.
+	 * @return void
+	 */
+	private function render_referral_link_section( $coupon_id ) {
+		$affiliate_id   = (string) get_post_meta( $coupon_id, self::META_AFFILIATE_ID, true );
+		$affiliate_name = (string) get_post_meta( $coupon_id, self::META_AFFILIATE_NAME, true );
+		$key            = $this->affiliate_key_from_fields( $affiliate_id, $affiliate_name );
+		$url            = '';
+
+		if ( '' !== $key && class_exists( 'ACT_Customer_Affiliate' ) ) {
+			$url = ACT_Customer_Affiliate::build_referral_url( $key );
+		}
+
+		$query_param = class_exists( 'ACT_Customer_Affiliate' ) ? ACT_Customer_Affiliate::QUERY_PARAM : 'act_ref';
+		$wrap_class = 'act-affiliate-referral-section' . ( '' === $url ? ' act-ref-empty' : '' );
+
+		?>
+		<div class="form-field <?php echo esc_attr( $wrap_class ); ?>" id="act-ref-url-field-wrap">
+			<label for="act-ref-url-display"><?php esc_html_e( 'Referral link (signup)', 'affiliate-coupon-tracker' ); ?></label>
+			<p class="description" style="margin-top:0;">
+				<?php esc_html_e( 'Give affiliates this link. Visitors may land on any page; append the query string below so we can store a referral cookie. When they later create a customer account before the cookie expires, their profile is linked to this coupon affiliate for reporting and payouts.', 'affiliate-coupon-tracker' ); ?>
+			</p>
+			<p class="description">
+				<?php
+				printf(
+					wp_kses(
+						/* translators: %s: query parameter name, e.g. act_ref */
+						__( 'Format: append <code>?%s=</code> and your affiliate key to the store URL (homepage or a product page). The key is the same as in reports: if Affiliate ID is set, use prefix <code>id:</code> plus the ID; otherwise <code>name:</code> plus Affiliate Name.', 'affiliate-coupon-tracker' ),
+						array( 'code' => array() )
+					),
+					esc_html( $query_param )
+				);
+				?>
+			</p>
+			<p class="description">
+				<?php esc_html_e( 'The link below updates when you change Affiliate ID or Name. Copy it for your partner; save the coupon to persist those fields.', 'affiliate-coupon-tracker' ); ?>
+			</p>
+			<p style="margin-bottom:0;">
+				<input
+					type="text"
+					readonly
+					class="large-text"
+					id="act-ref-url-display"
+					value="<?php echo esc_attr( $url ); ?>"
+					placeholder="<?php esc_attr_e( 'Set Affiliate ID or Name above to generate a link.', 'affiliate-coupon-tracker' ); ?>"
+					style="max-width: 45rem;"
+				/>
+				<button
+					type="button"
+					class="button"
+					id="act-ref-url-copy"
+					<?php echo '' === $url ? ' disabled="disabled"' : ''; ?>
+				><?php esc_html_e( 'Copy link', 'affiliate-coupon-tracker' ); ?></button>
+			</p>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Same canonical key as orders/reports: id: takes precedence over name:.
+	 *
+	 * @param string $affiliate_id Affiliate ID field.
+	 * @param string $affiliate_name Affiliate name field.
+	 * @return string
+	 */
+	private function affiliate_key_from_fields( $affiliate_id, $affiliate_name ) {
+		$affiliate_id   = trim( (string) $affiliate_id );
+		$affiliate_name = trim( (string) $affiliate_name );
+
+		if ( '' !== $affiliate_id ) {
+			return 'id:' . $affiliate_id;
+		}
+
+		if ( '' !== $affiliate_name ) {
+			return 'name:' . $affiliate_name;
+		}
+
+		return '';
 	}
 
 	/**

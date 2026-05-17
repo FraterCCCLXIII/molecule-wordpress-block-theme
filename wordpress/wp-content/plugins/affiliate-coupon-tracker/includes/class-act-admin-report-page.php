@@ -64,7 +64,7 @@ class ACT_Admin_Report_Page {
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'Affiliate Coupon Report', 'affiliate-coupon-tracker' ); ?></h1>
-			<p><?php esc_html_e( 'Track WooCommerce orders tied to affiliate coupons by month.', 'affiliate-coupon-tracker' ); ?></p>
+			<p><?php esc_html_e( 'Orders appear when an affiliate coupon is used, when a logged-in customer is linked to an affiliate (coupon, referral signup, or admin), or both.', 'affiliate-coupon-tracker' ); ?></p>
 
 			<form method="get" style="margin: 16px 0;">
 				<input type="hidden" name="page" value="affiliate-coupon-tracker" />
