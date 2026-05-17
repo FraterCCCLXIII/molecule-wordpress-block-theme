@@ -67,8 +67,13 @@ class MRG_Assets {
 		wp_enqueue_style( 'mrg-gate' );
 		wp_enqueue_script( 'mrg-gate' );
 
-		$user_id   = get_current_user_id();
+		$user_id    = get_current_user_id();
 		$needs_prof = $this->gate->current_user_requires_profile_modal();
+
+		$offer_newsletter = false;
+		if ( $user_id && MRG_Brevo_Newsletter::should_offer_opt_in_ui( $this->settings ) ) {
+			$offer_newsletter = ! (bool) get_user_meta( $user_id, MRG_User_Profile::META_BREVO_NEWSLETTER_OPT_IN_AT, true );
+		}
 
 		wp_localize_script(
 			'mrg-gate',
@@ -96,6 +101,7 @@ class MRG_Assets {
 					'shopCta'             => __( 'Continue shopping', 'molecule-research-gate' ),
 					'cartCta'             => __( 'Go to cart with coupon', 'molecule-research-gate' ),
 					'checkboxHtml'        => '', // Filled below.
+					'newsletterOptInLabel' => __( 'Email me product updates and promotions (optional).', 'molecule-research-gate' ),
 				),
 				'brand'                    => array(
 					'eyebrow'        => (string) $this->settings['brand_eyebrow'],
@@ -110,6 +116,10 @@ class MRG_Assets {
 				'supportEmail'             => sanitize_email( (string) $this->settings['support_email'] ),
 				'researchOtherValue'       => MRG_User_Profile::RESEARCH_OTHER_VALUE,
 				'gateUrlPrefixes'          => array_values( $this->gate->get_link_match_prefixes() ),
+				'newsletterOptIn'          => array(
+					'enabled' => $offer_newsletter,
+					'restUrl' => esc_url_raw( rest_url( 'molecule-research-gate/v1/newsletter-opt-in' ) ),
+				),
 			)
 		);
 
@@ -227,6 +237,12 @@ class MRG_Assets {
 							<p class="mrg-gate__intro" data-mrg-verified-intro></p>
 							<div class="mrg-gate__discount" data-mrg-discount-wrap hidden>
 								<div class="mrg-gate__discount-code" data-mrg-discount-code></div>
+							</div>
+							<div class="mrg-gate__newsletter" data-mrg-newsletter-wrap hidden>
+								<label class="mrg-gate__check">
+									<input type="checkbox" name="mrg_newsletter_opt_in" value="1" data-mrg-newsletter-checkbox autocomplete="off" />
+									<span data-mrg-newsletter-label></span>
+								</label>
 							</div>
 							<a href="#" class="mrg-gate__button mrg-gate__button--link" data-mrg-verified-shop></a>
 							<a href="#" class="mrg-gate__button mrg-gate__button--secondary mrg-gate__button--link" data-mrg-verified-cart hidden></a>

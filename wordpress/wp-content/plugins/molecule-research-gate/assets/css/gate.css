@@ -273,6 +273,18 @@
 	margin: 0;
 }
 
+.mrg-gate__state[data-mrg-state="verified"]:not([hidden]) > .mrg-gate__newsletter {
+	text-align: left;
+	align-self: stretch;
+	margin: 0;
+}
+
+.mrg-gate__state[data-mrg-state="verified"]:not([hidden]) > .mrg-gate__newsletter .mrg-gate__check {
+	font-size: 0.82rem;
+	line-height: 1.35;
+	color: var(--mrg-muted-text);
+}
+
 .mrg-gate__state[data-mrg-state="verified"]:not([hidden]) .mrg-gate__button--link {
 	box-sizing: border-box;
 	border-radius: var(--mrg-radius);

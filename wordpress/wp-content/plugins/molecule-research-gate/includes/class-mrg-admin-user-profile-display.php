@@ -78,6 +78,10 @@ class MRG_Admin_User_Profile_Display {
 				<td><?php echo wp_kses_post( self::cell_text( $profile['role_title'] ) ); ?></td>
 			</tr>
 			<tr>
+				<th scope="row"><?php esc_html_e( 'Marketing newsletter (Brevo)', 'molecule-research-gate' ); ?></th>
+				<td><?php echo esc_html( self::format_timestamp_cell( get_user_meta( $user->ID, MRG_User_Profile::META_BREVO_NEWSLETTER_OPT_IN_AT, true ) ) ); ?></td>
+			</tr>
+			<tr>
 				<th scope="row">
 					<?php esc_html_e( 'Profile submitted', 'molecule-research-gate' ); ?>
 				</th>

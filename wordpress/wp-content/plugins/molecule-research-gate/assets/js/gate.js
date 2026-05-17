@@ -252,6 +252,24 @@
 		if (fine && s.finePrintHtml) {
 			fine.innerHTML = s.finePrintHtml;
 		}
+		var nlLabel = root.querySelector('[data-mrg-newsletter-label]');
+		if (nlLabel && s.newsletterOptInLabel) {
+			nlLabel.textContent = s.newsletterOptInLabel;
+		}
+	}
+
+	function syncNewsletterOptInUi() {
+		var wrap = root.querySelector('[data-mrg-newsletter-wrap]');
+		var cb = root.querySelector('[data-mrg-newsletter-checkbox]');
+		var no = cfg.newsletterOptIn || {};
+		if (!wrap) {
+			return;
+		}
+		var show = !!(no.enabled && no.restUrl);
+		wrap.hidden = !show;
+		if (cb) {
+			cb.checked = false;
+		}
 	}
 
 	function prefillProfile() {
@@ -321,6 +339,40 @@
 		if (profileForm) {
 			profileForm.addEventListener('submit', submitProfile);
 		}
+
+		root.addEventListener('click', function (e) {
+			var a = e.target.closest('[data-mrg-verified-shop], [data-mrg-verified-cart]');
+			if (!a || a.hidden) {
+				return;
+			}
+			var verifiedState = root.querySelector('[data-mrg-state="verified"]');
+			if (!verifiedState || verifiedState.hidden) {
+				return;
+			}
+			var href = a.getAttribute('href');
+			if (!href || href.charAt(0) === '#') {
+				return;
+			}
+			var no = cfg.newsletterOptIn || {};
+			var cb = root.querySelector('[data-mrg-newsletter-checkbox]');
+			if (!no.enabled || !no.restUrl || !cb || !cb.checked) {
+				return;
+			}
+			e.preventDefault();
+			fetch(no.restUrl, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-WP-Nonce': cfg.nonce,
+				},
+				body: JSON.stringify({ subscribe: true }),
+				credentials: 'same-origin',
+			})
+				.catch(function () {})
+				.finally(function () {
+					window.location.href = href;
+				});
+		});
 	}
 
 	function submitProfile(e) {
@@ -419,6 +471,7 @@
 		} else if (cartBtn) {
 			cartBtn.hidden = true;
 		}
+		syncNewsletterOptInUi();
 		profileLock = false;
 		showState('verified');
 	}
@@ -465,6 +518,7 @@
 	function init() {
 		bindBrand();
 		bindCopy();
+		syncNewsletterOptInUi();
 		bindForms();
 		prefillProfile();
 		bindCaptureClicks();

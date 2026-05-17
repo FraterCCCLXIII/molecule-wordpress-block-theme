@@ -23,6 +23,9 @@ class MRG_User_Profile {
 	public const META_ROLE_TITLE              = 'molecule_role_title';
 	public const META_PROFILE_COMPLETED_AT    = 'molecule_research_profile_completed_at';
 
+	/** Unix time when user opted into marketing email via verified-step checkbox (Brevo sync attempted). */
+	public const META_BREVO_NEWSLETTER_OPT_IN_AT = 'molecule_brevo_newsletter_opt_in_at';
+
 	public const RESEARCH_OTHER_VALUE = 'Other Qualified Research (specify)';
 
 	/**

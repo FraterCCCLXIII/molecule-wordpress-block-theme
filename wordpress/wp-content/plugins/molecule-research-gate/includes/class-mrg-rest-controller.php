@@ -59,6 +59,24 @@ class MRG_REST_Controller extends WP_REST_Controller {
 				),
 			)
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'/newsletter-opt-in',
+			array(
+				array(
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'newsletter_opt_in' ),
+					'permission_callback' => array( $this, 'can_edit_profile' ),
+					'args'                => array(
+						'subscribe' => array(
+							'type'    => 'boolean',
+							'default' => false,
+						),
+					),
+				),
+			)
+		);
 	}
 
 	/**
@@ -115,6 +133,48 @@ class MRG_REST_Controller extends WP_REST_Controller {
 				'shopUrl'            => $shop_url,
 				'cartUrlWithCoupon'  => $apply_url,
 				'couponHelpTextKey'  => $coupon ? 'checkout' : 'none',
+			),
+			200
+		);
+	}
+
+	/**
+	 * Marketing opt-in after verified modal (uses Brevo plugin API when configured).
+	 *
+	 * @param WP_REST_Request $request Request.
+	 * @return WP_REST_Response
+	 */
+	public function newsletter_opt_in( WP_REST_Request $request ): WP_REST_Response {
+		$user_id = get_current_user_id();
+
+		if ( ! $request->get_param( 'subscribe' ) ) {
+			return new WP_REST_Response(
+				array(
+					'success' => false,
+					'skipped' => true,
+				),
+				200
+			);
+		}
+
+		if ( get_user_meta( $user_id, MRG_User_Profile::META_BREVO_NEWSLETTER_OPT_IN_AT, true ) ) {
+			return new WP_REST_Response(
+				array(
+					'success'   => true,
+					'duplicate' => true,
+				),
+				200
+			);
+		}
+
+		$settings = MRG_Admin_Settings::parse( get_option( MRG_OPTION_KEY, array() ) );
+		$result   = MRG_Brevo_Newsletter::subscribe_user( $user_id, $settings );
+
+		return new WP_REST_Response(
+			array(
+				'success' => ! empty( $result['ok'] ),
+				'reason'  => $result['reason'] ?? '',
+				'code'    => $result['code'] ?? '',
 			),
 			200
 		);

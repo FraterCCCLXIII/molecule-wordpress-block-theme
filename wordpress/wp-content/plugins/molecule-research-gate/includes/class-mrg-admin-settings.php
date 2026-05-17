@@ -49,6 +49,8 @@ class MRG_Admin_Settings {
 			'gate_product_tag'        => 1,
 			'gate_cart'               => 0,
 			'gate_checkout'           => 0,
+			'brevo_newsletter_optin_enabled' => 0,
+			'brevo_newsletter_list_id'       => '',
 		);
 	}
 
@@ -121,6 +123,20 @@ class MRG_Admin_Settings {
 		if ( 'settings_page_' . self::MENU_SLUG !== $hook_suffix ) {
 			return;
 		}
+
+		wp_enqueue_style(
+			'mrg-admin-guide',
+			false,
+			array(),
+			MRG_VERSION
+		);
+		wp_add_inline_style(
+			'mrg-admin-guide',
+			'.mrg-admin-guide{margin-bottom:24px;max-width:920px}' .
+			'.mrg-admin-guide .title{margin-top:0}' .
+			'.mrg-admin-guide ul{margin:8px 0 0 18px}' .
+			'.mrg-admin-guide li{margin:6px 0}'
+		);
 
 		wp_enqueue_media();
 
@@ -236,6 +252,11 @@ class MRG_Admin_Settings {
 			$out[ $key ] = ! empty( $out[ $key ] ) ? 1 : 0;
 		}
 
+		$out['brevo_newsletter_optin_enabled'] = ! empty( $out['brevo_newsletter_optin_enabled'] ) ? 1 : 0;
+		$list_raw                               = isset( $out['brevo_newsletter_list_id'] ) ? sanitize_text_field( (string) $out['brevo_newsletter_list_id'] ) : '';
+		$list_raw                               = preg_replace( '/[^\d\s,]/', '', $list_raw );
+		$out['brevo_newsletter_list_id']       = trim( (string) $list_raw );
+
 		return array_merge( $defaults, $out );
 	}
 
@@ -258,6 +279,7 @@ class MRG_Admin_Settings {
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'Molecule Research Gate', 'molecule-research-gate' ); ?></h1>
+			<?php $this->render_admin_guide(); ?>
 			<form method="post" action="options.php">
 				<?php settings_fields( 'mrg_settings_group' ); ?>
 				<table class="form-table" role="presentation">
@@ -348,6 +370,32 @@ class MRG_Admin_Settings {
 						</td>
 					</tr>
 					<tr>
+						<th scope="row"><?php esc_html_e( 'Brevo newsletter opt-in (verified step)', 'molecule-research-gate' ); ?></th>
+						<td>
+							<label>
+								<input type="checkbox" name="<?php echo esc_attr( MRG_OPTION_KEY ); ?>[brevo_newsletter_optin_enabled]" value="1" <?php checked( $values['brevo_newsletter_optin_enabled'] ); ?> />
+								<?php esc_html_e( 'Show an optional marketing checkbox on the final gate step after research verification.', 'molecule-research-gate' ); ?>
+							</label>
+							<p class="description">
+								<?php
+								echo wp_kses_post(
+									sprintf(
+										/* translators: %s: WordPress plugin directory URL */
+										__( 'Requires the <a href="%s" target="_blank" rel="noopener noreferrer">Brevo</a> plugin (slug %s), connected API key, and list IDs below.', 'molecule-research-gate' ),
+										esc_url( 'https://wordpress.org/plugins/mailin/' ),
+										'<code>mailin</code>'
+									)
+								);
+								?>
+							</p>
+							<p>
+								<label for="mrg_brevo_lists"><?php esc_html_e( 'Brevo list ID(s)', 'molecule-research-gate' ); ?></label><br />
+								<input name="<?php echo esc_attr( MRG_OPTION_KEY ); ?>[brevo_newsletter_list_id]" type="text" id="mrg_brevo_lists" value="<?php echo esc_attr( $values['brevo_newsletter_list_id'] ); ?>" class="regular-text" placeholder="12, 34" />
+							</p>
+							<p class="description"><?php esc_html_e( 'Numeric list IDs from your Brevo account (comma-separated). Contacts are subscribed with simple opt-in when the customer checks the box before continuing.', 'molecule-research-gate' ); ?></p>
+						</td>
+					</tr>
+					<tr>
 						<th scope="row"><?php esc_html_e( 'Gate these views (guests redirected to login)', 'molecule-research-gate' ); ?></th>
 						<td>
 							<label><input type="checkbox" name="<?php echo esc_attr( MRG_OPTION_KEY ); ?>[gate_shop]" value="1" <?php checked( $values['gate_shop'] ); ?> /> <?php esc_html_e( 'Shop archive', 'molecule-research-gate' ); ?></label><br />
@@ -361,6 +409,62 @@ class MRG_Admin_Settings {
 				</table>
 				<?php submit_button(); ?>
 			</form>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Instructions shown above the settings form (Settings → Molecule Research Gate).
+	 */
+	private function render_admin_guide(): void {
+		$users_url = admin_url( 'users.php' );
+		$brevo_url = 'https://wordpress.org/plugins/mailin/';
+		?>
+		<div class="card mrg-admin-guide">
+			<h2 class="title"><?php esc_html_e( 'How this plugin works', 'molecule-research-gate' ); ?></h2>
+			<ul>
+				<li>
+					<?php esc_html_e( 'Guests hitting gated catalog URLs see a fullscreen modal: they must acknowledge Research Use Only terms, then sign in or register via WooCommerce My Account.', 'molecule-research-gate' ); ?>
+				</li>
+				<li>
+					<?php esc_html_e( 'After login, customers who have not submitted the research profile see a second step (organization type, research field, optional lab name and role). Submitting it unlocks the catalog.', 'molecule-research-gate' ); ?>
+				</li>
+				<li>
+					<?php esc_html_e( 'Use \'Gate these views\' below to choose which storefront URLs require an account (shop, single product, categories, tags, cart, checkout).', 'molecule-research-gate' ); ?>
+				</li>
+				<li>
+					<?php esc_html_e( 'Terms URL, indemnity URL, support email, logo, brand panel image, and proof-line copy control modal content and styling.', 'molecule-research-gate' ); ?>
+				</li>
+				<li>
+					<?php esc_html_e( 'Welcome coupon code is shown on the final \'verified\' step; cart buttons can include a query argument so WooCommerce applies that coupon.', 'molecule-research-gate' ); ?>
+				</li>
+				<li>
+					<?php
+					echo wp_kses_post(
+						sprintf(
+							/* translators: %s: Users admin screen URL */
+							__( 'Saved profile answers are stored as user meta. Review them under <strong>Users → All Users</strong> → edit a user → scroll to <strong>Molecule research gate</strong>. (<a href="%s">Open Users</a>)', 'molecule-research-gate' ),
+							esc_url( $users_url )
+						)
+					);
+					?>
+				</li>
+				<li>
+					<?php
+					echo wp_kses_post(
+						sprintf(
+							/* translators: 1: opening anchor tag to Brevo plugin, 2: closing anchor tag */
+							__( 'Optional marketing checkbox on the verified step: enable below and enter Brevo list IDs. Requires the %1$sBrevo (mailin)%2$s plugin with a valid API key. Subscriptions use Brevo \'simple\' opt-in when the customer checks the box before leaving the modal.', 'molecule-research-gate' ),
+							'<a href="' . esc_url( $brevo_url ) . '" target="_blank" rel="noopener noreferrer">',
+							'</a>'
+						)
+					);
+					?>
+				</li>
+			</ul>
+			<p class="description">
+				<?php esc_html_e( 'Tip: Proof lines and other values below are stored in the database; deploying new plugin defaults does not overwrite options already saved on this site.', 'molecule-research-gate' ); ?>
+			</p>
 		</div>
 		<?php
 	}
