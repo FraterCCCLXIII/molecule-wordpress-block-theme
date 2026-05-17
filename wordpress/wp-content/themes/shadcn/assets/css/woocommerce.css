@@ -2,6 +2,235 @@
    WooCommerce Styles
    ========================================================================== */
 
+/* PHP-driven product catalog (woocommerce/archive-product.php) inside block themes */
+.woocommerce.molecule-php-product-catalog .molecule-php-catalog-main {
+  width: 100%;
+  max-width: var(--wp--style--global--wide-size, 1200px);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--wp--style--root--padding-left, var(--wp--custom--spacing--outer, 1.25rem));
+  padding-right: var(--wp--style--root--padding-right, var(--wp--custom--spacing--outer, 1.25rem));
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* PHP shop: avoid horizontal scroll; tighten wide-size to viewport */
+body.woocommerce.molecule-php-product-catalog {
+  overflow-x: hidden;
+}
+
+.woocommerce.molecule-php-product-catalog .wp-site-blocks {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: clip;
+  box-sizing: border-box;
+}
+
+/* Classic shop toolbar: notices full width; sort + in-stock on the left (result count removed on PHP catalog). */
+.woocommerce.molecule-php-product-catalog .molecule-php-shop-catalog-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  width: 100%;
+  padding-bottom: var(--wp--style--block-gap, 1.25rem);
+}
+
+.woocommerce.molecule-php-product-catalog .molecule-php-shop-catalog-toolbar .woocommerce-notices-wrapper {
+  flex: 1 0 100%;
+}
+
+.woocommerce.molecule-php-product-catalog .molecule-php-shop-catalog-toolbar .woocommerce-notices-wrapper:empty {
+  display: none;
+}
+
+.woocommerce.molecule-php-product-catalog .molecule-php-shop-catalog-toolbar .molecule-shop-catalog-sort-with-stock {
+  margin-left: 0;
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+.woocommerce.molecule-php-product-catalog .molecule-php-shop-catalog-toolbar > form.woocommerce-ordering {
+  margin-left: 0;
+  flex: 0 0 auto;
+}
+
+/* Sort + in-stock: single horizontal row (shrink select before wrapping the bar). */
+.woocommerce.molecule-php-product-catalog .molecule-shop-catalog-sort-with-stock {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  max-width: 100%;
+  min-width: 0;
+  gap: 0.75rem 1rem;
+}
+
+.woocommerce.molecule-php-product-catalog .molecule-shop-catalog-sort-with-stock .woocommerce-ordering {
+  flex: 0 1 auto;
+  width: auto;
+  max-width: min(100%, 15rem);
+  min-width: 0;
+  margin: 0;
+}
+
+.woocommerce.molecule-php-product-catalog .molecule-shop-catalog-sort-with-stock select.orderby {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.woocommerce.molecule-php-product-catalog .molecule-shop-catalog-sort-with-stock .molecule-shop-in-stock-toggle {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+/* Responsive grid instead of WooCommerce float + fixed % widths (prevents overflow). */
+.woocommerce.molecule-php-product-catalog #primary,
+.woocommerce.molecule-php-product-catalog .site-main {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.woocommerce.molecule-php-product-catalog ul.products {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem 1rem;
+  width: 100%;
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  box-sizing: border-box;
+}
+
+.woocommerce.molecule-php-product-catalog ul.products::before,
+.woocommerce.molecule-php-product-catalog ul.products::after {
+  content: none;
+  display: none;
+}
+
+.woocommerce.molecule-php-product-catalog ul.products li.product {
+  float: none !important;
+  width: auto !important;
+  max-width: 100%;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  min-width: 0;
+}
+
+@media (min-width: 480px) {
+  .woocommerce.molecule-php-product-catalog ul.products {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (min-width: 900px) {
+  .woocommerce.molecule-php-product-catalog ul.products {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+.woocommerce.molecule-php-product-catalog .woocommerce-products-header {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* PHP catalog: product cards — grid row title + price, rounded thumbs, 1px hover stroke */
+.woocommerce.molecule-php-product-catalog ul.products li.product a.woocommerce-LoopProduct-link {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 0.75rem;
+  row-gap: 0.25rem;
+  align-items: baseline;
+  box-sizing: border-box;
+  padding: 0.625rem;
+  border-radius: 0.75rem;
+  border: 1px solid transparent;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  min-width: 0;
+}
+
+.woocommerce.molecule-php-product-catalog ul.products li.product a.woocommerce-LoopProduct-link:hover {
+  border: 1px solid var(--border, #d4d4d4);
+  background-color: color-mix(in oklab, var(--card, #fafafa) 65%, transparent);
+}
+
+.woocommerce.molecule-php-product-catalog ul.products li.product a.woocommerce-LoopProduct-link:focus-visible {
+  outline: 2px solid var(--foreground, #0a0a0a);
+  outline-offset: 3px;
+}
+
+.woocommerce.molecule-php-product-catalog ul.products li.product .molecule-loop-product-thumb-wrap {
+  position: relative;
+  grid-column: 1 / -1;
+  grid-row: 1;
+  z-index: 0;
+}
+
+.woocommerce.molecule-php-product-catalog ul.products li.product .molecule-loop-product-thumb-wrap > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  border-radius: 0.5rem;
+}
+
+.woocommerce.molecule-php-product-catalog ul.products li.product .molecule-loop-product-thumb-wrap .molecule-product-card-stock-badge--out-of-stock {
+  position: absolute;
+  z-index: 3;
+  bottom: 0.625rem;
+  left: 0.625rem;
+  right: auto;
+  margin: 0;
+  padding: 0.375rem 0.8rem;
+  max-width: calc(100% - 1.25rem);
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #fff;
+  background: #000;
+  border: 1px solid #1a1a1a;
+  box-shadow: 0 1px 3px color-mix(in oklab, #000 35%, transparent);
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+.woocommerce.molecule-php-product-catalog ul.products li.product .woocommerce-loop-product__title {
+  grid-column: 1;
+  grid-row: 2;
+  margin: 0.65rem 0 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.woocommerce.molecule-php-product-catalog ul.products li.product .price {
+  grid-column: 2;
+  grid-row: 2;
+  margin: 0.65rem 0 0;
+  justify-self: end;
+  text-align: right;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+@media (min-width: 400px) {
+  .woocommerce.molecule-php-product-catalog ul.products li.product .price {
+    white-space: nowrap;
+  }
+}
+
+.woocommerce.molecule-php-product-catalog ul.products li.product .star-rating {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  margin: 0.2rem 0 0;
+}
+
 .wc-block-components-drawer {
   background: transparent;
 }
