@@ -946,6 +946,17 @@ WooCommerce Checkout Block Styles
    Stock badges: pill on product pages; overlay on catalog cards
    ========================================================================== */
 
+/* PDP: default WooCommerce / blocks output "In stock" — redundant when product is purchasable */
+.single-product .woocommerce div.product p.stock.in-stock,
+.single-product p.stock.in-stock,
+.single-product .wc-block-components-product-stock-indicator--in-stock,
+.woocommerce div.product .single_variation .woocommerce-variation-availability p.stock.in-stock,
+.wc-block-add-to-cart-form p.stock.in-stock,
+.wp-block-woocommerce-add-to-cart-form p.stock.in-stock,
+.wp-block-add-to-cart-form.wc-block-add-to-cart-form p.stock.in-stock {
+  display: none !important;
+}
+
 .single-product .woocommerce div.product p.stock.out-of-stock,
 .single-product p.stock.out-of-stock,
 .single-product .wc-block-components-product-stock-indicator--out-of-stock,
