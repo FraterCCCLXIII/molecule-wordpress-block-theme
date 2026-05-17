@@ -626,6 +626,79 @@ button.single_add_to_cart_button.button.alt.wp-element-button {
   box-shadow: none;
 }
 
+/* Register column: flush heading + form (Woo/core margins add phantom space). */
+.woocommerce-account #customer_login .u-column2 > h2 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.woocommerce-account .woocommerce-form-register {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.woocommerce-account .woocommerce-form-register > p.form-row:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+/* Login: center “Remember me” + submit in the stacked row (nonce stays in flow). */
+.woocommerce-account
+  .woocommerce-form-login
+  p.form-row:has(.woocommerce-form-login__rememberme) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.875rem;
+  text-align: center;
+}
+
+.woocommerce-account .woocommerce-form-login__rememberme {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 0;
+  cursor: pointer;
+}
+
+.woocommerce-account .woocommerce-form-login__rememberme input[type="checkbox"] {
+  margin: 0;
+}
+
+/* Larger primary actions on auth forms */
+.woocommerce-account .woocommerce-form-login__submit,
+.woocommerce-account .woocommerce-form-register__submit {
+  width: 100%;
+  min-height: 2.875rem;
+  padding: 0.85rem 1.35rem;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.woocommerce-account .woocommerce-privacy-policy-text {
+  margin: 0.75rem 0 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--muted-foreground);
+}
+
+.woocommerce-account .woocommerce-privacy-policy-text p {
+  margin: 0;
+}
+
+.woocommerce-account .woocommerce-privacy-policy-text a {
+  color: var(--muted-foreground);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.woocommerce-account .woocommerce-privacy-policy-text a:hover,
+.woocommerce-account .woocommerce-privacy-policy-text a:focus-visible {
+  color: var(--foreground);
+}
+
 body.molecule-auth-mode-login #customer_login .u-column2 {
   display: none !important;
 }
@@ -636,9 +709,25 @@ body.molecule-auth-mode-register #customer_login .u-column1 {
 
 /* Guest My Account: footer template part is suppressed; center a narrow “card” for forms. */
 body.molecule-guest-auth-layout.woocommerce-account .wp-site-blocks {
+  /* Include nav offset padding inside min-height (content-box would add padding on top of 100vh). */
+  box-sizing: border-box;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
+}
+
+/* Admin bar shifts the visual viewport; avoid ~one extra “empty” scroll gap. */
+body.admin-bar.molecule-guest-auth-layout.woocommerce-account .wp-site-blocks {
+  min-height: calc(100vh - 32px);
+  min-height: calc(100dvh - 32px);
+}
+
+@media screen and (max-width: 782px) {
+  body.admin-bar.molecule-guest-auth-layout.woocommerce-account .wp-site-blocks {
+    min-height: calc(100vh - 46px);
+    min-height: calc(100dvh - 46px);
+  }
 }
 
 body.molecule-guest-auth-layout.woocommerce-account main.wp-block-group {
@@ -647,6 +736,7 @@ body.molecule-guest-auth-layout.woocommerce-account main.wp-block-group {
   flex-direction: column;
   justify-content: center;
   margin-top: 0 !important;
+  min-height: 0;
   width: 100%;
 }
 
@@ -654,25 +744,32 @@ body.molecule-guest-auth-layout.woocommerce-account
   main.wp-block-group
   > .wp-block-group.alignfull {
   width: 100%;
-  max-width: 26rem;
+  max-width: none;
   margin-left: auto !important;
   margin-right: auto !important;
   margin-top: 0;
-  padding: clamp(1.25rem, 4vw, 2rem) !important;
+  padding: clamp(1rem, 4vw, 1.5rem) !important;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: inherit;
+  box-sizing: border-box;
+}
+
+/* Rounded shell for login/register columns (one visible at a time via auth mode). */
+body.molecule-guest-auth-layout.woocommerce-account #customer_login {
+  width: 100%;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: clamp(1.25rem, 4vw, 2rem);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--card);
   color: var(--card-foreground);
   box-sizing: border-box;
-}
-
-@media (min-width: 480px) {
-  body.molecule-guest-auth-layout.woocommerce-account
-    main.wp-block-group
-    > .wp-block-group.alignfull {
-    max-width: 28rem;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-  }
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
 }
 
 /* Ensure the primary gallery image fills the media column width. */
