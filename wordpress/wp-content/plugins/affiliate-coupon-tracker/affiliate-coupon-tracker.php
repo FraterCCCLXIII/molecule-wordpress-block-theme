@@ -2,14 +2,14 @@
 /**
  * Plugin Name: Affiliate Coupon Tracker
  * Description: Track affiliate coupon usage, link customers to affiliates (referral links, coupons, admin), and report monthly totals for payouts.
- * Version: 1.1.1
+ * Version: 1.1.4
  * Author: Molecule
  * Requires Plugins: woocommerce
  */
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'ACT_VERSION', '1.1.1' );
+define( 'ACT_VERSION', '1.1.4' );
 define( 'ACT_PLUGIN_FILE', __FILE__ );
 define( 'ACT_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 if ( ! defined( 'ACT_AFFILIATE_REF_COOKIE_TTL' ) ) {
@@ -20,6 +20,7 @@ require_once ACT_PLUGIN_DIR . 'includes/class-act-coupon-affiliate-fields.php';
 require_once ACT_PLUGIN_DIR . 'includes/class-act-customer-affiliate.php';
 require_once ACT_PLUGIN_DIR . 'includes/class-act-order-report-repository.php';
 require_once ACT_PLUGIN_DIR . 'includes/class-act-admin-report-page.php';
+require_once ACT_PLUGIN_DIR . 'includes/class-act-affiliate-coupon-guard.php';
 
 /**
  * Bootstrap plugin classes.
@@ -44,10 +45,12 @@ function act_bootstrap_plugin() {
 	$repository         = new ACT_Order_Report_Repository();
 	$coupon_fields      = new ACT_Coupon_Affiliate_Fields();
 	$customer_affiliate = new ACT_Customer_Affiliate( $repository );
+	$coupon_guard       = new ACT_Affiliate_Coupon_Guard( $repository );
 	$report_page        = new ACT_Admin_Report_Page( $repository );
 
 	$coupon_fields->register_hooks();
 	$customer_affiliate->register_hooks();
+	$coupon_guard->register_hooks();
 	$report_page->register_hooks();
 }
 add_action( 'plugins_loaded', 'act_bootstrap_plugin' );

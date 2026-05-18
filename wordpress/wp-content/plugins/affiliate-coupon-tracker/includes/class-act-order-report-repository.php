@@ -201,11 +201,25 @@ class ACT_Order_Report_Repository {
 
 		$user_id = (int) $order->get_user_id();
 		if ( $user_id ) {
-			$ck = trim( (string) get_user_meta( $user_id, ACT_Customer_Affiliate::META_KEY, true ) );
-			if ( '' !== $ck ) {
-				$label = $this->get_affiliate_label_for_key( $ck );
+			$key_from_snapshot = trim( (string) $order->get_meta( ACT_Customer_Affiliate::ORDER_LINKED_SNAPSHOT_META ) );
+
+			$linked_key_at_purchase = $key_from_snapshot;
+			if ( '' === $linked_key_at_purchase ) {
+				/**
+				 * Legacy orders placed before snapshots existed: opt-in fallback to live user meta.
+				 *
+				 * @param bool     $fallback Whether to fall back when snapshot meta is missing.
+				 * @param WC_Order $order    Order.
+				 */
+				if ( apply_filters( 'act_reports_use_live_user_meta_when_order_snapshot_missing', false, $order ) ) {
+					$linked_key_at_purchase = trim( (string) get_user_meta( $user_id, ACT_Customer_Affiliate::META_KEY, true ) );
+				}
+			}
+
+			if ( '' !== $linked_key_at_purchase ) {
+				$label = $this->get_affiliate_label_for_key( $linked_key_at_purchase );
 				if ( '' !== $label ) {
-					$customer_key_effective = $ck;
+					$customer_key_effective = $linked_key_at_purchase;
 					$affiliate_labels[]     = $label;
 				}
 			}
