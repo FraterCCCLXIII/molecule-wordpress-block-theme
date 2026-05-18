@@ -2,14 +2,14 @@
 /**
  * Plugin Name: Affiliate Coupon Tracker
  * Description: Track affiliate coupon usage, link customers to affiliates (referral links, coupons, admin), and report monthly totals for payouts.
- * Version: 1.1.4
+ * Version: 1.1.5
  * Author: Molecule
  * Requires Plugins: woocommerce
  */
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'ACT_VERSION', '1.1.4' );
+define( 'ACT_VERSION', '1.1.5' );
 define( 'ACT_PLUGIN_FILE', __FILE__ );
 define( 'ACT_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 if ( ! defined( 'ACT_AFFILIATE_REF_COOKIE_TTL' ) ) {

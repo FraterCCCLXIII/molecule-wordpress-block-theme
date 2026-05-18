@@ -12,16 +12,24 @@ defined( 'ABSPATH' ) || exit;
  */
 class ACT_Order_Report_Repository {
 
+	/** @var string Only sum rows where WooCommerce considers the order paid. */
+	const AMOUNT_BASIS_PAID_ONLY = 'paid_only';
+
+	/** @var string Sum every matched affiliate row regardless of payment / status. */
+	const AMOUNT_BASIS_ALL = 'all';
+
 	/**
 	 * Build a monthly affiliate report.
 	 *
-	 * @param string $month         Month in YYYY-MM format.
-	 * @param string $affiliate_key Affiliate key from selector.
+	 * @param string $month          Month in YYYY-MM format.
+	 * @param string $affiliate_key  Affiliate key from selector.
+	 * @param string $amount_basis   One of ACT_Order_Report_Repository::AMOUNT_BASIS_*.
 	 * @return array<string, mixed>
 	 */
-	public function build_monthly_report( $month, $affiliate_key = '' ) {
-		$month = $this->normalize_month( $month );
-		$range = $this->get_month_range( $month );
+	public function build_monthly_report( $month, $affiliate_key = '', $amount_basis = '' ) {
+		$month        = $this->normalize_month( $month );
+		$range        = $this->get_month_range( $month );
+		$amount_basis = $this->normalize_amount_basis( $amount_basis );
 
 		$orders = wc_get_orders(
 			array(
@@ -41,6 +49,9 @@ class ACT_Order_Report_Repository {
 			'tax_total'      => 0.0,
 			'order_total'    => 0.0,
 		);
+
+		$paid_matches   = 0;
+		$unpaid_matches = 0;
 
 		foreach ( $orders as $order ) {
 			$match = $this->get_order_affiliate_match( $order, $affiliate_key );
@@ -64,18 +75,42 @@ class ACT_Order_Report_Repository {
 				$coupon_display = __( 'Customer profile (no coupon)', 'affiliate-coupon-tracker' );
 			}
 
+			$status_slug      = $order->get_status();
+			$status_label     = function_exists( 'wc_get_order_status_name' )
+				? wc_get_order_status_name( $status_slug )
+				: $status_slug;
+			$payment_confirmed = $order->is_paid();
+
+			if ( $payment_confirmed ) {
+				++$paid_matches;
+			} else {
+				++$unpaid_matches;
+			}
+
+			$counts_in_totals = ( self::AMOUNT_BASIS_ALL === $amount_basis )
+				? true
+				: $payment_confirmed;
+
 			$rows[] = array(
-				'order_id'       => $order->get_id(),
-				'order_number'   => $order->get_order_number(),
-				'created_at'     => $order->get_date_created() ? $order->get_date_created()->date_i18n( 'Y-m-d H:i' ) : '',
-				'customer_name'  => trim( $order->get_formatted_billing_full_name() ),
-				'coupon_codes'   => $coupon_display,
-				'affiliate_name' => implode( ', ', $match['affiliate_labels'] ),
-				'items_total'    => $item_total,
-				'shipping_total' => $shipping_total,
-				'tax_total'      => $tax_total,
-				'order_total'    => $order_total,
+				'order_id'           => $order->get_id(),
+				'order_number'       => $order->get_order_number(),
+				'created_at'         => $order->get_date_created() ? $order->get_date_created()->date_i18n( 'Y-m-d H:i' ) : '',
+				'customer_name'      => trim( $order->get_formatted_billing_full_name() ),
+				'coupon_codes'       => $coupon_display,
+				'affiliate_name'     => implode( ', ', $match['affiliate_labels'] ),
+				'status_slug'        => $status_slug,
+				'status_label'       => $status_label,
+				'payment_confirmed'  => $payment_confirmed,
+				'counts_in_totals'   => $counts_in_totals,
+				'items_total'        => $item_total,
+				'shipping_total'     => $shipping_total,
+				'tax_total'          => $tax_total,
+				'order_total'        => $order_total,
 			);
+
+			if ( ! $counts_in_totals ) {
+				continue;
+			}
 
 			$totals['items_total']    += $item_total;
 			$totals['shipping_total'] += $shipping_total;
@@ -84,10 +119,14 @@ class ACT_Order_Report_Repository {
 		}
 
 		return array(
-			'month'  => $month,
-			'rows'   => $rows,
-			'totals' => $totals,
-			'count'  => count( $rows ),
+			'month'            => $month,
+			'amount_basis'     => $amount_basis,
+			'rows'             => $rows,
+			'totals'           => $totals,
+			'count'            => count( $rows ),
+			'matched_paid'     => $paid_matches,
+			'matched_unpaid'   => $unpaid_matches,
+			'totals_row_count' => self::AMOUNT_BASIS_ALL === $amount_basis ? count( $rows ) : $paid_matches,
 		);
 	}
 
@@ -290,6 +329,18 @@ class ACT_Order_Report_Repository {
 		}
 
 		return wp_date( 'Y-m' );
+	}
+
+	/**
+	 * Normalize report amount basis GET parameter.
+	 *
+	 * @param string $amount_basis Raw basis.
+	 * @return string self::AMOUNT_BASIS_PAID_ONLY or self::AMOUNT_BASIS_ALL.
+	 */
+	private function normalize_amount_basis( $amount_basis ) {
+		$amount_basis = trim( (string) $amount_basis );
+
+		return self::AMOUNT_BASIS_ALL === $amount_basis ? self::AMOUNT_BASIS_ALL : self::AMOUNT_BASIS_PAID_ONLY;
 	}
 
 	/**
