@@ -40,6 +40,7 @@ define( 'WCZELLE_PLUGIN_TEXT_DOMAIN', $plugin_data['TextDomain'] );
 define( 'WCZELLE_UPGRADE_URL', 'https://theafricanboss.com/freemius/wc-zelle' );
 require_once WCZELLE_PLUGIN_DIR . 'includes/wc-zelle-features.php';
 require_once WCZELLE_PLUGIN_DIR . 'includes/wc-zelle-instructions.php';
+require_once WCZELLE_PLUGIN_DIR . 'includes/wc-zelle-instructions-email.php';
 
 /**
  * Clear scheduled events when the plugin is deactivated.
@@ -146,6 +147,17 @@ if ( function_exists( 'zelle_fs' ) ) {
             }
         } );
         require_once WCZELLE_PLUGIN_DIR . 'includes/admin/dashboard.php';
+        add_action(
+            'plugins_loaded',
+            static function () {
+                if ( ! class_exists( 'WooCommerce' ) ) {
+                    return;
+                }
+                require_once WCZELLE_PLUGIN_DIR . 'includes/admin/class-wc-zelle-admin-order.php';
+                WC_Zelle_Admin_Order::init();
+            },
+            25
+        );
     }
     add_filter( 'woocommerce_payment_gateways', 'zelle_add_gateway_class' );
     //This action hook registers our PHP class as a WooCommerce payment gateway
