@@ -109,7 +109,7 @@ $product_id = $product->save();
 act_assert( $product_id > 0, 'Failed to create product' );
 $created['posts'][] = $product_id;
 
-// ---- Test: registration + referral cookie → user meta
+// ---- Test: registration keeps referral cookie; profile link waits for paid order
 $login_cookie  = 'act_smoke_cookie_' . $suffix;
 $email_cookie  = $login_cookie . '@example.invalid';
 $_COOKIE[ ACT_Customer_Affiliate::COOKIE_NAME ] = $affiliate_key;
@@ -126,8 +126,11 @@ act_assert( ! is_wp_error( $uid_cookie ), 'wp_insert_user (cookie path) failed: 
 $created['users'][] = (int) $uid_cookie;
 
 $meta_after_reg = (string) get_user_meta( (int) $uid_cookie, ACT_Customer_Affiliate::META_KEY, true );
-act_assert( $meta_after_reg === $affiliate_key, 'Cookie signup should set customer affiliate meta' );
-act_assert( ! isset( $_COOKIE[ ACT_Customer_Affiliate::COOKIE_NAME ] ), 'Cookie should be cleared after registration' );
+act_assert( '' === $meta_after_reg, 'Registration alone must not link customer affiliate meta' );
+act_assert(
+	isset( $_COOKIE[ ACT_Customer_Affiliate::COOKIE_NAME ] ) && sanitize_text_field( wp_unslash( $_COOKIE[ ACT_Customer_Affiliate::COOKIE_NAME ] ) ) === $affiliate_key,
+	'Referral cookie should persist after registration until a qualifying purchase'
+);
 
 // ---- Test: checkout hook marries user to affiliate from coupon
 $login_marry  = 'act_smoke_marry_' . $suffix;
@@ -150,18 +153,67 @@ $order_coupon->add_product( wc_get_product( $product_id ), 1 );
 $applied = $order_coupon->apply_coupon( $coupon_code );
 act_assert( ! is_wp_error( $applied ), 'apply_coupon failed: ' . ( is_wp_error( $applied ) ? $applied->get_error_message() : '' ) );
 $order_coupon->calculate_totals();
-$order_coupon->set_status( 'processing' );
+$order_coupon->set_status( 'pending' );
 $order_coupon->save();
 $created['orders'][] = $order_coupon->get_id();
 
-// Fire the same hook as checkout (registers ACT_Customer_Affiliate::marry_customer_from_order_coupons).
+// Snapshot + coupon meta on checkout processed; profile marriage waits for processing (payment-confirmed-ish).
 do_action( 'woocommerce_checkout_order_processed', $order_coupon->get_id(), array(), $order_coupon );
 
+$meta_before = (string) get_user_meta( (int) $uid_marry, ACT_Customer_Affiliate::META_KEY, true );
+act_assert(
+	'' === $meta_before,
+	'checkout_order_processed must not marry before order moves to processing'
+);
+
+$order_coupon->update_status( 'processing' );
+
 $meta_marry = (string) get_user_meta( (int) $uid_marry, ACT_Customer_Affiliate::META_KEY, true );
-act_assert( $meta_marry === $affiliate_key, 'Checkout processed should marry customer from affiliate coupon' );
+act_assert(
+	$meta_marry === $affiliate_key,
+	'woocommerce_order_status_processing should marry customer from affiliate coupon'
+);
+
+// ---- Test: referral cookie on checkout without coupon still snapshots for reporting
+$_COOKIE[ ACT_Customer_Affiliate::COOKIE_NAME ] = $affiliate_key;
+
+$order_ref_cookie = wc_create_order( array( 'customer_id' => (int) $uid_cookie ) );
+act_assert( $order_ref_cookie instanceof WC_Order, 'wc_create_order (referral cookie) failed' );
+$order_ref_cookie->add_product( wc_get_product( $product_id ), 1 );
+$order_ref_cookie->calculate_totals();
+$order_ref_cookie->set_status( 'pending' );
+$order_ref_cookie->save();
+$created['orders'][] = $order_ref_cookie->get_id();
+
+do_action( 'woocommerce_checkout_order_processed', $order_ref_cookie->get_id(), array(), $order_ref_cookie );
+
+$order_ref_cookie = wc_get_order( $order_ref_cookie->get_id() );
+act_assert(
+	trim( (string) $order_ref_cookie->get_meta( ACT_Customer_Affiliate::ORDER_REFERRAL_AFFILIATE_KEY_META ) ) === $affiliate_key,
+	'Checkout should persist referral cookie affiliate key on order'
+);
+act_assert(
+	trim( (string) $order_ref_cookie->get_meta( ACT_Customer_Affiliate::ORDER_LINKED_SNAPSHOT_META ) ) === $affiliate_key,
+	'Checkout should snapshot referral cookie affiliate on order'
+);
+
+$order_ref_cookie->update_status( 'processing' );
+act_assert(
+	(string) get_user_meta( (int) $uid_cookie, ACT_Customer_Affiliate::META_KEY, true ) === $affiliate_key,
+	'Processing should marry customer from referral cookie when no coupon was used'
+);
+
+$month_ref  = wp_date( 'Y-m' );
+$report_ref = $repository->build_monthly_report( $month_ref, $affiliate_key );
+act_assert(
+	in_array( $order_ref_cookie->get_id(), wp_list_pluck( $report_ref['rows'], 'order_id' ), true ),
+	'Report should include referral-cookie order without coupon'
+);
 
 // ---- Test: linked customer order without coupon appears in monthly report
-$order_bare = wc_create_order( array( 'customer_id' => (int) $uid_cookie ) );
+$uid_linked = (int) $uid_cookie;
+update_user_meta( $uid_linked, ACT_Customer_Affiliate::META_KEY, $affiliate_key );
+$order_bare = wc_create_order( array( 'customer_id' => $uid_linked ) );
 act_assert( $order_bare instanceof WC_Order, 'wc_create_order (bare) failed' );
 $order_bare->add_product( wc_get_product( $product_id ), 1 );
 $order_bare->calculate_totals();
@@ -182,8 +234,8 @@ $report = $repository->build_monthly_report( $month, $affiliate_key );
 $order_numbers = wp_list_pluck( $report['rows'], 'order_id' );
 act_assert( in_array( $order_bare->get_id(), $order_numbers, true ), 'Report should include customer-linked order without coupon' );
 
-delete_user_meta( (int) $uid_cookie, ACT_Customer_Affiliate::META_KEY );
-act_assert( get_user_meta( (int) $uid_cookie, ACT_Customer_Affiliate::META_KEY, true ) === '', 'Smoke test unlink should remove live customer affiliate meta' );
+delete_user_meta( $uid_linked, ACT_Customer_Affiliate::META_KEY );
+act_assert( get_user_meta( $uid_linked, ACT_Customer_Affiliate::META_KEY, true ) === '', 'Smoke test unlink should remove live customer affiliate meta' );
 
 $report_after_unlink = $repository->build_monthly_report( $month, $affiliate_key );
 $order_numbers_after = wp_list_pluck( $report_after_unlink['rows'], 'order_id' );

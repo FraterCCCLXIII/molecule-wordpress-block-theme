@@ -25,6 +25,18 @@ class ACT_Customer_Affiliate {
 	const ORDER_LINKED_SNAPSHOT_META = '_act_order_linked_affiliate_at_purchase';
 
 	/**
+	 * Order meta: affiliate key from referral coupon usage (for reporting until profile linkage runs).
+	 * Optional; persisted when deferring marriage until processing.
+	 */
+	const ORDER_AFFILIATE_KEY_FROM_COUPON_META = '_act_order_affiliate_key_from_coupon';
+
+	/** Order meta: affiliate key captured from referral cookie at checkout (when coupon was not applied). */
+	const ORDER_REFERRAL_AFFILIATE_KEY_META = '_act_order_referral_affiliate_key';
+
+	/** Order meta: once post-payment affiliate marriage logic has run for this order. */
+	const ORDER_POST_PAYMENT_MARRIAGE_META = '_act_order_post_payment_marriage_done';
+
+	/**
 	 * Build the storefront referral URL for a canonical affiliate key.
 	 *
 	 * @param string $affiliate_key Key such as `id:AFF-123` or `name:Partner`.
@@ -58,10 +70,14 @@ class ACT_Customer_Affiliate {
 	 */
 	public function register_hooks() {
 		add_action( 'template_redirect', array( $this, 'maybe_store_referral_cookie' ), 1 );
-		add_action( 'user_register', array( $this, 'assign_affiliate_from_cookie_on_register' ), 20, 1 );
-		// Classic shortcode checkout: marry coupon → user first, then freeze snapshot (so first purchase with affiliate coupon records that affiliate).
-		add_action( 'woocommerce_checkout_order_processed', array( $this, 'marry_customer_from_order_coupons' ), 15, 3 );
+		add_action( 'woocommerce_cart_loaded_from_session', array( $this, 'maybe_apply_referral_coupon_from_cookie' ), 99 );
+		add_action( 'woocommerce_before_calculate_totals', array( $this, 'maybe_apply_referral_coupon_from_cookie' ), 5 );
+		// Classic checkout: persist snapshot from coupon/profile; marry profile once order is paid-ish (processing+).
+		add_action( 'woocommerce_checkout_order_processed', array( $this, 'prepare_order_coupon_affiliate_meta' ), 15, 3 );
 		add_action( 'woocommerce_checkout_order_processed', array( $this, 'persist_order_linked_affiliate_snapshot' ), 30, 3 );
+		add_action( 'woocommerce_order_status_processing', array( $this, 'marry_logged_in_customer_from_order_after_payment' ), 20, 3 );
+		add_action( 'woocommerce_order_status_completed', array( $this, 'marry_logged_in_customer_from_order_after_payment' ), 20, 3 );
+		add_action( 'woocommerce_payment_complete', array( $this, 'marry_logged_in_customer_from_order_on_payment_complete' ), 20, 1 );
 		// Block / Store API checkout does not fire woocommerce_checkout_order_processed — use Woo's Store API hook instead.
 		add_action( 'woocommerce_store_api_checkout_order_processed', array( $this, 'handle_store_api_checkout_order_processed' ), 10, 1 );
 
@@ -110,51 +126,99 @@ class ACT_Customer_Affiliate {
 		);
 
 		$_COOKIE[ self::COOKIE_NAME ] = $key;
+
+		$this->maybe_apply_referral_coupon_from_cookie();
 	}
 
 	/**
-	 * On registration, bind stored ref cookie to the new user.
+	 * Apply affiliate coupon automatically when a valid referral cookie exists and the cart has no conflicting profile link.
 	 *
+	 * @return void
+	 */
+	public function maybe_apply_referral_coupon_from_cookie() {
+		static $applying = false;
+
+		if ( $applying ) {
+			return;
+		}
+
+		if ( is_admin() && ! wp_doing_ajax() ) {
+			return;
+		}
+
+		if ( wp_doing_cron() ) {
+			return;
+		}
+
+		if ( ! function_exists( 'WC' ) || ! WC()->cart || WC()->cart->is_empty() ) {
+			return;
+		}
+
+		$ref_key = $this->get_valid_referral_key_from_cookie();
+		if ( '' === $ref_key ) {
+			return;
+		}
+
+		if ( is_user_logged_in() ) {
+			$user_id = get_current_user_id();
+			if ( ! $user_id ) {
+				return;
+			}
+
+			$existing_profile = trim( (string) get_user_meta( $user_id, self::META_KEY, true ) );
+			if ( '' !== $existing_profile && $existing_profile !== $ref_key ) {
+				return;
+			}
+		}
+
+		$code = $this->repository->find_coupon_code_for_affiliate_key( $ref_key );
+		if ( '' === $code ) {
+			return;
+		}
+
+		if ( WC()->cart->has_discount( $code ) ) {
+			return;
+		}
+
+		$applying = true;
+		WC()->cart->apply_coupon( $code );
+		$applying = false;
+	}
+
+	/**
+	 * Valid affiliate key from the referral cookie, or empty if missing/unknown.
+	 *
+	 * @return string
+	 */
+	private function get_valid_referral_key_from_cookie() {
+		if ( empty( $_COOKIE[ self::COOKIE_NAME ] ) ) {
+			return '';
+		}
+
+		$ref_key = sanitize_text_field( wp_unslash( $_COOKIE[ self::COOKIE_NAME ] ) );
+		if ( '' === $ref_key ) {
+			return '';
+		}
+
+		$options = $this->repository->get_affiliate_options();
+		if ( ! isset( $options[ $ref_key ] ) ) {
+			return '';
+		}
+
+		return $ref_key;
+	}
+
+	/**
+	 * @deprecated 1.2.0 Profile linkage is deferred until payment is confirmed on the customer's first qualifying order.
 	 * @param int $user_id User ID.
 	 * @return void
 	 */
 	public function assign_affiliate_from_cookie_on_register( $user_id ) {
-		$user_id = absint( $user_id );
-		if ( ! $user_id ) {
-			return;
-		}
-
-		if ( ! isset( $_COOKIE[ self::COOKIE_NAME ] ) ) {
-			return;
-		}
-
-		$key = sanitize_text_field( wp_unslash( $_COOKIE[ self::COOKIE_NAME ] ) );
-		if ( '' === $key ) {
-			return;
-		}
-
-		$options = $this->repository->get_affiliate_options();
-		if ( ! isset( $options[ $key ] ) ) {
-			return;
-		}
-
-		$this->set_user_affiliate_key( $user_id, $key );
-
-		setcookie(
-			self::COOKIE_NAME,
-			'',
-			time() - 3600,
-			COOKIEPATH ? COOKIEPATH : '/',
-			COOKIE_DOMAIN,
-			is_ssl(),
-			true
-		);
-
-		unset( $_COOKIE[ self::COOKIE_NAME ] );
+		unset( $user_id );
 	}
 
 	/**
-	 * Block / Store API checkout: replicate classic checkout affiliate logic (coupon marriage then snapshot).
+	 * Block / Store API checkout: defer profile marriage until processing; freeze snapshot from coupon/profile.
 	 *
 	 * @param WC_Order $order Order instance.
 	 * @return void
@@ -164,14 +228,31 @@ class ACT_Customer_Affiliate {
 			return;
 		}
 
-		$this->maybe_marry_customer_from_order_coupons( $order );
+		$this->prepare_order_coupon_affiliate_meta_for_order( $order );
 		$this->persist_linked_affiliate_snapshot_from_order_customer( $order );
 	}
 
 	/**
-	 * Classic checkout handler: freeze the customer's affiliate link onto the order for reporting.
+	 * Persist coupon-backed affiliate meta on order (before snapshot).
 	 *
-	 * Runs after {@see marry_customer_from_order_coupons()} so the snapshot can include linkage just applied from a coupon on this order.
+	 * @param int          $order_id   Order ID.
+	 * @param array<mixed> $posted_data Posted data.
+	 * @param WC_Order     $order      Order object.
+	 * @return void
+	 */
+	public function prepare_order_coupon_affiliate_meta( $order_id, $posted_data, $order ) {
+		unset( $posted_data );
+
+		$resolved = self::resolve_checkout_order( $order_id, $order );
+		if ( null === $resolved ) {
+			return;
+		}
+
+		$this->prepare_order_coupon_affiliate_meta_for_order( $resolved );
+	}
+
+	/**
+	 * Classic checkout handler: freeze affiliate attribution snapshot (coupon-backed first, then profile).
 	 *
 	 * Changing or removing the profile link later does not alter snapshots on past orders.
 	 *
@@ -192,21 +273,41 @@ class ACT_Customer_Affiliate {
 	}
 
 	/**
-	 * Write/remove order meta `_act_order_linked_affiliate_at_purchase` from the placing customer's current affiliate meta.
+	 * Store `_act_order_affiliate_key_from_coupon` from the order's affiliate-backed coupons (if any).
+	 *
+	 * @param WC_Order $order Order.
+	 * @return void
+	 */
+	private function prepare_order_coupon_affiliate_meta_for_order( WC_Order $order ) {
+		$coupon_key = $this->repository->get_first_affiliate_key_from_order_coupons( $order );
+
+		if ( '' !== $coupon_key ) {
+			$order->update_meta_data( self::ORDER_AFFILIATE_KEY_FROM_COUPON_META, $coupon_key );
+		} else {
+			$order->delete_meta_data( self::ORDER_AFFILIATE_KEY_FROM_COUPON_META );
+		}
+
+		$referral_key = $this->get_valid_referral_key_from_cookie();
+		if ( '' !== $referral_key ) {
+			$order->update_meta_data( self::ORDER_REFERRAL_AFFILIATE_KEY_META, $referral_key );
+		} else {
+			$order->delete_meta_data( self::ORDER_REFERRAL_AFFILIATE_KEY_META );
+		}
+
+		$order->save();
+	}
+
+	/**
+	 * Write/remove order `_act_order_linked_affiliate_at_purchase`: coupon attribution first (for reporting before profile link), else profile snapshot.
 	 *
 	 * @param WC_Order $order Order.
 	 * @return void
 	 */
 	private function persist_linked_affiliate_snapshot_from_order_customer( WC_Order $order ) {
-		$user_id = (int) $order->get_user_id();
-		if ( ! $user_id ) {
-			return;
-		}
+		$snapshot_key = $this->resolve_order_affiliate_attribution_key( $order );
 
-		$key = trim( (string) get_user_meta( $user_id, self::META_KEY, true ) );
-
-		if ( '' !== $key ) {
-			$order->update_meta_data( self::ORDER_LINKED_SNAPSHOT_META, $key );
+		if ( '' !== $snapshot_key ) {
+			$order->update_meta_data( self::ORDER_LINKED_SNAPSHOT_META, $snapshot_key );
 		} else {
 			$order->delete_meta_data( self::ORDER_LINKED_SNAPSHOT_META );
 		}
@@ -215,53 +316,104 @@ class ACT_Customer_Affiliate {
 	}
 
 	/**
-	 * First affiliate coupon on the order binds the customer for future orders when they are not already linked,
-	 * or when they are linked to the same affiliate. A different affiliate never overwrites an existing link.
+	 * Resolve affiliate attribution for an order: coupon first, then referral cookie, then linked customer profile.
 	 *
-	 * @param int          $order_id   Order ID.
-	 * @param array<mixed> $posted_data Posted checkout data.
-	 * @param WC_Order     $order      Order object.
-	 * @return void
+	 * @param WC_Order $order Order.
+	 * @return string Canonical affiliate key or empty string.
 	 */
-	public function marry_customer_from_order_coupons( $order_id, $posted_data, $order ) {
-		unset( $posted_data );
-
-		$resolved = self::resolve_checkout_order( $order_id, $order );
-		if ( null === $resolved ) {
-			return;
+	private function resolve_order_affiliate_attribution_key( WC_Order $order ) {
+		$coupon_key = $this->repository->get_first_affiliate_key_from_order_coupons( $order );
+		if ( '' === $coupon_key ) {
+			$coupon_key = trim( (string) $order->get_meta( self::ORDER_AFFILIATE_KEY_FROM_COUPON_META ) );
 		}
 
-		$this->maybe_marry_customer_from_order_coupons( $resolved );
+		if ( '' !== $coupon_key ) {
+			return $coupon_key;
+		}
+
+		$referral_key = trim( (string) $order->get_meta( self::ORDER_REFERRAL_AFFILIATE_KEY_META ) );
+		if ( '' !== $referral_key ) {
+			return $referral_key;
+		}
+
+		$user_id = (int) $order->get_user_id();
+		if ( ! $user_id ) {
+			return '';
+		}
+
+		return trim( (string) get_user_meta( $user_id, self::META_KEY, true ) );
 	}
 
 	/**
-	 * If the customer is not locked to another affiliate, link them from the first affiliate coupon on the order.
+	 * WooCommerce payment_complete passes only the order ID.
 	 *
-	 * @param WC_Order $order Order object.
+	 * @param int $order_id Order ID.
 	 * @return void
 	 */
-	private function maybe_marry_customer_from_order_coupons( WC_Order $order ) {
+	public function marry_logged_in_customer_from_order_on_payment_complete( $order_id ) {
+		$this->marry_logged_in_customer_from_order_after_payment( (int) $order_id, null, null );
+	}
+
+	/**
+	 * After payment is confirmed (processing or completed), link the customer profile from the affiliate coupon once.
+	 *
+	 * WooCommerce fires `woocommerce_order_status_{processing|completed}` with order id and order instance.
+	 *
+	 * @param int              $order_id           Order ID.
+	 * @param WC_Order|null    $order              Order instance (preferred).
+	 * @param array<mixed>|null $status_transition Optional transition payload.
+	 * @return void
+	 */
+	public function marry_logged_in_customer_from_order_after_payment( $order_id, $order = null, $status_transition = null ) {
+		unset( $status_transition );
+
+		if ( ! $order instanceof WC_Order ) {
+			$order_id = absint( $order_id );
+			if ( ! $order_id ) {
+				return;
+			}
+			$fetched = wc_get_order( $order_id );
+			$order   = $fetched instanceof WC_Order ? $fetched : null;
+		}
+
+		if ( ! $order instanceof WC_Order ) {
+			return;
+		}
+
+		if ( '1' === (string) $order->get_meta( self::ORDER_POST_PAYMENT_MARRIAGE_META ) ) {
+			return;
+		}
+
 		$user_id = (int) $order->get_user_id();
 		if ( ! $user_id ) {
 			return;
 		}
 
+		$coupon_key = trim( (string) $order->get_meta( self::ORDER_AFFILIATE_KEY_FROM_COUPON_META ) );
+		if ( '' === $coupon_key ) {
+			$coupon_key = $this->repository->get_first_affiliate_key_from_order_coupons( $order );
+		}
+
+		$affiliate_key = $coupon_key;
+		if ( '' === $affiliate_key ) {
+			$affiliate_key = trim( (string) $order->get_meta( self::ORDER_REFERRAL_AFFILIATE_KEY_META ) );
+		}
+
+		if ( '' === $affiliate_key ) {
+			return;
+		}
+
 		$existing = trim( (string) get_user_meta( $user_id, self::META_KEY, true ) );
 
-		foreach ( $order->get_coupon_codes() as $code ) {
-			$coupon = new WC_Coupon( $code );
-			if ( ! $coupon->get_id() ) {
-				continue;
-			}
-
-			$key = $this->repository->get_affiliate_key_for_coupon_id( $coupon->get_id() );
-			if ( '' !== $key ) {
-				if ( '' === $existing || $existing === $key ) {
-					$this->set_user_affiliate_key( $user_id, $key );
-				}
-				return;
+		if ( '' === $existing || $existing === $affiliate_key ) {
+			if ( '' === $existing ) {
+				$this->set_user_affiliate_key( $user_id, $affiliate_key );
+				$this->clear_referral_cookie();
 			}
 		}
+
+		$order->update_meta_data( self::ORDER_POST_PAYMENT_MARRIAGE_META, '1' );
+		$order->save();
 	}
 
 	/**
@@ -400,5 +552,29 @@ class ACT_Customer_Affiliate {
 		$decoded = trim( $decoded );
 
 		return sanitize_text_field( $decoded );
+	}
+
+	/**
+	 * Clear referral cookie after successful profile linkage.
+	 *
+	 * @return void
+	 */
+	private function clear_referral_cookie() {
+		if ( headers_sent() ) {
+			unset( $_COOKIE[ self::COOKIE_NAME ] );
+			return;
+		}
+
+		setcookie(
+			self::COOKIE_NAME,
+			'',
+			time() - 3600,
+			COOKIEPATH ? COOKIEPATH : '/',
+			COOKIE_DOMAIN,
+			is_ssl(),
+			true
+		);
+
+		unset( $_COOKIE[ self::COOKIE_NAME ] );
 	}
 }

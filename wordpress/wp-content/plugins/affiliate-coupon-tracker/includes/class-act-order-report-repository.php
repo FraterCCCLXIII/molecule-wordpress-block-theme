@@ -497,6 +497,92 @@ class ACT_Order_Report_Repository {
 	}
 
 	/**
+	 * Pick one coupon code that maps to a canonical affiliate key (first match by ascending code).
+	 *
+	 * @param string $affiliate_key Key such as `id:FOO`.
+	 * @return string Coupon code including draft coupons, empty if none found.
+	 */
+	public function find_coupon_code_for_affiliate_key( $affiliate_key ) {
+		$want = is_string( $affiliate_key ) ? trim( $affiliate_key ) : '';
+		if ( '' === $want ) {
+			return '';
+		}
+
+		$coupons = array();
+
+		if ( function_exists( 'wc_get_coupons' ) ) {
+			$coupons = wc_get_coupons(
+				array(
+					'limit' => -1,
+				)
+			);
+		} else {
+			$coupon_ids = get_posts(
+				array(
+					'post_type'      => 'shop_coupon',
+					'post_status'    => array( 'publish', 'draft', 'private', 'pending' ),
+					'fields'         => 'ids',
+					'posts_per_page' => -1,
+					'no_found_rows'  => true,
+				)
+			);
+
+			foreach ( $coupon_ids as $coupon_id ) {
+				$coupon = new WC_Coupon( $coupon_id );
+				if ( $coupon->get_id() ) {
+					$coupons[] = $coupon;
+				}
+			}
+		}
+
+		$matches = array();
+		foreach ( $coupons as $coupon ) {
+			if ( ! $coupon instanceof WC_Coupon || ! $coupon->get_id() ) {
+				continue;
+			}
+			$key = $this->get_affiliate_key_for_coupon_id( $coupon->get_id() );
+			if ( $want === $key ) {
+				$matches[] = $coupon->get_code();
+			}
+		}
+
+		if ( empty( $matches ) ) {
+			return '';
+		}
+
+		natcasesort( $matches );
+		$matches = array_values( array_unique( $matches ) );
+
+		return (string) $matches[0];
+	}
+
+	/**
+	 * Resolve first affiliate-backed coupon code on order.
+	 *
+	 * @param WC_Order $order Order.
+	 * @return string Affiliate key attached to coupon, empty if none.
+	 */
+	public function get_first_affiliate_key_from_order_coupons( WC_Order $order ) {
+		if ( ! $order instanceof WC_Order ) {
+			return '';
+		}
+
+		foreach ( $order->get_coupon_codes() as $code ) {
+			$coupon = new WC_Coupon( $code );
+			if ( ! $coupon->get_id() ) {
+				continue;
+			}
+
+			$key = $this->get_affiliate_key_for_coupon_id( $coupon->get_id() );
+			if ( '' !== $key ) {
+				return $key;
+			}
+		}
+
+		return '';
+	}
+
+	/**
 	 * Whether order appears on affiliate report when Affiliate filter is "all".
 	 *
 	 * @param WC_Order $order WooCommerce order object.
@@ -546,29 +632,31 @@ class ACT_Order_Report_Repository {
 		$has_coupon_affiliate   = ! empty( $matched_codes );
 		$customer_key_effective = '';
 
+		$key_from_snapshot = trim( (string) $order->get_meta( ACT_Customer_Affiliate::ORDER_LINKED_SNAPSHOT_META ) );
+		$linked_key_at_purchase = $key_from_snapshot;
+
+		if ( '' === $linked_key_at_purchase ) {
+			$linked_key_at_purchase = trim( (string) $order->get_meta( ACT_Customer_Affiliate::ORDER_REFERRAL_AFFILIATE_KEY_META ) );
+		}
+
 		$user_id = (int) $order->get_user_id();
-		if ( $user_id ) {
-			$key_from_snapshot = trim( (string) $order->get_meta( ACT_Customer_Affiliate::ORDER_LINKED_SNAPSHOT_META ) );
-
-			$linked_key_at_purchase = $key_from_snapshot;
-			if ( '' === $linked_key_at_purchase ) {
-				/**
-				 * Legacy orders placed before snapshots existed: opt-in fallback to live user meta.
-				 *
-				 * @param bool     $fallback Whether to fall back when snapshot meta is missing.
-				 * @param WC_Order $order    Order.
-				 */
-				if ( apply_filters( 'act_reports_use_live_user_meta_when_order_snapshot_missing', false, $order ) ) {
-					$linked_key_at_purchase = trim( (string) get_user_meta( $user_id, ACT_Customer_Affiliate::META_KEY, true ) );
-				}
+		if ( $user_id && '' === $linked_key_at_purchase ) {
+			/**
+			 * Legacy orders placed before snapshots existed: opt-in fallback to live user meta.
+			 *
+			 * @param bool     $fallback Whether to fall back when snapshot meta is missing.
+			 * @param WC_Order $order    Order.
+			 */
+			if ( apply_filters( 'act_reports_use_live_user_meta_when_order_snapshot_missing', false, $order ) ) {
+				$linked_key_at_purchase = trim( (string) get_user_meta( $user_id, ACT_Customer_Affiliate::META_KEY, true ) );
 			}
+		}
 
-			if ( '' !== $linked_key_at_purchase ) {
-				$label = $this->get_affiliate_label_for_key( $linked_key_at_purchase );
-				if ( '' !== $label ) {
-					$customer_key_effective = $linked_key_at_purchase;
-					$affiliate_labels[]     = $label;
-				}
+		if ( '' !== $linked_key_at_purchase ) {
+			$label = $this->get_affiliate_label_for_key( $linked_key_at_purchase );
+			if ( '' !== $label ) {
+				$customer_key_effective = $linked_key_at_purchase;
+				$affiliate_labels[]     = $label;
 			}
 		}
 
