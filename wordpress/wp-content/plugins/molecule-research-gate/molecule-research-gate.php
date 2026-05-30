@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Molecule Research Gate
  * Description:       Gates WooCommerce catalog access with research compliance modals, user meta, and WooCommerce-native auth.
- * Version:           1.0.4
+ * Version:           1.0.6
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Molecule
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'MRG_VERSION', '1.0.4' );
+define( 'MRG_VERSION', '1.0.8' );
 define( 'MRG_PLUGIN_FILE', __FILE__ );
 define( 'MRG_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MRG_PLUGIN_URL', plugin_dir_url( __FILE__ ) );

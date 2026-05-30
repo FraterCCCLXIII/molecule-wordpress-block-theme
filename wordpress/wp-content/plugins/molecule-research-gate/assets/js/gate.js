@@ -20,6 +20,7 @@
 	var profileLock = false;
 	var trapHandler = null;
 	var previousActive = null;
+	var pendingWelcomeCode = '';
 
 	/* Icons: lucide-derived (stroke 2); purity / verified / laboratory research. */
 	var ICON_PURITY =
@@ -107,6 +108,8 @@
 			setAriaLabelledby('mrg-profile-title');
 		} else if (name === 'verified') {
 			setAriaLabelledby('mrg-gate-title-verified');
+		} else if (name === 'reward') {
+			setAriaLabelledby('mrg-gate-title-reward');
 		}
 		var shell = root.querySelector('.mrg-gate__shell');
 		if (shell) {
@@ -248,6 +251,26 @@
 		if (vIntro) {
 			vIntro.textContent = s.verifiedIntro || '';
 		}
+		var rTitle = root.querySelector('[data-mrg-reward-title]');
+		var rIntro = root.querySelector('[data-mrg-reward-intro]');
+		if (rTitle) {
+			rTitle.textContent = s.rewardTitle || '';
+		}
+		if (rIntro) {
+			rIntro.textContent = s.rewardIntro || '';
+		}
+		var claimBtn = root.querySelector('[data-mrg-newsletter-claim]');
+		if (claimBtn) {
+			claimBtn.textContent = s.newsletterClaimCta || '';
+		}
+		var verifiedSkip = root.querySelector('[data-mrg-verified-skip]');
+		if (verifiedSkip) {
+			verifiedSkip.textContent = s.verifiedSkipCta || s.shopCta || '';
+		}
+		var copyBtn = root.querySelector('[data-mrg-copy-code]');
+		if (copyBtn) {
+			copyBtn.textContent = s.copyCodeCta || '';
+		}
 		var fine = root.querySelector('[data-mrg-fine-print]');
 		if (fine && s.finePrintHtml) {
 			fine.innerHTML = s.finePrintHtml;
@@ -258,18 +281,110 @@
 		}
 	}
 
+	function hasWelcomeOffer() {
+		return !!(pendingWelcomeCode || cfg.welcomeCoupon);
+	}
+
+	function syncVerifiedSkipButton() {
+		var skipBtn = root.querySelector('[data-mrg-verified-skip]');
+		if (!skipBtn) {
+			return;
+		}
+		var s = cfg.strings || {};
+		skipBtn.textContent = s.verifiedSkipCta || s.shopCta || '';
+	}
+
 	function syncNewsletterOptInUi() {
 		var wrap = root.querySelector('[data-mrg-newsletter-wrap]');
 		var cb = root.querySelector('[data-mrg-newsletter-checkbox]');
+		var claimBtn = root.querySelector('[data-mrg-newsletter-claim]');
+		var actions = root.querySelector('[data-mrg-verified-actions]');
+		var errEl = root.querySelector('[data-mrg-newsletter-error]');
 		var no = cfg.newsletterOptIn || {};
 		if (!wrap) {
 			return;
 		}
-		var show = !!(no.enabled && no.restUrl);
+		var show = hasWelcomeOffer() && !!no.stepEnabled && !no.alreadySubscribed;
 		wrap.hidden = !show;
+		if (actions) {
+			actions.hidden = !show;
+		}
 		if (cb) {
 			cb.checked = false;
 		}
+		if (claimBtn) {
+			claimBtn.disabled = true;
+		}
+		if (errEl) {
+			errEl.hidden = true;
+			errEl.textContent = '';
+		}
+	}
+
+	function copyWelcomeCode(btn) {
+		var s = cfg.strings || {};
+		var code = pendingWelcomeCode || cfg.welcomeCoupon || '';
+		if (!code) {
+			return;
+		}
+		function done() {
+			if (!btn) {
+				return;
+			}
+			var prev = btn.textContent;
+			btn.textContent = s.copyCodeDone || 'Copied';
+			setTimeout(function () {
+				btn.textContent = prev;
+			}, 2000);
+		}
+		function fail() {
+			if (btn) {
+				btn.textContent = s.copyCodeFailed || 'Could not copy';
+			}
+		}
+		if (navigator.clipboard && navigator.clipboard.writeText) {
+			navigator.clipboard.writeText(code).then(done, fail);
+			return;
+		}
+		var ta = document.createElement('textarea');
+		ta.value = code;
+		ta.setAttribute('readonly', '');
+		ta.style.position = 'fixed';
+		ta.style.left = '-9999px';
+		document.body.appendChild(ta);
+		ta.select();
+		try {
+			document.execCommand('copy');
+			done();
+		} catch (e) {
+			fail();
+		}
+		document.body.removeChild(ta);
+	}
+
+	function showReward(data) {
+		var s = cfg.strings || {};
+		var code = pendingWelcomeCode || (data && data.welcomeCoupon) || cfg.welcomeCoupon || '';
+		var shopUrl = (data && data.shopUrl) || cfg.shopUrl;
+		var discountWrap = root.querySelector('[data-mrg-discount-wrap]');
+		var discountCode = root.querySelector('[data-mrg-discount-code]');
+		var shopBtn = root.querySelector('[data-mrg-verified-shop]');
+		pendingWelcomeCode = code;
+		if (discountWrap && discountCode) {
+			if (code) {
+				discountWrap.hidden = false;
+				discountCode.textContent = code;
+			} else {
+				discountWrap.hidden = true;
+				discountCode.textContent = '';
+			}
+		}
+		if (shopBtn) {
+			shopBtn.href = shopUrl || '#';
+			shopBtn.textContent = s.shopCta || '';
+		}
+		profileLock = false;
+		showState('reward');
 	}
 
 	function prefillProfile() {
@@ -340,39 +455,105 @@
 			profileForm.addEventListener('submit', submitProfile);
 		}
 
-		root.addEventListener('click', function (e) {
-			var a = e.target.closest('[data-mrg-verified-shop], [data-mrg-verified-cart]');
-			if (!a || a.hidden) {
-				return;
+		var newsletterCb = root.querySelector('[data-mrg-newsletter-checkbox]');
+		var claimBtn = root.querySelector('[data-mrg-newsletter-claim]');
+		if (newsletterCb && claimBtn) {
+			newsletterCb.addEventListener('change', function () {
+				claimBtn.disabled = !newsletterCb.checked;
+			});
+		}
+		if (claimBtn) {
+			claimBtn.addEventListener('click', submitNewsletterClaim);
+		}
+
+		var skipBtn = root.querySelector('[data-mrg-verified-skip]');
+		if (skipBtn) {
+			skipBtn.addEventListener('click', function () {
+				var shopUrl = cfg.shopUrl || '/';
+				pendingWelcomeCode = '';
+				profileLock = false;
+				closeModal();
+				window.location.href = shopUrl;
+			});
+		}
+
+		var copyBtn = root.querySelector('[data-mrg-copy-code]');
+		if (copyBtn) {
+			copyBtn.addEventListener('click', function () {
+				copyWelcomeCode(copyBtn);
+			});
+		}
+	}
+
+	function submitNewsletterClaim() {
+		var s = cfg.strings || {};
+		var no = cfg.newsletterOptIn || {};
+		var cb = root.querySelector('[data-mrg-newsletter-checkbox]');
+		var claimBtn = root.querySelector('[data-mrg-newsletter-claim]');
+		var errEl = root.querySelector('[data-mrg-newsletter-error]');
+		if (!cb || !cb.checked) {
+			return;
+		}
+		if (!no.restUrl) {
+			return;
+		}
+		if (!no.canSubscribe) {
+			if (errEl) {
+				errEl.textContent = s.newsletterUnavailable || '';
+				errEl.hidden = false;
 			}
-			var verifiedState = root.querySelector('[data-mrg-state="verified"]');
-			if (!verifiedState || verifiedState.hidden) {
-				return;
-			}
-			var href = a.getAttribute('href');
-			if (!href || href.charAt(0) === '#') {
-				return;
-			}
-			var no = cfg.newsletterOptIn || {};
-			var cb = root.querySelector('[data-mrg-newsletter-checkbox]');
-			if (!no.enabled || !no.restUrl || !cb || !cb.checked) {
-				return;
-			}
-			e.preventDefault();
-			fetch(no.restUrl, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'X-WP-Nonce': cfg.nonce,
-				},
-				body: JSON.stringify({ subscribe: true }),
-				credentials: 'same-origin',
-			})
-				.catch(function () {})
-				.finally(function () {
-					window.location.href = href;
+			return;
+		}
+		if (errEl) {
+			errEl.hidden = true;
+			errEl.textContent = '';
+		}
+		if (claimBtn) {
+			claimBtn.disabled = true;
+			claimBtn.textContent = s.newsletterClaiming || '…';
+		}
+		fetch(no.restUrl, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-WP-Nonce': cfg.nonce,
+			},
+			body: JSON.stringify({ subscribe: true }),
+			credentials: 'same-origin',
+		})
+			.then(function (r) {
+				return r.json().then(function (data) {
+					return { ok: r.ok, data: data };
 				});
-		});
+			})
+			.then(function (res) {
+				if (!res.ok || !res.data || !res.data.success) {
+					var msg =
+						res.data && res.data.message
+							? res.data.message
+							: s.newsletterSubscribeFailed || 'Error';
+					if (errEl) {
+						errEl.textContent = msg;
+						errEl.hidden = false;
+					}
+					if (claimBtn) {
+						claimBtn.disabled = !cb.checked;
+						claimBtn.textContent = s.newsletterClaimCta || '';
+					}
+					return;
+				}
+				showReward({});
+			})
+			.catch(function () {
+				if (errEl) {
+					errEl.textContent = 'Network error';
+					errEl.hidden = false;
+				}
+				if (claimBtn) {
+					claimBtn.disabled = !cb.checked;
+					claimBtn.textContent = s.newsletterClaimCta || '';
+				}
+			});
 	}
 
 	function submitProfile(e) {
@@ -444,35 +625,23 @@
 	}
 
 	function showVerified(data) {
-		var s = cfg.strings || {};
 		var code = (data && data.welcomeCoupon) || cfg.welcomeCoupon || '';
-		var shopUrl = (data && data.shopUrl) || cfg.shopUrl;
-		var cartUrl = (data && data.cartUrlWithCoupon) || cfg.cartUrl;
-		var discountWrap = root.querySelector('[data-mrg-discount-wrap]');
-		var discountCode = root.querySelector('[data-mrg-discount-code]');
-		var shopBtn = root.querySelector('[data-mrg-verified-shop]');
-		var cartBtn = root.querySelector('[data-mrg-verified-cart]');
-		if (discountWrap && discountCode) {
-			if (code) {
-				discountWrap.hidden = false;
-				discountCode.textContent = code;
-			} else {
-				discountWrap.hidden = true;
-			}
-		}
-		if (shopBtn) {
-			shopBtn.href = shopUrl || '#';
-			shopBtn.textContent = s.shopCta || '';
-		}
-		if (cartBtn && code && cartUrl) {
-			cartBtn.href = cartUrl;
-			cartBtn.textContent = s.cartCta || '';
-			cartBtn.hidden = false;
-		} else if (cartBtn) {
-			cartBtn.hidden = true;
-		}
-		syncNewsletterOptInUi();
+		pendingWelcomeCode = code;
 		profileLock = false;
+
+		if (!code) {
+			closeModal();
+			return;
+		}
+
+		var no = cfg.newsletterOptIn || {};
+		if (no.alreadySubscribed || !no.stepEnabled) {
+			showReward(data || {});
+			return;
+		}
+
+		syncNewsletterOptInUi();
+		syncVerifiedSkipButton();
 		showState('verified');
 	}
 

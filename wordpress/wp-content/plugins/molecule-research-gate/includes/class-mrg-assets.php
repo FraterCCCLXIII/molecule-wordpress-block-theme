@@ -69,11 +69,10 @@ class MRG_Assets {
 
 		$user_id    = get_current_user_id();
 		$needs_prof = $this->gate->current_user_requires_profile_modal();
+		$offer_copy = $this->get_welcome_offer_strings();
 
-		$offer_newsletter = false;
-		if ( $user_id && MRG_Brevo_Newsletter::should_offer_opt_in_ui( $this->settings ) ) {
-			$offer_newsletter = ! (bool) get_user_meta( $user_id, MRG_User_Profile::META_BREVO_NEWSLETTER_OPT_IN_AT, true );
-		}
+		$brevo_ready    = MRG_Brevo_Newsletter::should_offer_opt_in_ui( $this->settings );
+		$already_opt_in = $user_id && (bool) get_user_meta( $user_id, MRG_User_Profile::META_BREVO_NEWSLETTER_OPT_IN_AT, true );
 
 		wp_localize_script(
 			'mrg-gate',
@@ -96,12 +95,21 @@ class MRG_Assets {
 					'profileIntro'        => __( 'Complete this final step so we can keep the catalog limited to lawful laboratory research use.', 'molecule-research-gate' ),
 					'profileSubmit'       => __( 'Save & Continue', 'molecule-research-gate' ),
 					'profileSaving'       => __( 'Saving…', 'molecule-research-gate' ),
-					'verifiedTitle'       => __( 'Research access verified.', 'molecule-research-gate' ),
-					'verifiedIntro'       => __( 'Use your welcome code at checkout on your first order.', 'molecule-research-gate' ),
-					'shopCta'             => __( 'Continue shopping', 'molecule-research-gate' ),
-					'cartCta'             => __( 'Go to cart with coupon', 'molecule-research-gate' ),
-					'checkboxHtml'        => '', // Filled below.
-					'newsletterOptInLabel' => __( 'Email me product updates and promotions (optional).', 'molecule-research-gate' ),
+					'verifiedTitle'        => $offer_copy['verifiedTitle'],
+					'verifiedIntro'        => $offer_copy['verifiedIntro'],
+					'rewardTitle'          => $offer_copy['rewardTitle'],
+					'rewardIntro'          => $offer_copy['rewardIntro'],
+					'newsletterClaimCta'   => $offer_copy['newsletterClaimCta'],
+					'newsletterClaiming'   => __( 'Saving…', 'molecule-research-gate' ),
+					'newsletterUnavailable' => __( 'Newsletter signup is not available right now. You can skip and continue shopping without a discount code.', 'molecule-research-gate' ),
+					'newsletterSubscribeFailed' => __( 'We could not add you to the newsletter. Please try again or skip to continue without a discount code.', 'molecule-research-gate' ),
+					'verifiedSkipCta'      => $offer_copy['verifiedSkipCta'],
+					'copyCodeCta'          => __( 'Copy code', 'molecule-research-gate' ),
+					'copyCodeDone'         => __( 'Copied', 'molecule-research-gate' ),
+					'copyCodeFailed'       => __( 'Could not copy', 'molecule-research-gate' ),
+					'shopCta'              => __( 'Continue shopping', 'molecule-research-gate' ),
+					'checkboxHtml'         => '', // Filled below.
+					'newsletterOptInLabel' => $offer_copy['newsletterOptInLabel'],
 				),
 				'brand'                    => array(
 					'eyebrow'        => (string) $this->settings['brand_eyebrow'],
@@ -117,8 +125,10 @@ class MRG_Assets {
 				'researchOtherValue'       => MRG_User_Profile::RESEARCH_OTHER_VALUE,
 				'gateUrlPrefixes'          => array_values( $this->gate->get_link_match_prefixes() ),
 				'newsletterOptIn'          => array(
-					'enabled' => $offer_newsletter,
-					'restUrl' => esc_url_raw( rest_url( 'molecule-research-gate/v1/newsletter-opt-in' ) ),
+					'stepEnabled'       => ! empty( $this->settings['welcome_optin_step_enabled'] ),
+					'canSubscribe'      => $brevo_ready,
+					'alreadySubscribed' => $already_opt_in,
+					'restUrl'           => esc_url_raw( rest_url( 'molecule-research-gate/v1/newsletter-opt-in' ) ),
 				),
 			)
 		);
@@ -235,17 +245,29 @@ class MRG_Assets {
 						<div class="mrg-gate__state" data-mrg-state="verified" hidden>
 							<h2 id="mrg-gate-title-verified" class="mrg-gate__title" data-mrg-verified-title></h2>
 							<p class="mrg-gate__intro" data-mrg-verified-intro></p>
-							<div class="mrg-gate__discount" data-mrg-discount-wrap hidden>
-								<div class="mrg-gate__discount-code" data-mrg-discount-code></div>
-							</div>
 							<div class="mrg-gate__newsletter" data-mrg-newsletter-wrap hidden>
 								<label class="mrg-gate__check">
 									<input type="checkbox" name="mrg_newsletter_opt_in" value="1" data-mrg-newsletter-checkbox autocomplete="off" />
 									<span data-mrg-newsletter-label></span>
 								</label>
 							</div>
+							<p class="mrg-gate__error" data-mrg-newsletter-error role="alert" hidden></p>
+							<div class="mrg-gate__actions" data-mrg-verified-actions>
+								<button type="button" class="mrg-gate__button" data-mrg-newsletter-claim disabled></button>
+								<button type="button" class="mrg-gate__button mrg-gate__button--secondary" data-mrg-verified-skip></button>
+							</div>
+						</div>
+
+						<div class="mrg-gate__state" data-mrg-state="reward" hidden>
+							<h2 id="mrg-gate-title-reward" class="mrg-gate__title" data-mrg-reward-title></h2>
+							<p class="mrg-gate__intro" data-mrg-reward-intro></p>
+							<div class="mrg-gate__discount" data-mrg-discount-wrap hidden>
+								<div class="mrg-gate__discount-code" data-mrg-discount-code></div>
+								<div class="mrg-gate__discount-actions">
+									<button type="button" class="mrg-gate__button mrg-gate__button--secondary" data-mrg-copy-code></button>
+								</div>
+							</div>
 							<a href="#" class="mrg-gate__button mrg-gate__button--link" data-mrg-verified-shop></a>
-							<a href="#" class="mrg-gate__button mrg-gate__button--secondary mrg-gate__button--link" data-mrg-verified-cart hidden></a>
 						</div>
 
 						<p class="mrg-gate__fine-print" data-mrg-fine-print></p>
@@ -264,5 +286,71 @@ class MRG_Assets {
 			return;
 		}
 		echo '<noscript><div class="mrg-gate-noscript">' . esc_html__( 'JavaScript is required to complete research verification on this site. Please enable JavaScript and reload the page.', 'molecule-research-gate' ) . '</div></noscript>';
+	}
+
+	/**
+	 * Newsletter / welcome-code copy from settings (with defaults).
+	 *
+	 * @return array{verifiedTitle:string,verifiedIntro:string,rewardTitle:string,rewardIntro:string,newsletterClaimCta:string,newsletterOptInLabel:string,verifiedSkipCta:string}
+	 */
+	private function get_welcome_offer_strings(): array {
+		$label = trim( (string) ( $this->settings['welcome_offer_label'] ?? '' ) );
+
+		$verified_title = trim( (string) ( $this->settings['welcome_optin_title'] ?? '' ) );
+		if ( '' === $verified_title ) {
+			$verified_title = __( 'Claim your coupon', 'molecule-research-gate' );
+		}
+
+		$verified_intro = trim( (string) ( $this->settings['welcome_optin_intro'] ?? '' ) );
+		if ( '' === $verified_intro ) {
+			$verified_intro = __( 'Subscribe to the newsletter to get discount code', 'molecule-research-gate' );
+		}
+
+		$checkbox_label = trim( (string) ( $this->settings['welcome_optin_checkbox_label'] ?? '' ) );
+		if ( '' === $checkbox_label ) {
+			$checkbox_label = '' !== $label
+				? sprintf(
+					/* translators: %s: offer label, e.g. 10% off */
+					__( 'Yes — email me product updates and promotions to receive my %s code.', 'molecule-research-gate' ),
+					$label
+				)
+				: __( 'Yes — email me product updates and promotions to receive my welcome discount code.', 'molecule-research-gate' );
+		}
+
+		$claim_cta = trim( (string) ( $this->settings['welcome_optin_claim_cta'] ?? '' ) );
+		if ( '' === $claim_cta ) {
+			$claim_cta = __( 'Claim your coupon', 'molecule-research-gate' );
+		}
+
+		$skip_cta = trim( (string) ( $this->settings['welcome_optin_skip_cta'] ?? '' ) );
+		if ( '' === $skip_cta ) {
+			$skip_cta = __( 'Skip', 'molecule-research-gate' );
+		}
+
+		$reward_title = trim( (string) ( $this->settings['reward_title'] ?? '' ) );
+		if ( '' === $reward_title ) {
+			$reward_title = '' !== $label
+				? sprintf(
+					/* translators: %s: offer label, e.g. 10% off */
+					__( 'Your %s code', 'molecule-research-gate' ),
+					$label
+				)
+				: __( 'Your welcome code', 'molecule-research-gate' );
+		}
+
+		$reward_intro = trim( (string) ( $this->settings['reward_intro'] ?? '' ) );
+		if ( '' === $reward_intro ) {
+			$reward_intro = __( 'Copy your code below and apply it at checkout on your first order.', 'molecule-research-gate' );
+		}
+
+		return array(
+			'verifiedTitle'        => $verified_title,
+			'verifiedIntro'        => $verified_intro,
+			'rewardTitle'          => $reward_title,
+			'rewardIntro'          => $reward_intro,
+			'newsletterClaimCta'   => $claim_cta,
+			'newsletterOptInLabel' => $checkbox_label,
+			'verifiedSkipCta'      => $skip_cta,
+		);
 	}
 }

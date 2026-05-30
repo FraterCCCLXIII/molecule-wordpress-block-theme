@@ -248,7 +248,7 @@
 	min-height: 0;
 }
 
-/* Verified: centered stack + spaced CTAs */
+/* Verified: newsletter offer before code reveal */
 .mrg-gate__state[data-mrg-state="verified"]:not([hidden]) {
 	flex: 1 1 auto;
 	display: flex;
@@ -263,29 +263,73 @@
 
 .mrg-gate__state[data-mrg-state="verified"]:not([hidden]) > .mrg-gate__title {
 	margin-bottom: 0;
+	font-size: clamp(1.5rem, 4.5vw, 1.9rem);
+	font-weight: 700;
+	line-height: 1.15;
+	letter-spacing: -0.02em;
 }
 
 .mrg-gate__state[data-mrg-state="verified"]:not([hidden]) > .mrg-gate__intro {
 	margin-bottom: 0;
-}
-
-.mrg-gate__state[data-mrg-state="verified"]:not([hidden]) > .mrg-gate__discount {
-	margin: 0;
+	font-size: 1rem;
+	max-width: 22rem;
+	align-self: center;
 }
 
 .mrg-gate__state[data-mrg-state="verified"]:not([hidden]) > .mrg-gate__newsletter {
 	text-align: left;
 	align-self: stretch;
 	margin: 0;
+	padding: 0.85rem 1rem;
+	border: 1px solid var(--mrg-border);
+	border-radius: var(--mrg-radius);
+	background: var(--mrg-secondary-bg);
 }
 
 .mrg-gate__state[data-mrg-state="verified"]:not([hidden]) > .mrg-gate__newsletter .mrg-gate__check {
-	font-size: 0.82rem;
-	line-height: 1.35;
-	color: var(--mrg-muted-text);
+	font-size: 0.875rem;
+	line-height: 1.4;
+	color: var(--mrg-panel-fg);
 }
 
-.mrg-gate__state[data-mrg-state="verified"]:not([hidden]) .mrg-gate__button--link {
+.mrg-gate__actions {
+	display: flex;
+	flex-direction: column;
+	gap: 0.65rem;
+	width: 100%;
+}
+
+.mrg-gate__actions .mrg-gate__button {
+	width: 100%;
+	border-radius: var(--mrg-radius);
+}
+
+/* Reward: welcome code + copy */
+.mrg-gate__state[data-mrg-state="reward"]:not([hidden]) {
+	flex: 1 1 auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: stretch;
+	text-align: center;
+	min-height: 0;
+	width: 100%;
+	gap: 1rem;
+}
+
+.mrg-gate__state[data-mrg-state="reward"]:not([hidden]) > .mrg-gate__title {
+	margin-bottom: 0;
+}
+
+.mrg-gate__state[data-mrg-state="reward"]:not([hidden]) > .mrg-gate__intro {
+	margin-bottom: 0;
+}
+
+.mrg-gate__state[data-mrg-state="reward"]:not([hidden]) > .mrg-gate__discount {
+	margin: 0;
+}
+
+.mrg-gate__state[data-mrg-state="reward"]:not([hidden]) .mrg-gate__button--link {
 	box-sizing: border-box;
 	border-radius: var(--mrg-radius);
 	display: block;
@@ -462,6 +506,14 @@
 	letter-spacing: 0.08em;
 	font-family: ui-monospace, monospace;
 	color: var(--mrg-panel-fg);
+}
+
+.mrg-gate__discount-actions {
+	margin-top: 0.85rem;
+}
+
+.mrg-gate__discount-actions .mrg-gate__button {
+	width: 100%;
 }
 
 .mrg-gate__fine-print {

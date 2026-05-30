@@ -31,7 +31,16 @@ class MRG_Admin_Settings {
 			'terms_url'               => home_url( '/terms/' ),
 			'indemnity_url'           => home_url( '/indemnity-waiver/' ),
 			'support_email'           => get_bloginfo( 'admin_email' ),
-			'welcome_coupon_code'     => 'WELCOME15',
+			'welcome_coupon_code'          => 'WELCOME15',
+			'welcome_offer_label'          => '',
+			'welcome_optin_step_enabled'   => 1,
+			'welcome_optin_title'          => '',
+			'welcome_optin_intro'          => '',
+			'welcome_optin_checkbox_label' => '',
+			'welcome_optin_claim_cta'      => '',
+			'welcome_optin_skip_cta'       => '',
+			'reward_title'                 => '',
+			'reward_intro'                 => '',
 			'policy_version'          => '1.0',
 			'logo_attachment_id'      => 0,
 			'logo_url'                => '',
@@ -233,6 +242,25 @@ class MRG_Admin_Settings {
 		$code = isset( $out['welcome_coupon_code'] ) ? sanitize_text_field( (string) $out['welcome_coupon_code'] ) : '';
 		$out['welcome_coupon_code'] = function_exists( 'wc_format_coupon_code' ) ? wc_format_coupon_code( $code ) : $code;
 
+		$out['welcome_offer_label'] = isset( $out['welcome_offer_label'] )
+			? sanitize_text_field( (string) $out['welcome_offer_label'] )
+			: $defaults['welcome_offer_label'];
+
+		$out['welcome_optin_step_enabled'] = ! empty( $out['welcome_optin_step_enabled'] ) ? 1 : 0;
+
+		$optin_text_keys = array(
+			'welcome_optin_title',
+			'welcome_optin_intro',
+			'welcome_optin_checkbox_label',
+			'welcome_optin_claim_cta',
+			'welcome_optin_skip_cta',
+			'reward_title',
+			'reward_intro',
+		);
+		foreach ( $optin_text_keys as $key ) {
+			$out[ $key ] = isset( $out[ $key ] ) ? sanitize_text_field( (string) $out[ $key ] ) : $defaults[ $key ];
+		}
+
 		$out['policy_version'] = isset( $out['policy_version'] ) ? sanitize_text_field( (string) $out['policy_version'] ) : $defaults['policy_version'];
 
 		$text_keys = array( 'brand_eyebrow', 'proof_line_1', 'proof_line_2', 'proof_line_3' );
@@ -300,6 +328,51 @@ class MRG_Admin_Settings {
 						<td>
 							<input name="<?php echo esc_attr( MRG_OPTION_KEY ); ?>[welcome_coupon_code]" type="text" id="mrg_coupon" value="<?php echo esc_attr( $values['welcome_coupon_code'] ); ?>" class="regular-text" />
 							<p class="description"><?php esc_html_e( 'Create this coupon in WooCommerce. Optional: cart links can append ?mrg_apply_coupon=CODE to auto-apply for logged-in customers.', 'molecule-research-gate' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="mrg_welcome_offer_label"><?php esc_html_e( 'Welcome offer label', 'molecule-research-gate' ); ?></label></th>
+						<td>
+							<input name="<?php echo esc_attr( MRG_OPTION_KEY ); ?>[welcome_offer_label]" type="text" id="mrg_welcome_offer_label" value="<?php echo esc_attr( $values['welcome_offer_label'] ); ?>" class="regular-text" placeholder="<?php echo esc_attr__( '10% off', 'molecule-research-gate' ); ?>" />
+							<p class="description"><?php esc_html_e( 'Optional short phrase used in reward-step defaults when reward title/intro are left blank (e.g. 10% off, $15 off).', 'molecule-research-gate' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Welcome coupon opt-in step', 'molecule-research-gate' ); ?></th>
+						<td>
+							<label>
+								<input type="checkbox" name="<?php echo esc_attr( MRG_OPTION_KEY ); ?>[welcome_optin_step_enabled]" value="1" <?php checked( $values['welcome_optin_step_enabled'] ); ?> />
+								<?php esc_html_e( 'Require newsletter opt-in before revealing the welcome coupon code.', 'molecule-research-gate' ); ?>
+							</label>
+							<p class="description"><?php esc_html_e( 'When enabled, customers see a confirmation step with checkbox and claim button after research verification. When disabled, the coupon code is shown immediately (no opt-in gate).', 'molecule-research-gate' ); ?></p>
+							<p>
+								<label for="mrg_welcome_optin_title"><strong><?php esc_html_e( 'Step title', 'molecule-research-gate' ); ?></strong></label><br />
+								<input name="<?php echo esc_attr( MRG_OPTION_KEY ); ?>[welcome_optin_title]" type="text" id="mrg_welcome_optin_title" value="<?php echo esc_attr( $values['welcome_optin_title'] ); ?>" class="large-text" placeholder="<?php echo esc_attr__( 'Claim your coupon', 'molecule-research-gate' ); ?>" />
+							</p>
+							<p>
+								<label for="mrg_welcome_optin_intro"><strong><?php esc_html_e( 'Step intro', 'molecule-research-gate' ); ?></strong></label><br />
+								<input name="<?php echo esc_attr( MRG_OPTION_KEY ); ?>[welcome_optin_intro]" type="text" id="mrg_welcome_optin_intro" value="<?php echo esc_attr( $values['welcome_optin_intro'] ); ?>" class="large-text" placeholder="<?php echo esc_attr__( 'Subscribe to the newsletter to get discount code', 'molecule-research-gate' ); ?>" />
+							</p>
+							<p>
+								<label for="mrg_welcome_optin_checkbox_label"><strong><?php esc_html_e( 'Opt-in checkbox label', 'molecule-research-gate' ); ?></strong></label><br />
+								<input name="<?php echo esc_attr( MRG_OPTION_KEY ); ?>[welcome_optin_checkbox_label]" type="text" id="mrg_welcome_optin_checkbox_label" value="<?php echo esc_attr( $values['welcome_optin_checkbox_label'] ); ?>" class="large-text" placeholder="<?php echo esc_attr__( 'Yes — email me product updates and promotions to receive my welcome discount code.', 'molecule-research-gate' ); ?>" />
+							</p>
+							<p>
+								<label for="mrg_welcome_optin_claim_cta"><strong><?php esc_html_e( 'Claim button', 'molecule-research-gate' ); ?></strong></label><br />
+								<input name="<?php echo esc_attr( MRG_OPTION_KEY ); ?>[welcome_optin_claim_cta]" type="text" id="mrg_welcome_optin_claim_cta" value="<?php echo esc_attr( $values['welcome_optin_claim_cta'] ); ?>" class="regular-text" placeholder="<?php echo esc_attr__( 'Claim your coupon', 'molecule-research-gate' ); ?>" />
+							</p>
+							<p>
+								<label for="mrg_welcome_optin_skip_cta"><strong><?php esc_html_e( 'Skip button', 'molecule-research-gate' ); ?></strong></label><br />
+								<input name="<?php echo esc_attr( MRG_OPTION_KEY ); ?>[welcome_optin_skip_cta]" type="text" id="mrg_welcome_optin_skip_cta" value="<?php echo esc_attr( $values['welcome_optin_skip_cta'] ); ?>" class="regular-text" placeholder="<?php echo esc_attr__( 'Skip', 'molecule-research-gate' ); ?>" />
+							</p>
+							<p>
+								<label for="mrg_reward_title"><strong><?php esc_html_e( 'Reward step title', 'molecule-research-gate' ); ?></strong></label><br />
+								<input name="<?php echo esc_attr( MRG_OPTION_KEY ); ?>[reward_title]" type="text" id="mrg_reward_title" value="<?php echo esc_attr( $values['reward_title'] ); ?>" class="large-text" placeholder="<?php echo esc_attr__( 'Your welcome code', 'molecule-research-gate' ); ?>" />
+							</p>
+							<p>
+								<label for="mrg_reward_intro"><strong><?php esc_html_e( 'Reward step intro', 'molecule-research-gate' ); ?></strong></label><br />
+								<input name="<?php echo esc_attr( MRG_OPTION_KEY ); ?>[reward_intro]" type="text" id="mrg_reward_intro" value="<?php echo esc_attr( $values['reward_intro'] ); ?>" class="large-text" placeholder="<?php echo esc_attr__( 'Copy your code below and apply it at checkout on your first order.', 'molecule-research-gate' ); ?>" />
+							</p>
 						</td>
 					</tr>
 					<tr>
@@ -436,7 +509,7 @@ class MRG_Admin_Settings {
 					<?php esc_html_e( 'Terms URL, indemnity URL, support email, logo, brand panel image, and proof-line copy control modal content and styling.', 'molecule-research-gate' ); ?>
 				</li>
 				<li>
-					<?php esc_html_e( 'Welcome coupon code is shown on the final \'verified\' step; cart buttons can include a query argument so WooCommerce applies that coupon.', 'molecule-research-gate' ); ?>
+					<?php esc_html_e( 'Welcome coupon code can require a newsletter opt-in step first (configurable copy and buttons). After opt-in, the code is revealed on the reward step.', 'molecule-research-gate' ); ?>
 				</li>
 				<li>
 					<?php
