@@ -258,11 +258,25 @@ WooCommerce Inputs Styles
   gap: 6px;
 }
 
-/* Keep classic single-product add-to-cart buttons fully rounded. */
+/* Keep classic single-product add-to-cart buttons fully rounded, large, and full width. */
 .woocommerce div.product form.cart .single_add_to_cart_button.button,
 .woocommerce div.product form.cart .single_add_to_cart_button.button.alt,
 button.single_add_to_cart_button.button.alt.wp-element-button {
   border-radius: 9999px !important;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* Let the button fill the row in the variable-product add-to-cart container. */
+.single-product div.product form.cart .woocommerce-variation-add-to-cart {
+  display: block;
+  width: 100%;
 }
 
 .single-product .molecule-available-sizes {
@@ -317,7 +331,8 @@ button.single_add_to_cart_button.button.alt.wp-element-button {
   outline: none;
 }
 
-.single-product .molecule-variable-size-selector__option.is-active {
+.single-product .molecule-variable-size-selector__option.is-active,
+.single-product .molecule-available-sizes__option.is-active {
   border-color: #111827;
   background: #111827;
   color: #ffffff;
@@ -1718,11 +1733,17 @@ input.switch.molecule-in-stock-only-switch:focus-visible {
 /* -------------------------------------------------------------------------- */
 
 .single-product .molecule-bundle-tiers {
+  width: 100%;
+  /* Claim the full row when rendered inside a flex button container (variable products). */
+  flex: 1 0 100%;
+  box-sizing: border-box;
   margin: 0 0 1.25rem;
 }
 
 .single-product .molecule-bundle-tiers__list {
   display: grid;
+  width: 100%;
+  box-sizing: border-box;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
@@ -1786,8 +1807,8 @@ input.switch.molecule-in-stock-only-switch:focus-visible {
   transform: translateX(-50%);
   padding: 2px 10px;
   border-radius: 9999px;
-  background: var(--accent, #dbeafe);
-  color: var(--foreground, #1e3a8a);
+  background: #000;
+  color: #fff;
   font-size: 0.75rem;
   font-weight: 600;
   line-height: 1.5;

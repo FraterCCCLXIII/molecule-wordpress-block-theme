@@ -600,7 +600,7 @@ class WooCommerce {
 			<p class="molecule-available-sizes__label"><?php esc_html_e( 'Size', 'shadcn' ); ?></p>
 			<div class="molecule-available-sizes__options">
 				<?php foreach ( $sizes as $size ) : ?>
-					<span class="molecule-available-sizes__option" aria-pressed="false"><?php echo esc_html( $size ); ?></span>
+					<span class="molecule-available-sizes__option is-active" aria-pressed="true"><?php echo esc_html( $size ); ?></span>
 				<?php endforeach; ?>
 			</div>
 		</div>

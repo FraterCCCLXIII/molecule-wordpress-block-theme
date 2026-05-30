@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Molecule Bundle Pricing
  * Description:       Quantity-tier bundle pricing for WooCommerce products (Buy 1 / 3 / 6+ style) with global defaults, per-product and per-variation overrides, and server-side discount enforcement.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Molecule
@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'MBP_VERSION', '1.0.0' );
+define( 'MBP_VERSION', '1.0.1' );
 define( 'MBP_PLUGIN_FILE', __FILE__ );
 define( 'MBP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MBP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );

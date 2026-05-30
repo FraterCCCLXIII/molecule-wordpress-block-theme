@@ -168,7 +168,8 @@
 			var $button = $( this );
 			var value = String( $button.attr( 'data-value' ) || '' );
 			var current = String( $sizeSelect.val() || '' );
-			var next = current === value ? '' : value;
+			// Keep the sole option locked in for single-variation products (cannot deselect).
+			var next = ( current === value && optionData.length > 1 ) ? '' : value;
 
 			$sizeSelect.val( next ).trigger( 'change' );
 			syncFromSelect();
@@ -182,6 +183,16 @@
 		$form.on( 'reset_data hide_variation', function () {
 			resetTopPrice();
 		} );
+
+		// Single-variation products: auto-select the only option so the variation
+		// resolves immediately (price + add-to-cart enabled) without a manual click.
+		if ( 1 === optionData.length ) {
+			var soleValue = optionData[ 0 ].value;
+			if ( String( $sizeSelect.val() || '' ) !== soleValue ) {
+				$sizeSelect.val( soleValue ).trigger( 'change' );
+			}
+		}
+
 		syncFromSelect();
 	}
 

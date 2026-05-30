@@ -25,6 +25,46 @@ class MBP_Frontend {
 	public function register() {
 		// Inside the add-to-cart form, above the quantity + button (both simple and variable templates).
 		add_action( 'woocommerce_before_add_to_cart_button', array( $this, 'render_selector' ), 5 );
+
+		// Remove the redundant single-product price block when bundle tiers display pricing.
+		add_filter( 'render_block', array( $this, 'maybe_remove_single_product_price' ), 10, 2 );
+	}
+
+	/**
+	 * Hide the core single-product Product Price block on products that show bundle tiers.
+	 *
+	 * Scoped to the single-product template's own price block (not loop/related/upsell
+	 * price blocks) and only when the queried product actually resolves to tiers.
+	 *
+	 * @param string               $block_content Rendered block HTML.
+	 * @param array<string, mixed> $block         Parsed block.
+	 * @return string
+	 */
+	public function maybe_remove_single_product_price( $block_content, $block ) {
+		if ( empty( $block['blockName'] ) || 'woocommerce/product-price' !== $block['blockName'] ) {
+			return $block_content;
+		}
+
+		if ( ! function_exists( 'is_product' ) || ! is_product() ) {
+			return $block_content;
+		}
+
+		// Only the main single-product price block carries this attribute; loop prices do not.
+		if ( empty( $block['attrs']['isDescendentOfSingleProductTemplate'] ) ) {
+			return $block_content;
+		}
+
+		$product_id = get_queried_object_id();
+		if ( ! $product_id ) {
+			return $block_content;
+		}
+
+		$tiers = MBP_Tiers::resolve( (int) $product_id );
+		if ( empty( $tiers ) ) {
+			return $block_content;
+		}
+
+		return '';
 	}
 
 	/**

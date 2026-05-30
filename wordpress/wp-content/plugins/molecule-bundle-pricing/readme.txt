@@ -3,7 +3,7 @@ Contributors: molecule
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 
 Quantity-tier bundle pricing for WooCommerce products (Buy 1 / 3 / 6+ style), with
@@ -43,6 +43,9 @@ structural CSS. The active theme paints the look. Class-name contract:
 * WooCommerce (active).
 
 == Changelog ==
+
+= 1.0.1 =
+* Hide the redundant single-product Product Price block on products that show bundle tiers.
 
 = 1.0.0 =
 * Initial release.
