@@ -2145,11 +2145,21 @@ body.molecule-search-modal-open {
   line-height: 1.65;
 }
 
-.molecule-affiliates-steps__intro {
-  max-width: 42rem;
-  margin-top: 0;
-  margin-inline: 0 !important;
+.molecule-affiliates-steps {
   text-align: left;
+}
+
+.molecule-affiliates-steps > .wp-block-heading,
+.molecule-affiliates-steps > .molecule-affiliates-steps__intro {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0 !important;
+  text-align: left !important;
+}
+
+.molecule-affiliates-steps__intro {
+  margin-top: 0;
+  margin-bottom: var(--wp--preset--spacing--7) !important;
 }
 
 .molecule-affiliates-steps__grid .wp-block-column {
