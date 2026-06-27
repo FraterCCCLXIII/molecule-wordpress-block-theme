@@ -1360,6 +1360,118 @@ WooCommerce Coupon Form Styles
   background-color: var(--accent);
 }
 
+.wp-block-woocommerce-checkout-order-summary-coupon-form-block {
+  margin-block: 1rem 1.25rem;
+  font-size: 1rem;
+}
+
+.wp-block-woocommerce-checkout-order-summary-coupon-form-block
+  .wc-block-components-totals-coupon {
+  padding: 1rem 1.125rem !important;
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) + 2px);
+  background: color-mix(in oklab, var(--muted) 30%, var(--background));
+}
+
+.wp-block-woocommerce-checkout-order-summary-coupon-form-block.molecule-checkout-coupon--pinned
+  .wc-block-components-totals-coupon::before,
+.wp-block-woocommerce-checkout-order-summary-coupon-form-block.molecule-checkout-coupon--custom
+  .molecule-checkout-coupon__always-visible::before {
+  content: "Coupon or Affiliate Code";
+  display: block;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.wp-block-woocommerce-checkout-order-summary-coupon-form-block.molecule-checkout-coupon--custom
+  > .wc-block-components-totals-coupon:not(.molecule-checkout-coupon__always-visible) {
+  display: none !important;
+}
+
+.wp-block-woocommerce-checkout-order-summary-coupon-form-block.molecule-checkout-coupon--pinned
+  .wc-block-components-panel__content,
+.wp-block-woocommerce-checkout-order-summary-coupon-form-block.molecule-checkout-coupon--custom
+  .molecule-checkout-coupon__always-visible .wc-block-components-panel__content {
+  display: block !important;
+  padding-bottom: 0.25rem;
+}
+
+.wp-block-woocommerce-checkout-order-summary-coupon-form-block
+  .wc-block-components-totals-coupon__form {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.75rem;
+}
+
+.wp-block-woocommerce-checkout-order-summary-coupon-form-block
+  .wc-block-components-totals-coupon__input,
+.wp-block-woocommerce-checkout-order-summary-coupon-form-block
+  .wc-block-components-text-input.wc-block-components-totals-coupon__input {
+  flex: 1 1 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  line-height: normal;
+  margin-top: 0;
+  white-space: normal;
+}
+
+.wp-block-woocommerce-checkout-order-summary-coupon-form-block
+  .wc-block-components-text-input .wc-block-components-text-input__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.wp-block-woocommerce-checkout-order-summary-coupon-form-block
+  .wc-block-components-text-input label,
+.wp-block-woocommerce-checkout-order-summary-coupon-form-block
+  .wc-block-components-text-input.is-active label,
+.wp-block-woocommerce-checkout-order-summary-coupon-form-block
+  .wc-block-components-text-input input:-webkit-autofill + label {
+  position: static;
+  top: auto;
+  left: auto;
+  transform: none;
+  order: -1;
+  max-width: none;
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25;
+  transition: none;
+}
+
+.wp-block-woocommerce-checkout-order-summary-coupon-form-block
+  .wc-block-components-text-input input {
+  min-height: 3rem;
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+}
+
+.wp-block-woocommerce-checkout-order-summary-coupon-form-block
+  .wc-block-components-totals-coupon__form
+  .wc-block-components-totals-coupon__button {
+  width: 100%;
+  min-height: 3rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: var(--foreground);
+  color: var(--background);
+  border-color: var(--foreground);
+}
+
+.wp-block-woocommerce-checkout-order-summary-coupon-form-block
+  .wc-block-components-totals-coupon__form
+  .wc-block-components-totals-coupon__button:hover {
+  background-color: color-mix(in oklab, var(--foreground) 88%, var(--background));
+  color: var(--background);
+  border-color: color-mix(in oklab, var(--foreground) 88%, var(--background));
+}
+
 /* ==========================================================================
 Order Summary Block Styles
 ========================================================================== */

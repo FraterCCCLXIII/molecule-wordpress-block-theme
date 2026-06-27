@@ -263,6 +263,7 @@ if ( $show_shipping_banner ) {
 						<a href="<?php echo esc_url( home_url( '/shop' ) ); ?>"><?php esc_html_e( 'Shop', 'shadcn' ); ?></a>
 						<a href="<?php echo esc_url( home_url( '/peptide-guide' ) ); ?>"><?php esc_html_e( 'Peptide Guide', 'shadcn' ); ?></a>
 						<a href="<?php echo esc_url( home_url( '/research' ) ); ?>"><?php esc_html_e( 'Research', 'shadcn' ); ?></a>
+						<a href="<?php echo esc_url( home_url( '/affiliates' ) ); ?>"><?php esc_html_e( 'Affiliates', 'shadcn' ); ?></a>
 					</nav>
 				</aside>
 			</div>
@@ -331,6 +332,7 @@ if ( $show_shipping_banner ) {
 						<a href="<?php echo esc_url( home_url( '/research' ) ); ?>"><?php esc_html_e( 'Research', 'shadcn' ); ?></a>
 					</div>
 				</div>
+				<a href="<?php echo esc_url( home_url( '/affiliates' ) ); ?>"><?php esc_html_e( 'Affiliates', 'shadcn' ); ?></a>
 			</nav>
 
 			<div class="molecule-top-nav-icons">

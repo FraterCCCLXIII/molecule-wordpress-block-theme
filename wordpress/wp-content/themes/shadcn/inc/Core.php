@@ -15,6 +15,7 @@ class Core {
 		add_action( 'after_setup_theme', array( $this, 'starter_content_setup' ) );
 		add_action( 'init', array( $this, 'close_comments_for_existing_posts_once' ) );
 		add_action( 'init', array( $this, 'remove_footer_site_links_heading' ), 21 );
+		add_action( 'init', array( $this, 'remove_footer_powered_by_branding' ), 21 );
 		add_action( 'init', array( $this, 'ensure_footer_refund_policy_link' ), 22 );
 		add_action( 'init', array( $this, 'ensure_footer_contact_info' ), 22 );
 		add_action( 'init', array( $this, 'ensure_footer_navigation_layout' ), 23 );
@@ -179,6 +180,44 @@ class Core {
 			array(
 				'ID'           => $post->ID,
 				'post_content' => str_replace( $heading_block, '', $post->post_content ),
+			)
+		);
+	}
+
+	public function remove_footer_powered_by_branding() {
+		$footer_parts = get_posts(
+			array(
+				'post_type'      => 'wp_template_part',
+				'name'           => 'footer',
+				'posts_per_page' => 1,
+				'post_status'    => 'publish',
+			)
+		);
+
+		if ( empty( $footer_parts ) ) {
+			return;
+		}
+
+		$post = $footer_parts[0];
+		if ( ! str_contains( $post->post_content, 'Powered by' ) ) {
+			return;
+		}
+
+		$updated_footer = preg_replace(
+			'/\s*<!-- wp:group \{[^}]*\} -->\s*<div class="wp-block-group[^"]*">[\s\S]*?Powered by[\s\S]*?Shadcn WP Theme[\s\S]*?<\/div>\s*<!-- \/wp:group -->/',
+			'',
+			$post->post_content,
+			1
+		);
+
+		if ( ! is_string( $updated_footer ) || $updated_footer === $post->post_content ) {
+			return;
+		}
+
+		wp_update_post(
+			array(
+				'ID'           => $post->ID,
+				'post_content' => $updated_footer,
 			)
 		);
 	}

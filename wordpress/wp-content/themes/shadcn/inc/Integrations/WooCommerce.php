@@ -287,7 +287,10 @@ class WooCommerce {
 	}
 
 	public function enqueue_scripts() {
-		wp_enqueue_style( 'shadcn-woocommerce', get_template_directory_uri() . '/assets/css/woocommerce.css', array(), wp_get_theme()->get( 'Version' ) );
+		$style_path = get_template_directory() . '/assets/css/woocommerce.css';
+		$style_ver  = file_exists( $style_path ) ? (string) filemtime( $style_path ) : wp_get_theme()->get( 'Version' );
+
+		wp_enqueue_style( 'shadcn-woocommerce', get_template_directory_uri() . '/assets/css/woocommerce.css', array(), $style_ver );
 
 		// Late cascade win: login options row must not inherit horizontal padding from global/block styles.
 		wp_add_inline_style(
@@ -330,6 +333,19 @@ class WooCommerce {
 				get_template_directory_uri() . '/assets/js/shop-in-stock-toggle.js',
 				array(),
 				wp_get_theme()->get( 'Version' ),
+				true
+			);
+		}
+
+		if ( function_exists( 'is_checkout' ) && is_checkout() && ! is_wc_endpoint_url( 'order-received' ) ) {
+			$script_path = get_template_directory() . '/assets/js/checkout-coupon.js';
+			$script_ver  = file_exists( $script_path ) ? (string) filemtime( $script_path ) : wp_get_theme()->get( 'Version' );
+
+			wp_enqueue_script(
+				'shadcn-checkout-coupon',
+				get_template_directory_uri() . '/assets/js/checkout-coupon.js',
+				array( 'wc-blocks-data-store', 'wp-data' ),
+				$script_ver,
 				true
 			);
 		}

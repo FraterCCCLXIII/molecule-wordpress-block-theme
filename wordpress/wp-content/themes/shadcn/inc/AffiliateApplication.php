@@ -110,10 +110,18 @@ class AffiliateApplication {
 
 		$post = $navigation[0];
 		if ( str_contains( $post->post_content, '/affiliates' ) ) {
+			if ( str_contains( $post->post_content, '"label":"Affiliate Program"' ) ) {
+				wp_update_post(
+					array(
+						'ID'           => $post->ID,
+						'post_content' => str_replace( '"label":"Affiliate Program"', '"label":"Affiliates"', $post->post_content ),
+					)
+				);
+			}
 			return;
 		}
 
-		$link_block   = "\n\n<!-- wp:navigation-link {\"label\":\"Affiliate Program\",\"url\":\"/affiliates\",\"kind\":\"custom\"} /-->\n\n";
+		$link_block   = "\n\n<!-- wp:navigation-link {\"label\":\"Affiliates\",\"url\":\"/affiliates\",\"kind\":\"custom\"} /-->\n\n";
 		$about_marker = '<!-- wp:navigation-link {"label":"About Us","url":"/about","kind":"custom"} /-->';
 
 		if ( str_contains( $post->post_content, $about_marker ) ) {
