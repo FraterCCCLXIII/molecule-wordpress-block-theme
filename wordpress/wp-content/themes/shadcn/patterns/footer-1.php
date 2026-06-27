@@ -27,11 +27,9 @@
 	<!-- /wp:heading -->
 	
 	<!-- wp:navigation {"textColor":"muted-foreground","overlayMenu":"never","layout":{"type":"flex","orientation":"vertical"}} -->
-	<!-- wp:navigation-link {"label":"Shop","url":"#"} /-->
+	<!-- wp:navigation-link {"label":"Affiliate Program","url":"/affiliates","kind":"custom"} /-->
 
-	<!-- wp:navigation-link {"label":"Blog","url":"#"} /-->
-
-	<!-- wp:navigation-link {"label":"About","url":"#"} /-->
+	<!-- wp:navigation-link {"label":"Contact","url":"/contact","kind":"custom"} /-->
 
 	<!-- /wp:navigation -->
 	</div>

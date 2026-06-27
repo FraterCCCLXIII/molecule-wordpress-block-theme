@@ -1,11 +1,11 @@
 services:
-  # Local mail catcher: Web UI http://localhost:8025 (change host port if busy)
+  # Local mail catcher: Web UI http://localhost:8026 (change host port if busy)
   mailpit:
     image: axllent/mailpit:latest
     container_name: molecule_test2_mailpit
     restart: unless-stopped
     ports:
-      - "8025:8025"
+      - "8026:8025"
     networks:
       - wp_network
 
