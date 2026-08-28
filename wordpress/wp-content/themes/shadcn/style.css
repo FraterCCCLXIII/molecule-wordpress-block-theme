@@ -1544,12 +1544,14 @@ input[type="radio"],
 }
 
 .molecule-hero-badge {
-  display: inline-flex;
-  border: 1px solid #e5e7eb;
-  border-radius: 9999px;
-  padding: 0.4rem 0.75rem;
-  background-color: #ffffff;
-  gap: 0.5rem;
+  display: none !important; /* temporarily hidden */
+}
+
+.molecule-front-hero h1,
+.molecule-front-hero h1.wp-block-heading {
+  font-size: clamp(2.25rem, 5vw, 3.75rem) !important;
+  line-height: 1.1 !important;
+  max-width: 18ch;
 }
 
 .molecule-stars {

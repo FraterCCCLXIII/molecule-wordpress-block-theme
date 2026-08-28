@@ -6,8 +6,8 @@
  * Description: Hero banner for the Protocol Grade home page.
  */
 ?>
-<!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|8","bottom":"var:preset|spacing|4"}}},"layout":{"type":"constrained","wideSize":"1280px"}} -->
-<div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--8);padding-bottom:var(--wp--preset--spacing--4)">
+<!-- wp:group {"align":"full","className":"molecule-front-hero","style":{"spacing":{"padding":{"top":"var:preset|spacing|8","bottom":"var:preset|spacing|4"}}},"layout":{"type":"constrained","wideSize":"1280px"}} -->
+<div class="wp-block-group alignfull molecule-front-hero" style="padding-top:var(--wp--preset--spacing--8);padding-bottom:var(--wp--preset--spacing--4)">
 	<!-- wp:group {"className":"molecule-hero-badge","layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"left","verticalAlignment":"center"}} -->
 	<div class="wp-block-group molecule-hero-badge">
 		<!-- wp:paragraph {"className":"molecule-stars"} -->
@@ -20,14 +20,14 @@
 	</div>
 	<!-- /wp:group -->
 
-	<!-- wp:heading {"level":1,"style":{"typography":{"fontSize":"clamp(1.5rem,2.8vw,2.25rem)","lineHeight":"1.2","fontWeight":"400"},"spacing":{"margin":{"top":"var:preset|spacing|5","bottom":"var:preset|spacing|6"}}}} -->
-	<h1 class="wp-block-heading" style="margin-top:var(--wp--preset--spacing--5);margin-bottom:var(--wp--preset--spacing--6);font-size:clamp(1.5rem,2.8vw,2.25rem);font-style:normal;font-weight:400;line-height:1.2"><?php esc_html_e( 'Built for the protocol.', 'shadcn' ); ?></h1>
+	<!-- wp:heading {"level":1,"style":{"typography":{"fontSize":"clamp(2.25rem,5vw,3.75rem)","lineHeight":"1.1","fontWeight":"400"},"spacing":{"margin":{"top":"var:preset|spacing|2","bottom":"var:preset|spacing|6"}}}} -->
+	<h1 class="wp-block-heading" style="margin-top:var(--wp--preset--spacing--2);margin-bottom:var(--wp--preset--spacing--6);font-size:clamp(2.25rem,5vw,3.75rem);font-style:normal;font-weight:400;line-height:1.1"><?php esc_html_e( 'Peptides built for the protocol.', 'shadcn' ); ?></h1>
 	<!-- /wp:heading -->
 
 	<!-- wp:buttons -->
 	<div class="wp-block-buttons">
 		<!-- wp:button {"style":{"border":{"radius":"9999px"},"spacing":{"padding":{"top":"0.85rem","bottom":"0.85rem","left":"1.8rem","right":"1.8rem"}}},"fontSize":"lg"} -->
-		<div class="wp-block-button has-custom-font-size has-lg-font-size"><a class="wp-block-button__link wp-element-button" href="/catalog" style="border-radius:9999px;padding-top:0.85rem;padding-right:1.8rem;padding-bottom:0.85rem;padding-left:1.8rem"><?php esc_html_e( 'Shop Peptides', 'shadcn' ); ?></a></div>
+		<div class="wp-block-button has-custom-font-size has-lg-font-size"><a class="wp-block-button__link wp-element-button" href="/shop" style="border-radius:9999px;padding-top:0.85rem;padding-right:1.8rem;padding-bottom:0.85rem;padding-left:1.8rem"><?php esc_html_e( 'Shop Peptides', 'shadcn' ); ?></a></div>
 		<!-- /wp:button -->
 	</div>
 	<!-- /wp:buttons -->
