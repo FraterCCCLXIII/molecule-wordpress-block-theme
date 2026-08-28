@@ -703,11 +703,12 @@ body.admin-bar .molecule-top-nav {
 .molecule-top-nav-logo img,
 .molecule-top-nav-logo .custom-logo {
   width: auto;
-  height: 24px;
-  max-height: 24px;
+  height: 16px;
+  max-height: 16px;
+  max-width: 160px;
 }
 
-/* Guest My Account: logo-only top bar; same 24px logo as primary nav. */
+/* Guest My Account: logo-only top bar; same size as primary nav. */
 .molecule-top-nav--guest-auth {
   border-bottom: 1px solid var(--border, #e5e5e5);
 }

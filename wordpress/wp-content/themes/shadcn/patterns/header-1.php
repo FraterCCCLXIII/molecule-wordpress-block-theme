@@ -26,7 +26,7 @@
 
 			<!-- wp:group {"className":"molecule-top-nav-logo","layout":{"type":"flex","justifyContent":"center","verticalAlignment":"center"}} -->
 			<div class="wp-block-group molecule-top-nav-logo">
-				<!-- wp:site-logo {"width":149,"shouldSyncIcon":true} /-->
+				<!-- wp:site-logo {"width":120,"shouldSyncIcon":true} /-->
 			</div>
 			<!-- /wp:group -->
 
@@ -44,7 +44,7 @@
 		<div class="wp-block-group molecule-top-nav-desktop">
 			<!-- wp:group {"className":"molecule-top-nav-logo","layout":{"type":"flex","justifyContent":"left","verticalAlignment":"center"}} -->
 			<div class="wp-block-group molecule-top-nav-logo">
-				<!-- wp:site-logo {"width":149,"shouldSyncIcon":true} /-->
+				<!-- wp:site-logo {"width":120,"shouldSyncIcon":true} /-->
 			</div>
 			<!-- /wp:group -->
 
