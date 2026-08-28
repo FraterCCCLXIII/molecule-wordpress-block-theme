@@ -9,10 +9,25 @@ class DarkMode {
 
 	public function __construct() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'enqueue_block_assets', array( $this, 'enqueue_fonts' ) );
 		add_action( 'wp_head', array( $this, 'clear_dark_mode' ), 1 );
 	}
 
+	/**
+	 * Load Space Mono for titles/headings (front + block editor).
+	 */
+	public function enqueue_fonts() {
+		wp_enqueue_style(
+			'shadcn-space-mono',
+			'https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap',
+			array(),
+			null
+		);
+	}
+
 	public function enqueue_scripts() {
+		$this->enqueue_fonts();
+
 		$style_path    = get_stylesheet_directory() . '/style.css';
 		$style_version = file_exists( $style_path ) ? (string) filemtime( $style_path ) : wp_get_theme()->get( 'Version' );
 		$sticky_script = get_template_directory() . '/assets/js/sticky-top-nav.js';
@@ -21,7 +36,7 @@ class DarkMode {
 		wp_enqueue_style(
 			'shadcn-style',
 			get_stylesheet_uri(),
-			array(),
+			array( 'shadcn-space-mono' ),
 			$style_version
 		);
 

@@ -54,6 +54,7 @@ class Core {
 
 	public function setup_editor_styles() {
 		add_theme_support( 'editor-styles' );
+		add_editor_style( 'https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap' );
 		add_editor_style( get_template_directory_uri() . '/assets/css/editor-style.css' );
 	}
 
