@@ -1579,13 +1579,12 @@ input[type="radio"],
   margin-top: var(--wp--preset--spacing--6);
 }
 
-.molecule-product-card .wc-block-components-product-price {
-  font-weight: 600;
-}
-
 .molecule-product-card .wp-block-post-title {
   margin-top: var(--wp--preset--spacing--3);
-  margin-bottom: var(--wp--preset--spacing--2);
+  margin-bottom: 0.25rem;
+  font-size: 0.9375rem !important;
+  line-height: 1.35 !important;
+  font-weight: 600 !important;
 }
 
 .molecule-product-card .wp-block-post-title a,
@@ -1594,6 +1593,12 @@ input[type="radio"],
 .molecule-product-card .wp-block-post-title a:focus,
 .molecule-product-card .wp-block-post-title a:focus-visible {
   text-decoration: none !important;
+  color: inherit;
+}
+
+.molecule-product-card .wc-block-components-product-price {
+  font-weight: 600;
+  font-size: 0.875rem;
 }
 
 .molecule-why-choose {

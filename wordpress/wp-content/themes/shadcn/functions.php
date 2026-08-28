@@ -50,18 +50,21 @@ add_filter(
 			$context_post_id = (int) $block['context']['postId'];
 		}
 
+		// Always keep titles for non-page content (products, posts, etc.).
+		if ( '' !== $context_post_type && 'page' !== $context_post_type ) {
+			return $block_content;
+		}
+
 		$queried_object_id = get_queried_object_id();
 
 		$is_current_page_title = 'page' === $context_post_type
 			&& $context_post_id > 0
 			&& $context_post_id === (int) $queried_object_id;
 
-		// Some template overrides can render the page title block without context.
-		$is_contextless_page_title = '' === $context_post_type && 0 === $context_post_id;
-
-		// Keep query-loop titles (products/posts) untouched by only hiding page-owned
-		// or contextless page title blocks on page views.
-		if ( $is_current_page_title || $is_contextless_page_title ) {
+		// Hide only the current page title. Do not blank contextless titles —
+		// query-loop product cards can omit context in some renders and still
+		// need their names shown in rails/grids.
+		if ( $is_current_page_title ) {
 			return '';
 		}
 
