@@ -2219,12 +2219,15 @@ body.molecule-search-modal-open {
   text-align: left;
 }
 
+/* Keep section title/intro on the same content column as the step cards
+   (constrained wide size), not full-bleed against the section padding. */
 .molecule-affiliates-steps > .wp-block-heading,
 .molecule-affiliates-steps > .molecule-affiliates-steps__intro {
   width: 100%;
-  max-width: none;
-  margin-inline: 0 !important;
+  max-width: var(--wp--style--global--wide-size, 80rem);
+  margin-inline: auto !important;
   text-align: left !important;
+  box-sizing: border-box;
 }
 
 .molecule-affiliates-steps__intro {
