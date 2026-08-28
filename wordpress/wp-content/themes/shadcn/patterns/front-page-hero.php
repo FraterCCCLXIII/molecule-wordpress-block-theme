@@ -3,7 +3,7 @@
  * Title: Front Page Hero
  * Slug: shadcn/front-page-hero
  * Categories: shadcn, shadcn-banner
- * Description: Hero banner for the Molecule home page.
+ * Description: Hero banner for the Protocol Grade home page.
  */
 ?>
 <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|8","bottom":"var:preset|spacing|4"}}},"layout":{"type":"constrained","wideSize":"1280px"}} -->
