@@ -20,16 +20,6 @@
 <!-- wp:paragraph {"fontSize":"sm"} -->
 <p class="has-sm-font-size">. All rights reserved.</p>
 <!-- /wp:paragraph --></div>
-<!-- /wp:group -->
-
-<!-- wp:group {"style":{"elements":{"link":{"color":{"text":"var:preset|color|muted-foreground"}}},"spacing":{"blockGap":"var:preset|spacing|1"}},"textColor":"muted-foreground","layout":{"type":"flex","flexWrap":"wrap","verticalAlignment":"center"}} -->
-<div class="wp-block-group has-muted-foreground-color has-text-color has-link-color"><!-- wp:paragraph {"style":{"typography":{"fontSize":"var:preset|font-size|sm"}}} -->
-<p style="font-size:var(--wp--preset--font-size--sm)">Powered by</p>
-<!-- /wp:paragraph -->
-
-<!-- wp:paragraph {"style":{"typography":{"fontSize":"var:preset|font-size|sm","fontWeight":"600"}}} -->
-<p style="font-size:var(--wp--preset--font-size--sm);font-weight:600">Shadcn WP Theme</p>
-<!-- /wp:paragraph --></div>
 <!-- /wp:group --></div>
 <!-- /wp:group --></div>
 <!-- /wp:group -->

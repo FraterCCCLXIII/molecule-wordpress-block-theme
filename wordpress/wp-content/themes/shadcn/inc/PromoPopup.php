@@ -58,7 +58,7 @@ class PromoPopup {
 			return false;
 		}
 
-		return (bool) apply_filters( 'shadcn_promo_popup_enabled', true );
+		return (bool) apply_filters( 'shadcn_promo_popup_enabled', false );
 	}
 
 	public function render_markup() {

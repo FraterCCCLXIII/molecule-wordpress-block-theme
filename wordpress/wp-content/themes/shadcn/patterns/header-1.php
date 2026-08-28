@@ -17,7 +17,7 @@
 			<div class="wp-block-group molecule-top-nav-mobile-menu">
 				<!-- wp:molecule/mobile-drawer -->
 				<!-- wp:navigation-link {"label":"Home","url":"/","kind":"custom"} /-->
-				<!-- wp:navigation-link {"label":"Catalog","url":"/shop","kind":"custom"} /-->
+				<!-- wp:navigation-link {"label":"Shop","url":"/shop","kind":"custom"} /-->
 				<!-- wp:navigation-link {"label":"Peptide Guide","url":"/peptide-guide","kind":"custom"} /-->
 				<!-- wp:navigation-link {"label":"Research","url":"/research","kind":"custom"} /-->
 				<!-- /wp:molecule/mobile-drawer -->
@@ -50,7 +50,7 @@
 
 			<!-- wp:navigation {"openSubmenusOnClick":false,"className":"molecule-desktop-navigation","layout":{"type":"flex","justifyContent":"center"}} -->
 				<!-- wp:navigation-link {"label":"Home","url":"/","kind":"custom"} /-->
-				<!-- wp:navigation-link {"label":"Catalog","url":"/shop","kind":"custom"} /-->
+				<!-- wp:navigation-link {"label":"Shop","url":"/shop","kind":"custom"} /-->
 				<!-- wp:navigation-submenu {"label":"Research","url":"/research","kind":"custom"} -->
 					<!-- wp:navigation-link {"label":"Peptide Guide","url":"/peptide-guide","kind":"custom"} /-->
 					<!-- wp:navigation-link {"label":"Research","url":"/research","kind":"custom"} /-->

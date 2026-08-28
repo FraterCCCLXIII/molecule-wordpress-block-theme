@@ -2,6 +2,14 @@
     display: none !important;
 }
 
+/*
+ * Product Collection blocks: price is shown via .subscription-period-prices (woocommerce_after_shop_loop_item_title).
+ * Hide the duplicate Product Price block in CSS so behavior matches for guests and logged-in users (no jQuery timing).
+ */
+ul.wc-block-product-template .wc-block-product > .wp-block-woocommerce-product-price {
+	display: none !important;
+}
+
 /* Product grid: evenly spaced, consistent row alignment */
 .wc-block-product-template__responsive {
   display: flex;
@@ -108,6 +116,8 @@
 }
 
 /* Remove add-to-cart button and view-cart link inside shop cards */
+ul.wc-block-product-template .wc-block-product .wp-block-woocommerce-product-button,
+ul.wc-block-product-template .wc-block-product a.added_to_cart,
 .wc-block-product-template .wc-block-product .wp-block-woocommerce-product-button,
 .wc-block-product-template .wc-block-product a.added_to_cart {
   display: none !important;

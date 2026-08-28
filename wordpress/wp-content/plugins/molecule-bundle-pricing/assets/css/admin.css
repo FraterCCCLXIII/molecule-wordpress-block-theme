@@ -1,0 +1,45 @@
+/**
+ * Admin styling for the bundle tier tables (settings page, product panel, variations).
+ */
+
+.mbp-tier-table {
+  border-collapse: collapse;
+  margin: 4px 0 8px;
+  max-width: 760px;
+}
+
+.mbp-tier-table th,
+.mbp-tier-table td {
+  padding: 4px 8px 4px 0;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.mbp-tier-table thead th {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #646970;
+}
+
+.mbp-tier-table input[type="text"] {
+  width: 100%;
+  min-width: 120px;
+}
+
+.mbp-tier-table .small-text {
+  width: 70px;
+}
+
+.mbp-tier-table--compact th,
+.mbp-tier-table--compact td {
+  padding: 2px 6px 2px 0;
+}
+
+.mbp-tier-table--compact input[type="text"] {
+  min-width: 90px;
+}
+
+.mbp-variation-tiers {
+  border-top: 1px solid #e0e0e0;
+  padding-top: 8px;
+}

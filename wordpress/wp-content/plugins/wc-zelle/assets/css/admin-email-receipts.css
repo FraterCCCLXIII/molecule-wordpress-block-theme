@@ -1,0 +1,116 @@
+/**
+ * Automated Zelle / emailreceipts.io admin screen only.
+ */
+
+.wc-zelle-email-receipts {
+	max-width: 860px;
+}
+
+.wc-zelle-email-receipts > h1 {
+	margin-bottom: 0.35em;
+}
+
+.wc-zelle-email-receipts__lead {
+	font-size: 14px;
+	color: #646970;
+	margin: 0 0 1.5rem;
+	line-height: 1.5;
+}
+
+.wc-zelle-email-receipts__intro {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+	padding: 16px 20px 20px;
+	margin-bottom: 20px;
+}
+
+.wc-zelle-email-receipts__intro h2 {
+	margin: 0 0 12px;
+	font-size: 14px;
+	font-weight: 600;
+	color: #1d2327;
+}
+
+.wc-zelle-email-receipts__steps {
+	margin: 0;
+	padding-left: 1.25em;
+	color: #2c3338;
+	line-height: 1.6;
+}
+
+.wc-zelle-email-receipts__steps li {
+	margin-bottom: 8px;
+}
+
+.wc-zelle-email-receipts__steps li:last-child {
+	margin-bottom: 0;
+}
+
+.wc-zelle-email-receipts__panel {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+	padding: 0 20px 20px;
+}
+
+.wc-zelle-email-receipts__panel-header {
+	border-bottom: 1px solid #dcdcde;
+	margin: 0 -20px 16px;
+	padding: 12px 20px;
+	background: #f6f7f7;
+	border-radius: 4px 4px 0 0;
+}
+
+.wc-zelle-email-receipts__panel-header h2 {
+	margin: 0;
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1.4;
+	color: #1d2327;
+}
+
+.wc-zelle-email-receipts__alert {
+	margin: 0 0 16px !important;
+	border-left-width: 4px;
+}
+
+.wc-zelle-email-receipts__field {
+	margin-bottom: 16px;
+}
+
+.wc-zelle-email-receipts__field label {
+	display: block;
+	font-weight: 600;
+	margin-bottom: 4px;
+	color: #1d2327;
+}
+
+.wc-zelle-email-receipts__field .description {
+	margin: 4px 0 0;
+	font-size: 13px;
+	color: #646970;
+	line-height: 1.5;
+}
+
+.wc-zelle-email-receipts__field input.regular-text,
+.wc-zelle-email-receipts__field input[type="email"] {
+	width: 100%;
+	max-width: 480px;
+}
+
+.wc-zelle-email-receipts__field input[readonly] {
+	background: #f6f7f7;
+	color: #50575e;
+}
+
+.wc-zelle-email-receipts__submit {
+	margin-top: 8px;
+}
+
+/* Tighter layout under wpbody */
+#wpbody-content .wc-zelle-email-receipts {
+	padding-bottom: 24px;
+}

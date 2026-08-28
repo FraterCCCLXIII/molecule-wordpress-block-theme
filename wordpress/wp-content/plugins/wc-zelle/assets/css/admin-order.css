@@ -1,0 +1,88 @@
+/**
+ * WooCommerce admin order screen — Zelle modals.
+ */
+
+.wc-zelle-admin-order-actions {
+	margin-top: 1.25rem;
+	padding-top: 1rem;
+	border-top: 1px solid #dcdcde;
+}
+
+.wc-zelle-admin-order-actions h3 {
+	margin: 0 0 0.5rem;
+	font-size: 13px;
+}
+
+.wc-zelle-admin-order-actions__buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin: 0;
+}
+
+.wc-zelle-admin-modal__intro {
+	margin: 0 0 1rem;
+	color: #50575e;
+}
+
+.wc-zelle-admin-modal__panel--compact {
+	max-width: 28rem;
+}
+
+.wc-zelle-admin-copy-list {
+	display: grid;
+	gap: 0.75rem;
+	margin: 0 0 1rem;
+}
+
+.wc-zelle-admin-copy-row__label {
+	display: block;
+	margin-bottom: 0.25rem;
+	font-weight: 600;
+}
+
+.wc-zelle-admin-copy-row__controls .wc-zelle-memo-copytxt {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.wc-zelle-admin-modal__details {
+	margin-top: 1rem;
+	padding-top: 1rem;
+	border-top: 1px solid #dcdcde;
+}
+
+.wc-zelle-admin-modal__store-instructions {
+	margin-top: 1rem;
+	padding-top: 1rem;
+	border-top: 1px solid #dcdcde;
+}
+
+.wc-zelle-admin-resend-form__actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.5rem;
+	margin: 0;
+}
+
+.wc-zelle-admin-resend-form__status {
+	margin: 0.75rem 0 0;
+}
+
+.wc-zelle-admin-resend-form__status.is-success {
+	color: #007017;
+}
+
+.wc-zelle-admin-resend-form__status.is-error {
+	color: #b32d2e;
+}
+
+.wc-zelle-admin-modal .wc-zelle-modal__memo-row {
+	display: flex;
+	gap: 0.5rem;
+	align-items: stretch;
+}
+
+.wc-zelle-admin-modal .wc-zelle-memo-copytxt {
+	width: 100%;
+}

@@ -11,6 +11,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/*
+ * Login, registration, and other guest views on My Account: logo-only header.
+ * Skips shipping-banner queries and full navigation for a focused auth layout.
+ */
+$molecule_guest_auth_layout = function_exists( 'is_account_page' ) && is_account_page() && ! is_user_logged_in();
+
+if ( $molecule_guest_auth_layout ) {
+	$logo     = get_custom_logo();
+	$home_url = esc_url( home_url( '/' ) );
+	?>
+	<header class="molecule-top-nav molecule-top-nav--guest-auth" role="banner">
+		<div class="molecule-top-nav-inner molecule-top-nav-inner--guest-auth">
+			<div class="molecule-top-nav-logo molecule-top-nav-logo--guest-auth">
+				<?php if ( $logo ) : ?>
+					<?php echo $logo; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_custom_logo() is safe ?>
+				<?php else : ?>
+					<a href="<?php echo esc_url( $home_url ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a>
+				<?php endif; ?>
+			</div>
+		</div>
+	</header>
+	<?php
+	return;
+}
+
 $logo            = get_custom_logo();
 $home_url        = esc_url( home_url( '/' ) );
 $search_url      = esc_url( home_url( '/?s=' ) );
@@ -23,8 +48,166 @@ $cart_url        = function_exists( 'wc_get_cart_url' )
 $cart_count      = ( function_exists( 'WC' ) && WC()->cart )
 	? (int) WC()->cart->get_cart_contents_count()
 	: 0;
+$free_shipping_enabled    = false;
+$free_shipping_min_amount = null;
+
+if ( class_exists( 'WC_Shipping_Zones' ) ) {
+	$shipping_methods = array();
+	$zones            = \WC_Shipping_Zones::get_zones();
+
+	foreach ( $zones as $zone ) {
+		if ( empty( $zone['shipping_methods'] ) || ! is_array( $zone['shipping_methods'] ) ) {
+			continue;
+		}
+		$shipping_methods = array_merge( $shipping_methods, $zone['shipping_methods'] );
+	}
+
+	$rest_of_world  = new \WC_Shipping_Zone( 0 );
+	$shipping_methods = array_merge( $shipping_methods, $rest_of_world->get_shipping_methods( true ) );
+
+	foreach ( $shipping_methods as $method ) {
+		if ( ! $method instanceof \WC_Shipping_Method || 'free_shipping' !== $method->id ) {
+			continue;
+		}
+
+		$is_enabled = (string) $method->get_option( 'enabled', 'no' );
+		if ( 'yes' !== $is_enabled ) {
+			continue;
+		}
+		$free_shipping_enabled = true;
+
+		$min_amount = (float) wc_format_decimal( $method->get_option( 'min_amount', 0 ) );
+		if ( $min_amount > 0 && ( null === $free_shipping_min_amount || $min_amount < $free_shipping_min_amount ) ) {
+			$free_shipping_min_amount = $min_amount;
+		}
+	}
+}
+
+// Fallback: use WooCommerce shipping zone method rows + wp_options settings.
+if ( ! $free_shipping_enabled || null === $free_shipping_min_amount ) {
+	global $wpdb;
+	$zone_methods_table = $wpdb->prefix . 'woocommerce_shipping_zone_methods';
+	$enabled_instance_ids = array();
+	$zone_methods_exist = $wpdb->get_var(
+		$wpdb->prepare( 'SHOW TABLES LIKE %s', $zone_methods_table )
+	);
+
+	if ( $zone_methods_exist === $zone_methods_table ) {
+		$enabled_instance_ids = $wpdb->get_col(
+			"SELECT instance_id
+			FROM {$zone_methods_table}
+			WHERE method_id = 'free_shipping' AND is_enabled = 1"
+		);
+	}
+
+	if ( ! empty( $enabled_instance_ids ) ) {
+		$free_shipping_enabled = true;
+
+		foreach ( $enabled_instance_ids as $instance_id ) {
+			$option_name = 'woocommerce_free_shipping_' . absint( $instance_id ) . '_settings';
+			$option_rows = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT option_value FROM {$wpdb->options} WHERE option_name = %s",
+					$option_name
+				)
+			);
+
+			if ( empty( $option_rows ) ) {
+				continue;
+			}
+
+			foreach ( $option_rows as $row ) {
+				$settings = maybe_unserialize( $row->option_value ?? null );
+				if ( ! is_array( $settings ) ) {
+					continue;
+				}
+
+				$min_amount = (float) wc_format_decimal( $settings['min_amount'] ?? 0 );
+				if ( $min_amount > 0 && ( null === $free_shipping_min_amount || $min_amount < $free_shipping_min_amount ) ) {
+					$free_shipping_min_amount = $min_amount;
+				}
+			}
+		}
+	}
+
+	// Final fallback for hosts where zone methods table is unavailable.
+	$like_pattern = $wpdb->esc_like( 'woocommerce_free_shipping_' ) . '%_settings';
+	$option_rows = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT option_value FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name = %s",
+			$like_pattern,
+			'woocommerce_free_shipping_settings'
+		)
+	);
+
+	if ( is_array( $option_rows ) && ! empty( $option_rows ) ) {
+		foreach ( $option_rows as $row ) {
+			$settings = maybe_unserialize( $row->option_value ?? null );
+			if ( ! is_array( $settings ) ) {
+				continue;
+			}
+
+			$is_enabled = isset( $settings['enabled'] ) ? (string) $settings['enabled'] : 'no';
+			if ( 'yes' !== $is_enabled ) {
+				continue;
+			}
+
+			$free_shipping_enabled = true;
+			$min_amount = (float) wc_format_decimal( $settings['min_amount'] ?? 0 );
+			if ( $min_amount > 0 && ( null === $free_shipping_min_amount || $min_amount < $free_shipping_min_amount ) ) {
+				$free_shipping_min_amount = $min_amount;
+			}
+		}
+	}
+}
+
+$show_shipping_banner = $free_shipping_enabled;
+$shipping_banner_text = '';
+if ( $show_shipping_banner ) {
+	if ( null !== $free_shipping_min_amount && $free_shipping_min_amount > 0 ) {
+		$formatted_amount    = html_entity_decode( wp_strip_all_tags( wc_price( $free_shipping_min_amount ) ), ENT_QUOTES, get_bloginfo( 'charset' ) );
+		$shipping_banner_text = sprintf(
+			/* translators: %s: minimum order amount for free shipping */
+			__( 'Free shipping on orders of %s or more', 'shadcn' ),
+			$formatted_amount
+		);
+	} else {
+		$shipping_banner_text = __( 'Free shipping available', 'shadcn' );
+	}
+}
 ?>
+<style>
+	.molecule-top-nav-announcement {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: #000000;
+		color: #ffffff;
+		text-align: center;
+		font-size: 0.8125rem;
+		line-height: 1.35;
+		letter-spacing: 0.01em;
+		padding: 0.45rem 1rem;
+		max-height: 3rem;
+		overflow: hidden;
+		transition: max-height var(--default-transition-duration) var(--default-transition-timing-function),
+			padding var(--default-transition-duration) var(--default-transition-timing-function),
+			opacity var(--default-transition-duration) var(--default-transition-timing-function);
+	}
+
+	.molecule-top-nav.is-announcement-hidden .molecule-top-nav-announcement {
+		max-height: 0;
+		padding-top: 0;
+		padding-bottom: 0;
+		opacity: 0;
+	}
+</style>
 <header class="molecule-top-nav" role="banner">
+	<?php if ( $show_shipping_banner ) : ?>
+		<div class="molecule-top-nav-announcement" aria-label="<?php esc_attr_e( 'Shipping announcement', 'shadcn' ); ?>">
+			<?php echo esc_html( $shipping_banner_text ); ?>
+		</div>
+	<?php endif; ?>
 	<div class="molecule-top-nav-inner">
 
 		<?php /* ── Mobile row (3-column grid: hamburger | logo | icons) ── */ ?>
@@ -77,9 +260,10 @@ $cart_count      = ( function_exists( 'WC' ) && WC()->cart )
 					</div>
 					<nav class="molecule-mobile-drawer-nav" aria-label="<?php esc_attr_e( 'Mobile Navigation', 'shadcn' ); ?>">
 						<a href="<?php echo $home_url; ?>"><?php esc_html_e( 'Home', 'shadcn' ); ?></a>
-						<a href="<?php echo esc_url( home_url( '/shop' ) ); ?>"><?php esc_html_e( 'Catalog', 'shadcn' ); ?></a>
+						<a href="<?php echo esc_url( home_url( '/shop' ) ); ?>"><?php esc_html_e( 'Shop', 'shadcn' ); ?></a>
 						<a href="<?php echo esc_url( home_url( '/peptide-guide' ) ); ?>"><?php esc_html_e( 'Peptide Guide', 'shadcn' ); ?></a>
 						<a href="<?php echo esc_url( home_url( '/research' ) ); ?>"><?php esc_html_e( 'Research', 'shadcn' ); ?></a>
+						<a href="<?php echo esc_url( home_url( '/affiliates' ) ); ?>"><?php esc_html_e( 'Affiliates', 'shadcn' ); ?></a>
 					</nav>
 				</aside>
 			</div>
@@ -130,7 +314,7 @@ $cart_count      = ( function_exists( 'WC' ) && WC()->cart )
 
 			<nav class="molecule-desktop-navigation" aria-label="<?php esc_attr_e( 'Desktop Navigation', 'shadcn' ); ?>">
 				<a href="<?php echo $home_url; ?>"><?php esc_html_e( 'Home', 'shadcn' ); ?></a>
-				<a href="<?php echo esc_url( home_url( '/shop' ) ); ?>"><?php esc_html_e( 'Catalog', 'shadcn' ); ?></a>
+				<a href="<?php echo esc_url( home_url( '/shop' ) ); ?>"><?php esc_html_e( 'Shop', 'shadcn' ); ?></a>
 				<div class="molecule-desktop-nav-dropdown">
 					<button
 						class="molecule-desktop-dropdown-toggle"
@@ -148,6 +332,7 @@ $cart_count      = ( function_exists( 'WC' ) && WC()->cart )
 						<a href="<?php echo esc_url( home_url( '/research' ) ); ?>"><?php esc_html_e( 'Research', 'shadcn' ); ?></a>
 					</div>
 				</div>
+				<a href="<?php echo esc_url( home_url( '/affiliates' ) ); ?>"><?php esc_html_e( 'Affiliates', 'shadcn' ); ?></a>
 			</nav>
 
 			<div class="molecule-top-nav-icons">

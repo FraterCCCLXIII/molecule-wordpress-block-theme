@@ -37,11 +37,17 @@ class Patterns {
 			'shadcn/peptide-guide-essential-guides' => 'patterns/peptide-guide-essential-guides.php',
 			'shadcn/peptide-guide-tools'            => 'patterns/peptide-guide-tools.php',
 			'shadcn/peptide-guide-disclaimer'       => 'patterns/peptide-guide-disclaimer.php',
+			'shadcn/affiliates-hero'                => 'patterns/affiliates-hero.php',
+			'shadcn/affiliates-stats'               => 'patterns/affiliates-stats.php',
+			'shadcn/affiliates-benefits'            => 'patterns/affiliates-benefits.php',
+			'shadcn/affiliates-steps'               => 'patterns/affiliates-steps.php',
+			'shadcn/affiliates-application'         => 'patterns/affiliates-application.php',
+			'shadcn/affiliates-faq'                 => 'patterns/affiliates-faq.php',
 		);
 
 		foreach ( $file_based_patterns as $slug => $relative_path ) {
 			if ( \WP_Block_Patterns_Registry::get_instance()->is_registered( $slug ) ) {
-				continue;
+				unregister_block_pattern( $slug );
 			}
 
 			$content = $this->render_pattern_file( $relative_path );
