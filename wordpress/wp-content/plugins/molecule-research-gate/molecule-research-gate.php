@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name:       Molecule Research Gate
+ * Plugin Name:       Protocol Grade Research Gate
  * Description:       Gates WooCommerce catalog access with research compliance modals, user meta, and WooCommerce-native auth.
  * Version:           1.0.6
  * Requires at least: 6.0
  * Requires PHP:      7.4
- * Author:            Molecule
+ * Author:            Protocol Grade
  * Text Domain:       molecule-research-gate
  * Domain Path:       /languages
  * Requires Plugins:  woocommerce

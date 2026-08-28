@@ -3,7 +3,7 @@
  * Title: Header 1
  * Slug: shadcn/header-1
  * Categories: shadcn, header
- * Description: Molecule-inspired top nav with custom mobile drawer block, centered logo, and icon-link blocks.
+ * Description: Protocol Grade top nav with custom mobile drawer block, centered logo, and icon-link blocks.
  */
 ?>
 

@@ -195,7 +195,7 @@ class AffiliateApplication {
 					<input id="affiliate-website" name="website" type="url" placeholder="https://">
 				</div>
 				<div class="molecule-affiliate-form__field">
-					<label for="affiliate-promotion-plan"><?php esc_html_e( 'Tell us how you would introduce Molecule to your audience *', 'shadcn' ); ?></label>
+					<label for="affiliate-promotion-plan"><?php esc_html_e( 'Tell us how you would introduce Protocol Grade to your audience *', 'shadcn' ); ?></label>
 					<textarea id="affiliate-promotion-plan" name="promotionPlan" rows="5" required minlength="20"></textarea>
 					<p class="molecule-affiliate-form__char-count"><span data-promotion-plan-count>0</span> <?php esc_html_e( 'characters', 'shadcn' ); ?></p>
 				</div>
@@ -231,13 +231,13 @@ class AffiliateApplication {
 			return new WP_Error( 'invalid_email', __( 'A valid email address is required.', 'shadcn' ), array( 'status' => 400 ) );
 		}
 		if ( strlen( $promotion_plan ) < 20 ) {
-			return new WP_Error( 'invalid_promotion_plan', __( 'Please describe how you plan to promote Molecule.', 'shadcn' ), array( 'status' => 400 ) );
+			return new WP_Error( 'invalid_promotion_plan', __( 'Please describe how you plan to promote Protocol Grade.', 'shadcn' ), array( 'status' => 400 ) );
 		}
 		if ( '' !== $venmo_username && strlen( $venmo_username ) > 30 ) {
 			return new WP_Error( 'invalid_venmo_username', __( 'Please enter a valid Venmo username.', 'shadcn' ), array( 'status' => 400 ) );
 		}
 
-		$recipient = apply_filters( 'shadcn_affiliate_application_recipient', 'contact@moleculepeptides.com' );
+		$recipient = apply_filters( 'shadcn_affiliate_application_recipient', 'contact@protocolgrade.com' );
 		$subject   = sprintf( __( 'New Affiliate Application: %s', 'shadcn' ), $first_name . ' ' . $last_name );
 		$body      = implode(
 			"\n",

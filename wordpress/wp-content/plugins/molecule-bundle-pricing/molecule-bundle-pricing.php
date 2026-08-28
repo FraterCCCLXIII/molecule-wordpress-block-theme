@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name:       Molecule Bundle Pricing
+ * Plugin Name:       Protocol Grade Bundle Pricing
  * Description:       Quantity-tier bundle pricing for WooCommerce products (Buy 1 / 3 / 6+ style) with global defaults, per-product and per-variation overrides, and server-side discount enforcement.
  * Version:           1.0.1
  * Requires at least: 6.0
  * Requires PHP:      7.4
- * Author:            Molecule
+ * Author:            Protocol Grade
  * Text Domain:       molecule-bundle-pricing
  * Requires Plugins:  woocommerce
  *

@@ -98,7 +98,7 @@ class PromoPopup {
 
 				<div class="molecule-promo-popup__disclaimer">
 					<strong><?php esc_html_e( 'DISCLAIMER:', 'shadcn' ); ?></strong>
-					<?php esc_html_e( 'All products sold by Molecule are strictly intended for laboratory research use only. They are not approved for human or animal consumption, or for any form of therapeutic or diagnostic use.', 'shadcn' ); ?>
+					<?php esc_html_e( 'All products sold by Protocol Grade are strictly intended for laboratory research use only. They are not approved for human or animal consumption, or for any form of therapeutic or diagnostic use.', 'shadcn' ); ?>
 					<br><br>
 					<?php esc_html_e( 'We do not provide usage instructions, dosing guidelines, or any advice regarding the application of our products.', 'shadcn' ); ?>
 					<br><br>

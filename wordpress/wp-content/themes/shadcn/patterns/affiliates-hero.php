@@ -13,7 +13,7 @@
 	<!-- /wp:paragraph -->
 
 	<!-- wp:heading {"level":1,"style":{"typography":{"fontSize":"clamp(2.5rem,5vw,3.75rem)","lineHeight":"1.1","fontWeight":"800"},"spacing":{"margin":{"top":"var:preset|spacing|6","bottom":"var:preset|spacing|6"}}}} -->
-	<h1 class="wp-block-heading" style="margin-top:var(--wp--preset--spacing--6);margin-bottom:var(--wp--preset--spacing--6);font-size:clamp(2.5rem,5vw,3.75rem);font-style:normal;font-weight:800;line-height:1.1"><?php esc_html_e( 'Share Molecule. Earn Commission.', 'shadcn' ); ?></h1>
+	<h1 class="wp-block-heading" style="margin-top:var(--wp--preset--spacing--6);margin-bottom:var(--wp--preset--spacing--6);font-size:clamp(2.5rem,5vw,3.75rem);font-style:normal;font-weight:800;line-height:1.1"><?php esc_html_e( 'Share Protocol Grade. Earn Commission.', 'shadcn' ); ?></h1>
 	<!-- /wp:heading -->
 
 	<!-- wp:paragraph {"fontSize":"xl","textColor":"muted-foreground","style":{"typography":{"lineHeight":"1.65"}}} -->
