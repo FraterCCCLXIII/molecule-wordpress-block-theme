@@ -20,8 +20,8 @@
 	</div>
 	<!-- /wp:group -->
 
-	<!-- wp:heading {"level":1,"style":{"typography":{"fontSize":"clamp(2.25rem,5vw,4rem)","lineHeight":"1.1","fontWeight":"800"},"spacing":{"margin":{"top":"var:preset|spacing|5","bottom":"var:preset|spacing|6"}}}} -->
-	<h1 class="wp-block-heading" style="margin-top:var(--wp--preset--spacing--5);margin-bottom:var(--wp--preset--spacing--6);font-size:clamp(2.25rem,5vw,4rem);font-style:normal;font-weight:400;line-height:1.1"><?php esc_html_e( 'Premium Research Peptides', 'shadcn' ); ?><br><span class="has-muted-foreground-color has-text-color"><?php esc_html_e( 'For Laboratory Use', 'shadcn' ); ?></span></h1>
+	<!-- wp:heading {"level":1,"style":{"typography":{"fontSize":"clamp(1.5rem,2.8vw,2.25rem)","lineHeight":"1.2","fontWeight":"400"},"spacing":{"margin":{"top":"var:preset|spacing|5","bottom":"var:preset|spacing|6"}}}} -->
+	<h1 class="wp-block-heading" style="margin-top:var(--wp--preset--spacing--5);margin-bottom:var(--wp--preset--spacing--6);font-size:clamp(1.5rem,2.8vw,2.25rem);font-style:normal;font-weight:400;line-height:1.2"><?php esc_html_e( 'Built for the protocol.', 'shadcn' ); ?></h1>
 	<!-- /wp:heading -->
 
 	<!-- wp:buttons -->

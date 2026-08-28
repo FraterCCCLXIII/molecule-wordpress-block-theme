@@ -26,8 +26,8 @@ $step_card = static function ( $number, $title, $text ) {
 ?>
 <!-- wp:group {"align":"full","className":"molecule-affiliates-steps","style":{"spacing":{"padding":{"top":"var:preset|spacing|10","bottom":"var:preset|spacing|10"}},"color":{"background":"#f9fafb"},"border":{"top":{"color":"var:preset|color|border","width":"1px"},"bottom":{"color":"var:preset|color|border","width":"1px"}}},"layout":{"type":"constrained","wideSize":"1280px"}} -->
 <div class="wp-block-group alignfull molecule-affiliates-steps has-background" style="border-top-color:var(--wp--preset--color--border);border-top-width:1px;border-bottom-color:var(--wp--preset--color--border);border-bottom-width:1px;background-color:#f9fafb;padding-top:var(--wp--preset--spacing--10);padding-bottom:var(--wp--preset--spacing--10)">
-	<!-- wp:heading {"level":2,"style":{"typography":{"fontSize":"clamp(2rem,4vw,2.5rem)","fontWeight":"800"},"spacing":{"margin":{"bottom":"var:preset|spacing|3"}}}} -->
-	<h2 class="wp-block-heading" style="margin-bottom:var(--wp--preset--spacing--3);font-size:clamp(2rem,4vw,2.5rem);font-style:normal;font-weight:800;line-height:1.1"><?php esc_html_e( 'Getting Started', 'shadcn' ); ?></h2>
+	<!-- wp:heading {"level":2,"style":{"typography":{"fontSize":"clamp(1.25rem,2.2vw,1.75rem)","fontWeight":"800"},"spacing":{"margin":{"bottom":"var:preset|spacing|3"}}}} -->
+	<h2 class="wp-block-heading" style="margin-bottom:var(--wp--preset--spacing--3);font-size:clamp(1.25rem,2.2vw,1.75rem);font-style:normal;font-weight:800;line-height:1.1"><?php esc_html_e( 'Getting Started', 'shadcn' ); ?></h2>
 	<!-- /wp:heading -->
 	<!-- wp:paragraph {"textColor":"muted-foreground","className":"molecule-affiliates-steps__intro","style":{"typography":{"lineHeight":"1.65"},"spacing":{"margin":{"bottom":"var:preset|spacing|7"}}}} -->
 	<p class="molecule-affiliates-steps__intro has-muted-foreground-color has-text-color" style="margin-bottom:var(--wp--preset--spacing--7);line-height:1.65"><?php esc_html_e( 'Four straightforward steps from application to your first commission payout.', 'shadcn' ); ?></p>

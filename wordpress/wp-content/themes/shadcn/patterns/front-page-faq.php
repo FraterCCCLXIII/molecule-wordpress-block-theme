@@ -8,8 +8,8 @@
 ?>
 <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|10","bottom":"var:preset|spacing|10"}}},"layout":{"type":"constrained","wideSize":"960px"}} -->
 <div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--10);padding-bottom:var(--wp--preset--spacing--10)">
-	<!-- wp:heading {"level":2,"style":{"typography":{"fontSize":"clamp(2rem,4vw,3.5rem)","fontWeight":"800","lineHeight":"1.1"},"spacing":{"margin":{"bottom":"var:preset|spacing|7"}}}} -->
-	<h2 class="wp-block-heading" style="margin-bottom:var(--wp--preset--spacing--7);font-size:clamp(2rem,4vw,3.5rem);font-style:normal;font-weight:400;line-height:1.1"><?php esc_html_e( "Got questions?", 'shadcn' ); ?><br><span class="has-muted-foreground-color has-text-color"><?php esc_html_e( "We've got answers.", 'shadcn' ); ?></span></h2>
+	<!-- wp:heading {"level":2,"style":{"typography":{"fontSize":"clamp(1.25rem,2.2vw,1.75rem)","fontWeight":"400","lineHeight":"1.25"},"spacing":{"margin":{"bottom":"var:preset|spacing|7"}}}} -->
+	<h2 class="wp-block-heading" style="margin-bottom:var(--wp--preset--spacing--7);font-size:clamp(1.25rem,2.2vw,1.75rem);font-style:normal;font-weight:400;line-height:1.25"><?php esc_html_e( "Got questions?", 'shadcn' ); ?><br><span class="has-muted-foreground-color has-text-color"><?php esc_html_e( "We've got answers.", 'shadcn' ); ?></span></h2>
 	<!-- /wp:heading -->
 
 	<!-- wp:group {"className":"molecule-faq-list","layout":{"type":"constrained"}} -->
