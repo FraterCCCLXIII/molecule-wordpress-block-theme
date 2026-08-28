@@ -187,8 +187,8 @@ if ( $show_shipping_banner ) {
 		font-size: 0.8125rem;
 		line-height: 1.35;
 		letter-spacing: 0.01em;
-		padding: 0.45rem 1rem;
-		max-height: 3rem;
+		padding: 0.3rem 1rem;
+		max-height: 2.5rem;
 		overflow: hidden;
 		transition: max-height var(--default-transition-duration) var(--default-transition-timing-function),
 			padding var(--default-transition-duration) var(--default-transition-timing-function),
