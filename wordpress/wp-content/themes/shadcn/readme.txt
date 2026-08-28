@@ -30,7 +30,7 @@ Molecule is a modern, lightweight WordPress theme built with component-driven de
 
 1. Upload the `shadcn` folder to your WordPress themes directory (usually `/wp-content/themes/`)
 2. Go to Appearance > Themes in the WordPress admin dashboard
-3. Find "Molecule" and click "Activate"
+3. Find "Protocol Grade" and click "Activate"
 4. (Optional) Go to Appearance > Editor to adjust theme settings
 
 == Getting Started ==

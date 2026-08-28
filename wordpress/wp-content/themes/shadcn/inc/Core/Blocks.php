@@ -63,7 +63,7 @@ class Blocks {
 			array(
 				array(
 					'slug'  => 'molecule',
-					'title' => __( 'Molecule', 'shadcn' ),
+					'title' => __( 'Protocol Grade', 'shadcn' ),
 					'icon'  => null,
 				),
 			),

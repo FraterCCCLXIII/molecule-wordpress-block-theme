@@ -39,7 +39,7 @@ Molecule is designed for developers and content creators who value clean code an
 
 2. **Activate the theme:**
    - Go to **Appearance → Themes** in the WordPress admin dashboard
-   - Find "Molecule" and click "Activate"
+   - Find "Protocol Grade" and click "Activate"
 
 3. **Configure settings (Optional):**
    - Go to **Appearance → Editor** to customize theme settings

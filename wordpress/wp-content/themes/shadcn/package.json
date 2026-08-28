@@ -1,7 +1,7 @@
 {
 	"name": "shadcn-theme",
 	"version": "1.0.0",
-	"description": "Molecule / shadcn WordPress block theme",
+	"description": "Protocol Grade / shadcn WordPress block theme",
 	"scripts": {
 		"build": "wp-scripts build",
 		"start": "wp-scripts start"
