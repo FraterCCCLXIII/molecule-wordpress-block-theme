@@ -661,6 +661,7 @@
         "typography": {
           "fontFamily": "var:preset|font-family|space-mono",
           "fontWeight": "400",
+          "letterSpacing": "-0.04em",
           "lineHeight": "1.2"
         }
       },

@@ -1794,6 +1794,7 @@ h6,
 .wp-block-query .wp-block-post-title {
   font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace !important;
+  letter-spacing: -0.04em;
 }
 
 /* ==========================================================================
