@@ -1551,16 +1551,19 @@ input[type="radio"],
 .molecule-front-hero h1.wp-block-heading {
   font-size: clamp(2.25rem, 5vw, 3.75rem) !important;
   line-height: 1.1 !important;
-  max-width: 18ch;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
+  width: 100%;
+  max-width: var(--wp--style--global--wide-size, 80rem);
+  margin-inline: auto !important;
   text-align: left !important;
+  box-sizing: border-box;
 }
 
 .molecule-front-hero .wp-block-buttons {
-  margin-left: 0 !important;
-  margin-right: 0 !important;
+  width: 100%;
+  max-width: var(--wp--style--global--wide-size, 80rem);
+  margin-inline: auto !important;
   justify-content: flex-start;
+  box-sizing: border-box;
 }
 
 .molecule-stars {
