@@ -1768,6 +1768,34 @@ h6,
   font-weight: 400 !important;
 }
 
+/* Title / heading typeface */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.wp-block-heading,
+.wp-block-post-title,
+.wp-block-site-title,
+.entry-title,
+.product_title,
+.woocommerce-loop-product__title,
+.woocommerce-Products-table__product-name,
+.molecule-search-modal__item-title,
+.molecule-affiliates-benefit-card__title,
+.molecule-affiliates-step__title,
+.molecule-product-disclaimer__title,
+.molecule-promo-popup__title,
+.molecule-research-card h3,
+.wc-block-components-product-name,
+.wc-block-components-title,
+.wp-block-woocommerce-product-title,
+.wp-block-query .wp-block-post-title {
+  font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace !important;
+}
+
 /* ==========================================================================
    Search Modal
    ========================================================================== */
