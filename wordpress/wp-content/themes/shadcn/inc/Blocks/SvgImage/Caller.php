@@ -100,9 +100,10 @@ class Caller {
 			return $content;
 		}
 
+		$svg_code = $this->normalize_svg_code( $svg_code );
 		$sanitized_svg = $this->sanitize_svg( $svg_code );
 
-		if ( empty( $sanitized_svg ) ) {
+		if ( empty( $sanitized_svg ) || false === stripos( $sanitized_svg, '<svg' ) ) {
 			return $content;
 		}
 
@@ -136,6 +137,35 @@ class Caller {
 	}
 
 	/**
+	 * Normalize SVG markup from block attrs.
+	 *
+	 * Some saved content lost JSON backslashes (e.g. "\u003c" became "u003c"),
+	 * which would otherwise print as literal text instead of an SVG.
+	 *
+	 * @param string $svg Raw svgCode attribute.
+	 * @return string Normalized SVG markup.
+	 */
+	private function normalize_svg_code( $svg ) {
+		$svg = html_entity_decode( (string) $svg, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+
+		if ( false !== stripos( $svg, '<svg' ) ) {
+			return $svg;
+		}
+
+		// Decode JSON-style unicode escapes, including broken forms without backslash.
+		$decoded = preg_replace_callback(
+			'/\\\\u([0-9a-fA-F]{4})|(?<![\\\\0-9a-fA-F])u([0-9a-fA-F]{4})/',
+			static function ( $matches ) {
+				$code = $matches[1] !== '' ? $matches[1] : $matches[2];
+				return mb_convert_encoding( pack( 'H*', $code ), 'UTF-8', 'UCS-2BE' );
+			},
+			$svg
+		);
+
+		return is_string( $decoded ) ? $decoded : $svg;
+	}
+
+	/**
 	 * Sanitize SVG code using wp_kses with allowed SVG tags.
 	 *
 	 * @param string $svg Raw SVG code.
@@ -154,97 +184,115 @@ class Caller {
 	private function get_allowed_svg_tags() {
 		return array(
 			'svg'      => array(
-				'xmlns'       => true,
-				'viewbox'     => true,
-				'width'       => true,
-				'height'      => true,
-				'fill'        => true,
-				'class'       => true,
-				'aria-hidden' => true,
-				'aria-label'  => true,
-				'role'        => true,
-				'focusable'   => true,
-				'id'          => true,
-				'stroke'       => true,
-				'stroke-width' => true,
+				'xmlns'            => true,
+				'viewbox'          => true,
+				'width'            => true,
+				'height'           => true,
+				'fill'             => true,
+				'class'            => true,
+				'aria-hidden'      => true,
+				'aria-label'       => true,
+				'role'             => true,
+				'focusable'        => true,
+				'id'               => true,
+				'stroke'           => true,
+				'stroke-width'     => true,
+				'stroke-linecap'   => true,
+				'stroke-linejoin'  => true,
 			),
 			'path'     => array(
-				'd'            => true,
-				'fill'         => true,
-				'stroke'       => true,
-				'stroke-width' => true,
-				'class'        => true,
-				'opacity'      => true,
-				'fill-rule'    => true,
-				'clip-rule'    => true,
-				'id'           => true,
+				'd'                => true,
+				'fill'             => true,
+				'stroke'           => true,
+				'stroke-width'     => true,
+				'stroke-linecap'   => true,
+				'stroke-linejoin'  => true,
+				'class'            => true,
+				'opacity'          => true,
+				'fill-rule'        => true,
+				'clip-rule'        => true,
+				'id'               => true,
 			),
 			'circle'   => array(
-				'cx'           => true,
-				'cy'           => true,
-				'r'            => true,
-				'fill'         => true,
-				'stroke'       => true,
-				'stroke-width' => true,
-				'class'        => true,
-				'opacity'      => true,
-				'id'           => true,
+				'cx'               => true,
+				'cy'               => true,
+				'r'                => true,
+				'fill'             => true,
+				'stroke'           => true,
+				'stroke-width'     => true,
+				'stroke-linecap'   => true,
+				'stroke-linejoin'  => true,
+				'class'            => true,
+				'opacity'          => true,
+				'id'               => true,
 			),
 			'rect'     => array(
-				'x'            => true,
-				'y'            => true,
-				'width'        => true,
-				'height'       => true,
-				'rx'           => true,
-				'ry'           => true,
-				'fill'         => true,
-				'stroke'       => true,
-				'stroke-width' => true,
-				'class'        => true,
-				'opacity'      => true,
-				'id'           => true,
+				'x'                => true,
+				'y'                => true,
+				'width'            => true,
+				'height'           => true,
+				'rx'               => true,
+				'ry'               => true,
+				'fill'             => true,
+				'stroke'           => true,
+				'stroke-width'     => true,
+				'stroke-linecap'   => true,
+				'stroke-linejoin'  => true,
+				'class'            => true,
+				'opacity'          => true,
+				'id'               => true,
 			),
 			'line'     => array(
-				'x1'           => true,
-				'y1'           => true,
-				'x2'           => true,
-				'y2'           => true,
-				'stroke'       => true,
-				'stroke-width' => true,
-				'class'        => true,
+				'x1'               => true,
+				'y1'               => true,
+				'x2'               => true,
+				'y2'               => true,
+				'stroke'           => true,
+				'stroke-width'     => true,
+				'stroke-linecap'   => true,
+				'stroke-linejoin'  => true,
+				'class'            => true,
 			),
 			'polyline' => array(
-				'points'       => true,
-				'fill'         => true,
-				'stroke'       => true,
-				'stroke-width' => true,
-				'class'        => true,
+				'points'           => true,
+				'fill'             => true,
+				'stroke'           => true,
+				'stroke-width'     => true,
+				'stroke-linecap'   => true,
+				'stroke-linejoin'  => true,
+				'class'            => true,
 			),
 			'polygon'  => array(
-				'points'       => true,
-				'fill'         => true,
-				'stroke'       => true,
-				'stroke-width' => true,
-				'class'        => true,
+				'points'           => true,
+				'fill'             => true,
+				'stroke'           => true,
+				'stroke-width'     => true,
+				'stroke-linecap'   => true,
+				'stroke-linejoin'  => true,
+				'class'            => true,
 			),
 			'ellipse'  => array(
-				'cx'           => true,
-				'cy'           => true,
-				'rx'           => true,
-				'ry'           => true,
-				'fill'         => true,
-				'stroke'       => true,
-				'stroke-width' => true,
-				'class'        => true,
+				'cx'               => true,
+				'cy'               => true,
+				'rx'               => true,
+				'ry'               => true,
+				'fill'             => true,
+				'stroke'           => true,
+				'stroke-width'     => true,
+				'stroke-linecap'   => true,
+				'stroke-linejoin'  => true,
+				'class'            => true,
 			),
 			'g'        => array(
-				'fill'         => true,
-				'stroke'       => true,
-				'stroke-width' => true,
-				'transform'    => true,
-				'class'        => true,
-				'opacity'      => true,
-				'id'           => true,
+				'fill'             => true,
+				'stroke'           => true,
+				'stroke-width'     => true,
+				'stroke-linecap'   => true,
+				'stroke-linejoin'  => true,
+				'transform'        => true,
+				'class'            => true,
+				'opacity'          => true,
+				'id'               => true,
 			),
 			'defs'     => array(),
 			'clippath' => array(
