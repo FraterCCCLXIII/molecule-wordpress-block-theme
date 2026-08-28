@@ -8,8 +8,8 @@
 ?>
 <!-- wp:group {"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|10","bottom":"var:preset|spacing|8"}},"color":{"background":"#f9fafb"},"border":{"top":{"color":"var:preset|color|border","width":"1px"}}},"layout":{"type":"constrained","wideSize":"960px"}} -->
 <div class="wp-block-group alignfull has-background" style="border-top-color:var(--wp--preset--color--border);border-top-width:1px;background-color:#f9fafb;padding-top:var(--wp--preset--spacing--10);padding-bottom:var(--wp--preset--spacing--8)">
-	<!-- wp:heading {"level":2,"style":{"typography":{"fontSize":"clamp(2rem,4vw,2.5rem)","fontWeight":"800"},"spacing":{"margin":{"bottom":"var:preset|spacing|7"}}}} -->
-	<h2 class="wp-block-heading" style="margin-bottom:var(--wp--preset--spacing--7);font-size:clamp(2rem,4vw,2.5rem);font-style:normal;font-weight:800;line-height:1.1"><?php esc_html_e( 'Common Questions', 'shadcn' ); ?></h2>
+	<!-- wp:heading {"level":2,"style":{"typography":{"fontSize":"clamp(1.25rem,2.2vw,1.75rem)","fontWeight":"800"},"spacing":{"margin":{"bottom":"var:preset|spacing|7"}}}} -->
+	<h2 class="wp-block-heading" style="margin-bottom:var(--wp--preset--spacing--7);font-size:clamp(1.25rem,2.2vw,1.75rem);font-style:normal;font-weight:800;line-height:1.1"><?php esc_html_e( 'Common Questions', 'shadcn' ); ?></h2>
 	<!-- /wp:heading -->
 
 	<!-- wp:group {"className":"molecule-faq-list","layout":{"type":"constrained"}} -->

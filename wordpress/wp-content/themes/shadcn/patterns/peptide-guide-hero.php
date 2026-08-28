@@ -22,8 +22,8 @@
 		</div>
 		<!-- /wp:group -->
 
-		<!-- wp:heading {"level":1,"style":{"typography":{"fontSize":"clamp(2.5rem,5vw,3.75rem)","lineHeight":"1.1","fontWeight":"800"},"spacing":{"margin":{"top":"var:preset|spacing|6","bottom":"var:preset|spacing|6"}}}} -->
-		<h1 class="wp-block-heading" style="margin-top:var(--wp--preset--spacing--6);margin-bottom:var(--wp--preset--spacing--6);font-size:clamp(2.5rem,5vw,3.75rem);font-style:normal;font-weight:800;line-height:1.1"><?php esc_html_e( 'Research Guide:', 'shadcn' ); ?><br><span class="has-muted-foreground-color has-text-color"><?php esc_html_e( 'An Online Reference for Researchers', 'shadcn' ); ?></span></h1>
+		<!-- wp:heading {"level":1,"style":{"typography":{"fontSize":"clamp(1.5rem,2.8vw,2.25rem)","lineHeight":"1.1","fontWeight":"800"},"spacing":{"margin":{"top":"var:preset|spacing|6","bottom":"var:preset|spacing|6"}}}} -->
+		<h1 class="wp-block-heading" style="margin-top:var(--wp--preset--spacing--6);margin-bottom:var(--wp--preset--spacing--6);font-size:clamp(1.5rem,2.8vw,2.25rem);font-style:normal;font-weight:800;line-height:1.1"><?php esc_html_e( 'Research Guide:', 'shadcn' ); ?><br><span class="has-muted-foreground-color has-text-color"><?php esc_html_e( 'An Online Reference for Researchers', 'shadcn' ); ?></span></h1>
 		<!-- /wp:heading -->
 
 		<!-- wp:paragraph {"fontSize":"xl","textColor":"muted-foreground","style":{"typography":{"lineHeight":"1.65"}}} -->

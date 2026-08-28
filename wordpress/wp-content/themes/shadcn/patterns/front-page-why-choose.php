@@ -12,8 +12,8 @@
 	<div class="wp-block-columns are-vertically-aligned-center">
 		<!-- wp:column {"verticalAlignment":"center","width":"55%"} -->
 		<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:55%">
-			<!-- wp:heading {"level":2,"style":{"typography":{"fontSize":"clamp(2rem,4vw,3.5rem)","fontWeight":"800","lineHeight":"1.1"},"spacing":{"margin":{"bottom":"var:preset|spacing|6"}}}} -->
-			<h2 class="wp-block-heading" style="margin-bottom:var(--wp--preset--spacing--6);font-size:clamp(2rem,4vw,3.5rem);font-style:normal;font-weight:400;line-height:1.1"><?php esc_html_e( 'Why Choose Our Peptides', 'shadcn' ); ?></h2>
+			<!-- wp:heading {"level":2,"style":{"typography":{"fontSize":"clamp(1.25rem,2.2vw,1.75rem)","fontWeight":"400","lineHeight":"1.25"},"spacing":{"margin":{"bottom":"var:preset|spacing|6"}}}} -->
+			<h2 class="wp-block-heading" style="margin-bottom:var(--wp--preset--spacing--6);font-size:clamp(1.25rem,2.2vw,1.75rem);font-style:normal;font-weight:400;line-height:1.25"><?php esc_html_e( 'Why Choose Our Peptides', 'shadcn' ); ?></h2>
 			<!-- /wp:heading -->
 
 			<!-- wp:details {"showContent":true,"className":"molecule-feature-panel is-open"} -->
